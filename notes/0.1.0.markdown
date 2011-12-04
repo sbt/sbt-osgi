@@ -1,0 +1,5 @@
+This is the first (pre-)release of [sbtosgi](https://github.com/typesafehub/sbtosgi), an [sbt](https://github.com/harrah/xsbt/) plugin for creating [OSGi](http://www.osgi.org) bundles.
+
+sbtosgi is inspired by [bnd4sbt](https://github.com/weiglewilczek/bnd4sbt) and makes use of the awesome [bnd library](http://www.aqute.biz/Bnd/Bnd). sbtosgi requires sbt 0.11.2.
+
+For installation and usage instructinos, please refer to the [sbtosgi README](https://github.com/typesafehub/sbtosgi).
