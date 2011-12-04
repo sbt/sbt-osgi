@@ -48,7 +48,7 @@ object OsgiKeys {
   val bundleVersion: SettingKey[String] =
     SettingKey[String](
       prefix("bundle-version"),
-      "Value for *Bundle-Version* header ."
+      "Value for *Bundle-Version* header."
     )
 
   val dynamicImportPackage: SettingKey[Seq[String]] =
