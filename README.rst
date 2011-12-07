@@ -16,14 +16,14 @@ Just add the following lines to your plugin definition (*plugins.sbt* file in th
   addSbtPlugin("com.typesafe.sbtosgi" % "sbtosgi" % "0.1.0")
 
 
-Adding sbcosgi settings
+Adding sbtosgi settings
 -----------------------
 
-  - Add the below line to your build definition, which will add the task *osgi-bundle*, paying attention to the blank line between settings:
-  
+Add the below line to your build definition, which will add the task *osgi-bundle*, paying attention to the blank line between settings:
+
 ::
 
-    seq(scalariformSettings: _*)
+    seq(osgiSettings: _*)
 
 
 Configuring sbtosgi
@@ -39,7 +39,7 @@ This plugin comes with the following configuration options, available as sbt set
 - *OsgiKeys.importPackage*: Values for *Import-Package* header, default is "*"
 - *OsgiKeys.fragmentHost*: Optional value for *Fragment-Host* header, default is *None*
 - *OsgiKeys.privatePackage*: Values for *Private-Package* header, default is *OsgiKeys.bundleSymbolicName* plus ".*"
-- *OsgiKeys.*requireBundle: Values for *Require-Bundle* header, default is the empty sequence
+- *OsgiKeys.requireBundle*: Values for *Require-Bundle* header, default is the empty sequence
 
 
 Mailing list
