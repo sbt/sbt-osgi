@@ -35,7 +35,7 @@ This plugin comes with the following configuration options, available as sbt set
 - *OsgiKeys.bundleSymbolicName*: Value for *Bundle-SymbolicName* header, default is *organization* plus *name*
 - *OsgiKeys.bundleVersion*: Value for *Bundle-Version* header, default is *version*
 - *OsgiKeys.dynamicImportPackage*: Values for *Dynamic-ImportPackage* header, default is the empty sequence
-- *OsgiKeys.export-package*: Values for *Export-Package* header, c
+- *OsgiKeys.export-package*: Values for *Export-Package* header, default is the empty sequence
 - *OsgiKeys.importPackage*: Values for *Import-Package* header, default is "*"
 - *OsgiKeys.fragmentHost*: Optional value for *Fragment-Host* header, default is *None*
 - *OsgiKeys.privatePackage*: Values for *Private-Package* header, default is *OsgiKeys.bundleSymbolicName* plus ".*"
