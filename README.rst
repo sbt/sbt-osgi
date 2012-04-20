@@ -10,9 +10,9 @@ Installing sbtosgi
 Just add the following lines to your plugin definition (*plugins.sbt* file in the *project/* folder of your project or *plugins.sbt* file in the *~/.sbt/plugins/* directory, for details about plugins see the `sbt documentation`_), paying attention to the blank line between settings:
 
 ::
-  
+
   resolvers += Classpaths.typesafeResolver
-  
+
   addSbtPlugin("com.typesafe.sbtosgi" % "sbtosgi" % "0.1.0")
 
 
@@ -40,6 +40,7 @@ This plugin comes with the following configuration options, available as sbt set
 - *OsgiKeys.fragmentHost*: Optional value for *Fragment-Host* header, default is *None*
 - *OsgiKeys.privatePackage*: Values for *Private-Package* header, default is *OsgiKeys.bundleSymbolicName* plus ".*"
 - *OsgiKeys.requireBundle*: Values for *Require-Bundle* header, default is the empty sequence
+- *OsgiKeys.additionalHeaders*: Map of additional headers to be passed to BND, default is the empty sequence
 
 
 Mailing list

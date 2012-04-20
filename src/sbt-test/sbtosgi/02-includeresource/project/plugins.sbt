@@ -1,2 +1,2 @@
 
-addSbtPlugin("com.typesafe.sbtosgi" % "sbtosgi" % "0.1.0-SNAPSHOT")
+addSbtPlugin("com.typesafe.sbtosgi" % "sbtosgi" % "0.2.0-SNAPSHOT")

@@ -30,6 +30,7 @@ object OsgiPlugin extends Plugin {
     Seq(
       bundle <<= (
         manifestHeaders,
+        additionalHeaders,
         fullClasspath in Compile,
         artifactPath in (Compile, packageBin),
         resourceDirectories in Compile
@@ -53,7 +54,8 @@ object OsgiPlugin extends Plugin {
       importPackage := List("*"),
       fragmentHost := None,
       privatePackage <<= bundleSymbolicName(name => List(name + ".*")),
-      requireBundle := Nil
+      requireBundle := Nil,
+      additionalHeaders := Map.empty
     )
   }
 

@@ -48,7 +48,7 @@ class packageSpec extends Specification {
         Seq("privatePackage"),
         Nil
       )
-      val properties = headersToProperties(headers)
+      val properties = headersToProperties(headers, Map.empty)
       import aQute.lib.osgi.Constants._
       properties.asScala must havePairs(
         BUNDLE_ACTIVATOR -> "bundleActivator",
