@@ -87,5 +87,11 @@ object OsgiKeys {
       "Values for *Require-Bundle* header."
     )
 
+  val additionalHeaders: SettingKey[Map[String, String]] =
+    SettingKey[Map[String, String]](
+      prefix("additional-headers"),
+      "Additional headers to pass to BND."
+    )
+
   private def prefix(key: String) = "osgi-" + key
 }

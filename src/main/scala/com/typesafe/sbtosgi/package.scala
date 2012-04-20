@@ -28,12 +28,13 @@ package object sbtosgi {
 
   private[sbtosgi] def bundleTask(
     headers: OsgiManifestHeaders,
+    additionalHeaders: Map[String, String],
     fullClasspath: Seq[Attributed[File]],
     artifactPath: File,
     resourceDirectories: Seq[File]): File = {
     val builder = new Builder
     builder.setClasspath(fullClasspath map (_.data) toArray)
-    builder.setProperties(headersToProperties(headers))
+    builder.setProperties(headersToProperties(headers, additionalHeaders))
     //builder.setProperty(aQute.lib.osgi.Constants.INCLUDE_RESOURCE, "")
     seqToStrOpt(resourceDirectories)(_.getAbsolutePath) foreach (dirs =>
       builder.setProperty(aQute.lib.osgi.Constants.INCLUDE_RESOURCE, dirs)
@@ -43,7 +44,7 @@ package object sbtosgi {
     artifactPath
   }
 
-  def headersToProperties(headers: OsgiManifestHeaders): Properties = {
+  def headersToProperties(headers: OsgiManifestHeaders, additionalHeaders: Map[String, String]): Properties = {
     import headers._
     import aQute.lib.osgi.Constants._
     val properties = new Properties
@@ -56,6 +57,7 @@ package object sbtosgi {
     fragmentHost foreach (properties.put(FRAGMENT_HOST, _))
     seqToStrOpt(privatePackage)(id) foreach (properties.put(PRIVATE_PACKAGE, _))
     seqToStrOpt(requireBundle)(id) foreach (properties.put(REQUIRE_BUNDLE, _))
+    additionalHeaders foreach { case (k, v) => properties.put(k, v) }
     properties
   }
 
