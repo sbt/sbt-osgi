@@ -11,8 +11,6 @@ Just add the following lines to your plugin definition (*plugins.sbt* file in th
 
 ::
 
-  resolvers += Classpaths.typesafeResolver
-
   addSbtPlugin("com.typesafe.sbtosgi" % "sbtosgi" % "0.1.0")
 
 
