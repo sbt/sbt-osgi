@@ -1,6 +1,4 @@
 
-import sbtrelease._
-
 organization := "com.typesafe.sbtosgi"
 
 name := "sbtosgi"
@@ -28,34 +26,8 @@ publishTo <<= (version) { version =>
 
 publishMavenStyle := false
 
-seq(posterousSettings: _*)
+sbtrelease.Release.releaseSettings
 
-(email in Posterous) <<= PropertiesKeys.properties(_ get "posterous.email")
+scalariformSettings
 
-(password in Posterous) <<= PropertiesKeys.properties(_ get "posterous.password")
-
-seq(propertiesSettings: _*)
-
-seq(Release.releaseSettings: _*)
-
-ReleaseKeys.releaseProcess <<= thisProjectRef { ref =>
-  import ReleaseStateTransformations._
-  Seq[ReleasePart](
-    initialGitChecks,
-    checkSnapshotDependencies,
-    releaseTask(check in Posterous in ref),
-    inquireVersions,
-    runTest,
-    setReleaseVersion,
-    commitReleaseVersion,
-    tagRelease,
-    releaseTask(publish in Global in ref),
-    releaseTask(publish in Posterous in ref),
-    setNextVersion,
-    commitNextVersion
-  )
-}
-
-seq(scalariformSettings: _*)
-
-seq(scriptedSettings: _*)
+scriptedSettings
