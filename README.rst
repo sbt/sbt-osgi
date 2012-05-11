@@ -11,7 +11,7 @@ Just add the following lines to your plugin definition (*plugins.sbt* file in th
 
 ::
 
-  addSbtPlugin("com.typesafe.sbtosgi" % "sbtosgi" % "0.1.0")
+  addSbtPlugin("com.typesafe.sbtosgi" % "sbtosgi" % "0.2.0")
 
 
 Adding sbtosgi settings
@@ -21,7 +21,7 @@ Add the below line to your build definition, which will add the task *osgi-bundl
 
 ::
 
-    seq(osgiSettings: _*)
+    osgiSettings
 
 
 Configuring sbtosgi
