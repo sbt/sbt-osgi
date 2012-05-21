@@ -25,7 +25,12 @@ object OsgiPlugin extends Plugin {
 
   val OsgiKeys = com.typesafe.sbtosgi.OsgiKeys
 
-  def osgiSettings: Seq[Setting[_]] = {
+  def osgiSettings: Seq[Setting[_]] = defaultOsgiSettings ++ Seq(
+    packagedArtifact in (Compile, packageBin) <<= (artifact in (Compile, packageBin), OsgiKeys.bundle).identityMap,
+    artifact in (Compile, packageBin) ~= (_.copy(`type` = "bundle"))
+  )
+
+  def defaultOsgiSettings: Seq[Setting[_]] = {
     import OsgiKeys._
     Seq(
       bundle <<= (
