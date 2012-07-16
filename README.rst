@@ -9,13 +9,13 @@ Installing sbtosgi
 
 Just add the following line to your plugin definition (*plugins.sbt* file in the *project/* folder of your project or *plugins.sbt* file in the *~/.sbt/plugins/* directory, for details about plugins see the `sbt documentation`_), paying attention to the blank line between settings::
 
-  addSbtPlugin("com.typesafe.sbtosgi" % "sbtosgi" % "0.2.0")
+  addSbtPlugin("com.typesafe.sbtosgi" % "sbtosgi" % "0.3.0")
 
 If you want to use the latest and greates features, you can also give the latest snapshot release a try::
 
   resolvers += Classpaths.typesafeSnapshots
 
-  addSbtPlugin("com.typesafe.sbtosgi" % "sbtosgi" % "0.3.0-SNAPSHOT")
+  addSbtPlugin("com.typesafe.sbtosgi" % "sbtosgi" % "0.4.0-SNAPSHOT")
 
 
 Adding sbtosgi settings
@@ -29,7 +29,7 @@ If you don't want to publish an OSGi bundle instead of a raw JAR archive::
 
   defaultOsgiSettings
 
-Notice that automatically publishing an OSGi bundle and *defaultOsgiSettings* are only available from version 0.3.0-SNAPSHOT on. If you are using version 0.2.0, you have to add the following settings to your build definition to enable publishing an OSGi bundle::
+Notice that automatically publishing an OSGi bundle and *defaultOsgiSettings* are only available from version 0.3.0 on. If you are using an older version, you have to add the following settings to your build definition to enable publishing an OSGi bundle::
 
   packagedArtifact in (Compile, packageBin) <<= (artifact in (Compile, packageBin), OsgiKeys.bundle).identityMap
 
