@@ -1,15 +1,9 @@
 
 resolvers ++= Seq(
-  "gseitz@github" at "http://gseitz.github.com/maven/",
-  Resolver.url("heikoseeberger", new URL("http://hseeberger.github.com/releases"))(Resolver.ivyStylePatterns)
 )
 
-addSbtPlugin("com.github.gseitz" % "sbt-release" % "0.4")
+addSbtPlugin("com.github.gseitz" % "sbt-release" % "0.5")
 
-addSbtPlugin("com.typesafe.sbtscalariform" % "sbtscalariform" % "0.3.1")
+addSbtPlugin("com.typesafe.sbtscalariform" % "sbtscalariform" % "0.5.0")
 
-//addSbtPlugin("name.heikoseeberger.sbtproperties" % "sbtproperties" % "1.0.0")
-
-libraryDependencies <+= (sbtVersion)(sbtVersion =>
-  "org.scala-sbt" %% "scripted-plugin" % sbtVersion
-)
+libraryDependencies <+= (sbtVersion)("org.scala-sbt" % "scripted-plugin" % _)

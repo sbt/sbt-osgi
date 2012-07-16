@@ -11,4 +11,4 @@
 
 # Existence of JAR file
 > osgi-bundle
-$ exists target/scala-2.9.1/sbtosgi-test_2.9.1-1.2.3.jar
+$ exists target/scala-2.9.2/sbtosgi-test_2.9.2-1.2.3.jar
