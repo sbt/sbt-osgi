@@ -5,7 +5,7 @@ name := "sbtosgi-test"
 
 version := "1.2.3"
 
-seq(osgiSettings: _*)
+osgiSettings
 
 OsgiKeys.additionalHeaders := Map(
   "Main-Class" -> "com.typesafe.sbtosgi.test.App"

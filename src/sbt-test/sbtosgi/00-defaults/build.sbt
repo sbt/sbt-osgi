@@ -7,7 +7,7 @@ version := "1.2.3"
 
 libraryDependencies += "org.osgi" % "org.osgi.core" % "4.3.0" % "provided"
 
-seq(osgiSettings: _*)
+osgiSettings
 
 TaskKey[Unit]("verify-bundle-activator") <<= OsgiKeys.bundleActivator map (activator =>
   if (activator.isDefined) error("Expected bundle-activator to be None, but was %s!" format activator)

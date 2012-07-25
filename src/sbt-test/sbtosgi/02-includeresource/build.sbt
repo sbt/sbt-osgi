@@ -7,7 +7,7 @@ version := "1.2.3"
 
 libraryDependencies += "org.osgi" % "org.osgi.core" % "4.3.0" % "provided"
 
-seq(osgiSettings: _*)
+osgiSettings
 
 OsgiKeys.bundleActivator := Some("com.typesafe.sbtosgi.test.internal.Activator")
 
