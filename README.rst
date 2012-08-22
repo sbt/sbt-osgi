@@ -63,7 +63,7 @@ Please use the `sbt mailing list`_ and prefix the subject with "[sbtosgi]".
 Contribution policy
 -------------------
 
-Contributions via GitHub pull requests are gladly accepted from their original author. Along with any pull requests, please state that the contribution is your original work and that you license the work to the project under the project's open source license.
+Contributions via GitHub pull requests are gladly accepted from their original author. Before we can accept pull requests, you will need to agree to the `Typesafe Contributor License Agreement`_ online, using your GitHub account - it takes 30 seconds.
 
 
 License
@@ -76,3 +76,4 @@ This code is open source software licensed under the `Apache 2.0 License`_. Feel
 .. _`sbt documentation`: https://github.com/harrah/xsbt/wiki/Plugins
 .. _`sbt mailing list`: mailto:simple-build-tool@googlegroups.com
 .. _`Apache 2.0 License`: http://www.apache.org/licenses/LICENSE-2.0.html
+.. _`Typesafe Contributor License Agreement`: http://www.typesafe.com/contribute/cla
