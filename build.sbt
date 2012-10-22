@@ -1,21 +1,21 @@
 
-organization := "com.typesafe.sbtosgi"
+organization := "com.typesafe.sbt"
 
-name := "sbtosgi"
+name := "sbt-osgi"
 
-// version is defined in 0.2.0-SNAPSHOT in order to support sbt-release
+// version is defined in version.sbt in order to support sbt-release
 
 sbtPlugin := true
 
 libraryDependencies ++= Seq(
   "biz.aQute" % "bndlib" % "1.50.0",
-  "org.specs2" %% "specs2" % "1.11" % "test",
+  "org.specs2" %% "specs2" % "1.12.2" % "test",
   "junit" % "junit" % "4.7" % "test"
 )
 
 scalacOptions ++= Seq("-unchecked", "-deprecation")
 
-publishTo <<= isSnapshot(if (_) Some(Classpaths.typesafeSnapshots) else Some(Classpaths.typesafeReleases))
+publishTo <<= isSnapshot(if (_) Some(Classpaths.sbtPluginSnapshots) else Some(Classpaths.sbtPluginReleases))
 
 publishMavenStyle := false
 

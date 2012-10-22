@@ -1,24 +1,24 @@
-sbtosgi
-=======
+sbt-osgi
+========
 
 Plugin for `sbt`_ to create `OSGi`_ bundles.
 
 
-Installing sbtosgi
-------------------
+Installing sbt-osgi
+-------------------
 
 Just add the following line to your plugin definition (*plugins.sbt* file in the *project/* folder of your project or *plugins.sbt* file in the *~/.sbt/plugins/* directory, for details about plugins see the `sbt documentation`_), paying attention to the blank line between settings::
 
-  addSbtPlugin("com.typesafe.sbtosgi" % "sbtosgi" % "0.3.0")
+  addSbtPlugin("com.typesafe.sbt-osgi" % "sbt-osgi" % "0.4.0")
 
 If you want to use the latest and greates features, you can also give the latest snapshot release a try::
 
   resolvers += Classpaths.typesafeSnapshots
 
-  addSbtPlugin("com.typesafe.sbtosgi" % "sbtosgi" % "0.4.0-SNAPSHOT")
+  addSbtPlugin("com.typesafe.sbt-osgi" % "sbt-osgi" % "0.5.0-SNAPSHOT")
 
 
-Adding sbtosgi settings
+Adding sbt-osgi settings
 -----------------------
 
 Add the below line to your build definition, which will add the task *osgi-bundle* and also publish an OSGi bundle instead of a raw JAR archive. Again, pay attention to the blank line between settings::
@@ -37,7 +37,7 @@ Notice that automatically publishing an OSGi bundle and *defaultOsgiSettings* ar
 
 
 
-Configuring sbtosgi
+Configuring sbt-osgi
 -------------------
 
 This plugin comes with the following configuration options, available as sbt settings:
@@ -57,7 +57,7 @@ This plugin comes with the following configuration options, available as sbt set
 Mailing list
 ------------
 
-Please use the `sbt mailing list`_ and prefix the subject with "[sbtosgi]".
+Please use the `sbt mailing list`_ and prefix the subject with "[sbt-osgi]".
 
 
 Contribution policy
