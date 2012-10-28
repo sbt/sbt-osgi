@@ -20,6 +20,7 @@ import aQute.lib.osgi.Builder
 import java.util.Properties
 import sbt._
 import sbt.Keys._
+import aQute.lib.osgi.Constants
 
 package object osgi {
 
@@ -31,13 +32,17 @@ package object osgi {
     additionalHeaders: Map[String, String],
     fullClasspath: Seq[Attributed[File]],
     artifactPath: File,
-    resourceDirectories: Seq[File]): File = {
+    resourceDirectories: Seq[File],
+    embeddedJars: Seq[File]): File = {
     val builder = new Builder
     builder.setClasspath(fullClasspath map (_.data) toArray)
     builder.setProperties(headersToProperties(headers, additionalHeaders))
     //builder.setProperty(aQute.lib.osgi.Constants.INCLUDE_RESOURCE, "")
-    seqToStrOpt(resourceDirectories)(_.getAbsolutePath) foreach (dirs =>
+    seqToStrOpt(resourceDirectories ++ embeddedJars)(_.getAbsolutePath) foreach (dirs =>
       builder.setProperty(aQute.lib.osgi.Constants.INCLUDE_RESOURCE, dirs)
+    )
+    seqToStrOpt(embeddedJars)(_.getName) foreach (jars =>
+      builder.setProperty(aQute.lib.osgi.Constants.BUNDLE_CLASSPATH, ".," + jars)
     )
     val jar = builder.build
     jar.write(artifactPath)
