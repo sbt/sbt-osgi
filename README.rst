@@ -36,6 +36,15 @@ Notice that automatically publishing an OSGi bundle and *defaultOsgiSettings* ar
   artifact in (Compile, packageBin) ~= (_.copy(`type` = "bundle"))
 
 
+Embedding a jar file in the bundle
+----------------------------------
+
+This example will embed all the "jackson" jars from your classpath inside the bundle.
+
+	OsgiKeys.embeddedJars <<= Keys.externalDependencyClasspath in Compile map {
+		deps => deps filter (d => d.data.getName startsWith "jackson") map (d => d.data)
+	}
+
 
 Configuring sbt-osgi
 -------------------
@@ -52,6 +61,7 @@ This plugin comes with the following configuration options, available as sbt set
 - *OsgiKeys.privatePackage*: Values for *Private-Package* header, default is *OsgiKeys.bundleSymbolicName* plus ".*"
 - *OsgiKeys.requireBundle*: Values for *Require-Bundle* header, default is the empty sequence
 - *OsgiKeys.additionalHeaders*: Map of additional headers to be passed to BND, default is the empty sequence
+- *OsgiKeys.embeddedJars*: A list of jars to embed inside the bundle. Jars are automatically added to *Bundle-Classpath*.
 
 
 Mailing list
