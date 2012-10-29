@@ -60,7 +60,7 @@ object SbtOsgi extends Plugin {
       privatePackage <<= bundleSymbolicName(name => List(name + ".*")),
       requireBundle := Nil,
       additionalHeaders := Map.empty,
-      embeddedJars := Seq()
+      embeddedJars := Nil
     )
   }
 
