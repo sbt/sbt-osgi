@@ -17,6 +17,7 @@
 package com.typesafe.sbt.osgi
 
 import java.util.Properties
+import java.io.File
 import org.junit.runner.RunWith
 import org.specs2.mutable.Specification
 import org.specs2.runner.JUnitRunner
@@ -73,6 +74,27 @@ class packageSpec extends Specification {
       defaultBundleSymbolicName("", "a") must beEqualTo("a")
       defaultBundleSymbolicName("a", "") must beEqualTo("a")
       defaultBundleSymbolicName("", "") must beEqualTo("")
+    }
+  }
+
+  "Calling buildIncludeResource" should {
+    "add resources and embedded jars to INCLUDE_RESOURCE" in {
+      val resources = Seq(new File("/resource"))
+      val embeddedJars = Seq(new File("/aJar.jar"))
+      val actual = includeResourceProperty(resources, embeddedJars)
+      actual must beEqualTo(Some("/resource,/aJar.jar"))
+    }
+  }
+  "Calling bundleClasspathProperty" should {
+    "add bundle classes and embedded jars to classpath" in {
+      val embeddedJars = Seq(new File("/aJar.jar"), new File("/bJar.jar"))
+      val actual = bundleClasspathProperty(embeddedJars)
+      actual must beEqualTo(Some(".,aJar.jar,bJar.jar"))
+    }
+    "remain default if no embedded jars are specified" in {
+      val embeddedJars = Seq()
+      val actual = bundleClasspathProperty(embeddedJars)
+      actual must beEqualTo(None)
     }
   }
 }

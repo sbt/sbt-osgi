@@ -38,11 +38,11 @@ package object osgi {
     builder.setClasspath(fullClasspath map (_.data) toArray)
     builder.setProperties(headersToProperties(headers, additionalHeaders))
     //builder.setProperty(aQute.lib.osgi.Constants.INCLUDE_RESOURCE, "")
-    seqToStrOpt(resourceDirectories ++ embeddedJars)(_.getAbsolutePath) foreach (dirs =>
+    includeResourceProperty(resourceDirectories, embeddedJars) foreach (dirs =>
       builder.setProperty(aQute.lib.osgi.Constants.INCLUDE_RESOURCE, dirs)
     )
-    seqToStrOpt(embeddedJars)(_.getName) foreach (jars =>
-      builder.setProperty(aQute.lib.osgi.Constants.BUNDLE_CLASSPATH, ".," + jars)
+    bundleClasspathProperty(embeddedJars) foreach (jars =>
+      builder.setProperty(aQute.lib.osgi.Constants.BUNDLE_CLASSPATH, jars)
     )
     val jar = builder.build
     jar.write(artifactPath)
@@ -64,6 +64,14 @@ package object osgi {
     seqToStrOpt(requireBundle)(id) foreach (properties.put(REQUIRE_BUNDLE, _))
     additionalHeaders foreach { case (k, v) => properties.put(k, v) }
     properties
+  }
+
+  private[osgi] def includeResourceProperty(resourceDirectories: Seq[File], embeddedJars: Seq[File]) = {
+    seqToStrOpt(resourceDirectories ++ embeddedJars)(_.getAbsolutePath)
+  }
+
+  private[osgi] def bundleClasspathProperty(embeddedJars: Seq[File]) = {
+    seqToStrOpt(embeddedJars)(_.getName) map (".," + _)
   }
 
   private[osgi] def defaultBundleSymbolicName(organization: String, name: String): String = {
