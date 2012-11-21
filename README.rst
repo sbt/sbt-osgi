@@ -53,7 +53,17 @@ This plugin comes with the following configuration options, available as sbt set
 - *OsgiKeys.requireBundle*: Values for *Require-Bundle* header, default is the empty sequence
 - *OsgiKeys.additionalHeaders*: Map of additional headers to be passed to BND, default is the empty sequence
 
-Example Configuration:
+Example for a OSGi bundle 'build.sbt' configuration::
+
+  organization := "com.typesafe.sbt"
+
+  name := "osgi.demo"
+
+  version := "1.0.0"
+
+  libraryDependencies += "org.osgi" % "org.osgi.core" % "4.3.0" % "provided"
+
+  osgiSettings
 
   OsgiKeys.exportPackage := Seq("com.typesafe.sbt.osgidemo")
 
