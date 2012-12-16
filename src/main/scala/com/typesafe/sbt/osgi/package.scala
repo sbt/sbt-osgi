@@ -66,13 +66,11 @@ package object osgi {
     properties
   }
 
-  private[osgi] def includeResourceProperty(resourceDirectories: Seq[File], embeddedJars: Seq[File]) = {
+  private[osgi] def includeResourceProperty(resourceDirectories: Seq[File], embeddedJars: Seq[File]) =
     seqToStrOpt(resourceDirectories ++ embeddedJars)(_.getAbsolutePath)
-  }
 
-  private[osgi] def bundleClasspathProperty(embeddedJars: Seq[File]) = {
+  private[osgi] def bundleClasspathProperty(embeddedJars: Seq[File]) =
     seqToStrOpt(embeddedJars)(_.getName) map (".," + _)
-  }
 
   private[osgi] def defaultBundleSymbolicName(organization: String, name: String): String = {
     val organizationParts = parts(organization)

@@ -77,7 +77,7 @@ class packageSpec extends Specification {
     }
   }
 
-  "Calling buildIncludeResource" should {
+  "Calling includeResourceProperty" should {
     "add resources and embedded jars to INCLUDE_RESOURCE" in {
       val resources = Seq(new File("/resource"))
       val embeddedJars = Seq(new File("/aJar.jar"))
@@ -85,6 +85,7 @@ class packageSpec extends Specification {
       actual must beEqualTo(Some("/resource,/aJar.jar"))
     }
   }
+
   "Calling bundleClasspathProperty" should {
     "add bundle classes and embedded jars to classpath" in {
       val embeddedJars = Seq(new File("/aJar.jar"), new File("/bJar.jar"))
