@@ -9,13 +9,13 @@ Installing sbt-osgi
 
 Just add the following line to your plugin definition (*plugins.sbt* file in the *project/* folder of your project or *plugins.sbt* file in the *~/.sbt/plugins/* directory, for details about plugins see the `sbt documentation`_), paying attention to the blank line between settings::
 
-  addSbtPlugin("com.typesafe.sbt-osgi" % "sbt-osgi" % "0.4.0")
+  addSbtPlugin("com.typesafe.sbt" % "sbt-osgi" % "0.4.0")
 
 If you want to use the latest and greates features, you can also give the latest snapshot release a try::
 
   resolvers += Classpaths.typesafeSnapshots
 
-  addSbtPlugin("com.typesafe.sbt-osgi" % "sbt-osgi" % "0.5.0-SNAPSHOT")
+  addSbtPlugin("com.typesafe.sbt" % "sbt-osgi" % "0.5.0-SNAPSHOT")
 
 
 Adding sbt-osgi settings
@@ -63,6 +63,21 @@ This plugin comes with the following configuration options, available as sbt set
 - *OsgiKeys.additionalHeaders*: Map of additional headers to be passed to BND, default is the empty sequence
 - *OsgiKeys.embeddedJars*: A list of jars to embed inside the bundle. Jars are automatically added to *Bundle-Classpath*.
 
+Example for a OSGi bundle 'build.sbt' configuration::
+
+  organization := "com.typesafe.sbt"
+
+  name := "osgi.demo"
+
+  version := "1.0.0"
+
+  libraryDependencies += "org.osgi" % "org.osgi.core" % "4.3.0" % "provided"
+
+  osgiSettings
+
+  OsgiKeys.exportPackage := Seq("com.typesafe.sbt.osgidemo")
+
+  OsgiKeys.bundleActivator := Option("com.typesafe.sbt.osgidemo.internal.Activator")
 
 Mailing list
 ------------
