@@ -93,5 +93,11 @@ object OsgiKeys {
       "Additional headers to pass to BND."
     )
 
+  val embeddedJars: TaskKey[Seq[File]] =
+    TaskKey[Seq[File]](
+      prefix("embedded-jars"),
+      "Jar files to be embedded inside the bundle."
+    )
+
   private def prefix(key: String) = "osgi-" + key
 }

@@ -36,7 +36,8 @@ object SbtOsgi extends Plugin {
         additionalHeaders,
         fullClasspath in Compile,
         artifactPath in (Compile, packageBin),
-        resourceDirectories in Compile
+        resourceDirectories in Compile,
+        embeddedJars
       ) map bundleTask,
       manifestHeaders <<= (
         bundleActivator,
@@ -58,7 +59,8 @@ object SbtOsgi extends Plugin {
       fragmentHost := None,
       privatePackage <<= bundleSymbolicName(name => List(name + ".*")),
       requireBundle := Nil,
-      additionalHeaders := Map.empty
+      additionalHeaders := Map.empty,
+      embeddedJars := Nil
     )
   }
 
