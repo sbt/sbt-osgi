@@ -9,13 +9,13 @@ Installing sbt-osgi
 
 Just add the following line to your plugin definition (*plugins.sbt* file in the *project/* folder of your project or *plugins.sbt* file in the *~/.sbt/plugins/* directory, for details about plugins see the `sbt documentation`_), paying attention to the blank line between settings::
 
-  addSbtPlugin("com.typesafe.sbt" % "sbt-osgi" % "0.4.0")
+  addSbtPlugin("com.typesafe.sbt" % "sbt-osgi" % "0.5.0")
 
 If you want to use the latest and greates features, you can also give the latest snapshot release a try::
 
-  resolvers += Classpaths.typesafeSnapshots
+  resolvers += Classpaths.sbtPluginSnapshots
 
-  addSbtPlugin("com.typesafe.sbt" % "sbt-osgi" % "0.5.0-SNAPSHOT")
+  addSbtPlugin("com.typesafe.sbt" % "sbt-osgi" % "0.6.0-SNAPSHOT")
 
 
 Adding sbt-osgi settings
