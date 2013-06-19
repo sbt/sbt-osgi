@@ -16,15 +16,15 @@
 
 package com.typesafe.sbt.osgi
 
+import aQute.bnd.osgi.Constants._
 import java.util.Properties
 import java.io.File
-import org.junit.runner.RunWith
 import org.specs2.mutable.Specification
-import org.specs2.runner.JUnitRunner
 import scala.collection.JavaConverters._
 
-@RunWith(classOf[JUnitRunner])
-class packageSpec extends Specification {
+class OsgiSpec extends Specification {
+
+  import Osgi._
 
   "Calling seqToStrOpt" should {
     "return None for an empty Seq" in {
@@ -50,7 +50,6 @@ class packageSpec extends Specification {
         Nil
       )
       val properties = headersToProperties(headers, Map.empty)
-      import aQute.lib.osgi.Constants._
       properties.asScala must havePairs(
         BUNDLE_ACTIVATOR -> "bundleActivator",
         BUNDLE_SYMBOLICNAME -> "bundleSymbolicName",

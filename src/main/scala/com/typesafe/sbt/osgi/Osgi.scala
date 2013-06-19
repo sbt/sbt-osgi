@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Typesafe Inc.
+ * Copyright 2011-2013 Typesafe Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,20 +14,17 @@
  * limitations under the License.
  */
 
-package com.typesafe.sbt
+package com.typesafe.sbt.osgi
 
-import aQute.lib.osgi.Builder
+import aQute.bnd.osgi.Builder
+import aQute.bnd.osgi.Constants._
 import java.util.Properties
 import sbt._
 import sbt.Keys._
-import aQute.lib.osgi.Constants
 
-package object osgi {
+private object Osgi {
 
-  def seqToStrOpt[A](seq: Seq[A])(f: A => String): Option[String] =
-    if (seq.isEmpty) None else Some(seq map f mkString ",")
-
-  private[osgi] def bundleTask(
+  def bundleTask(
     headers: OsgiManifestHeaders,
     additionalHeaders: Map[String, String],
     fullClasspath: Seq[Attributed[File]],
@@ -39,10 +36,10 @@ package object osgi {
     builder.setProperties(headersToProperties(headers, additionalHeaders))
     //builder.setProperty(aQute.lib.osgi.Constants.INCLUDE_RESOURCE, "")
     includeResourceProperty(resourceDirectories, embeddedJars) foreach (dirs =>
-      builder.setProperty(aQute.lib.osgi.Constants.INCLUDE_RESOURCE, dirs)
+      builder.setProperty(INCLUDE_RESOURCE, dirs)
     )
     bundleClasspathProperty(embeddedJars) foreach (jars =>
-      builder.setProperty(aQute.lib.osgi.Constants.BUNDLE_CLASSPATH, jars)
+      builder.setProperty(BUNDLE_CLASSPATH, jars)
     )
     val jar = builder.build
     jar.write(artifactPath)
@@ -51,7 +48,6 @@ package object osgi {
 
   def headersToProperties(headers: OsgiManifestHeaders, additionalHeaders: Map[String, String]): Properties = {
     import headers._
-    import aQute.lib.osgi.Constants._
     val properties = new Properties
     properties.put(BUNDLE_SYMBOLICNAME, bundleSymbolicName)
     properties.put(BUNDLE_VERSION, bundleVersion)
@@ -66,13 +62,16 @@ package object osgi {
     properties
   }
 
-  private[osgi] def includeResourceProperty(resourceDirectories: Seq[File], embeddedJars: Seq[File]) =
+  def seqToStrOpt[A](seq: Seq[A])(f: A => String): Option[String] =
+    if (seq.isEmpty) None else Some(seq map f mkString ",")
+
+  def includeResourceProperty(resourceDirectories: Seq[File], embeddedJars: Seq[File]) =
     seqToStrOpt(resourceDirectories ++ embeddedJars)(_.getAbsolutePath)
 
-  private[osgi] def bundleClasspathProperty(embeddedJars: Seq[File]) =
+  def bundleClasspathProperty(embeddedJars: Seq[File]) =
     seqToStrOpt(embeddedJars)(_.getName) map (".," + _)
 
-  private[osgi] def defaultBundleSymbolicName(organization: String, name: String): String = {
+  def defaultBundleSymbolicName(organization: String, name: String): String = {
     val organizationParts = parts(organization)
     val nameParts = parts(name)
     val partsWithoutOverlap = (organizationParts.lastOption, nameParts.headOption) match {
@@ -82,7 +81,7 @@ package object osgi {
     partsWithoutOverlap mkString "."
   }
 
-  private[osgi] def id(s: String) = s
+  def id(s: String) = s
 
-  private def parts(s: String) = s split "[.-]" filterNot (_.isEmpty)
+  def parts(s: String) = s split "[.-]" filterNot (_.isEmpty)
 }

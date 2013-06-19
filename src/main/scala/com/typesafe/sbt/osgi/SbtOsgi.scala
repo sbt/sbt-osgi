@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Typesafe Inc.
+ * Copyright 2011-2013 Typesafe Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,8 @@ import sbt.Keys._
 
 object SbtOsgi extends Plugin {
 
+  type OsgiManifestHeaders = com.typesafe.sbt.osgi.OsgiManifestHeaders
+
   val OsgiKeys = com.typesafe.sbt.osgi.OsgiKeys
 
   def osgiSettings: Seq[Setting[_]] = defaultOsgiSettings ++ Seq(
@@ -38,7 +40,7 @@ object SbtOsgi extends Plugin {
         artifactPath in (Compile, packageBin),
         resourceDirectories in Compile,
         embeddedJars
-      ) map bundleTask,
+      ) map Osgi.bundleTask,
       manifestHeaders <<= (
         bundleActivator,
         bundleSymbolicName,
@@ -51,7 +53,7 @@ object SbtOsgi extends Plugin {
         requireBundle
       )(OsgiManifestHeaders),
       bundleActivator := None,
-      bundleSymbolicName <<= (organization, name)(defaultBundleSymbolicName),
+      bundleSymbolicName <<= (organization, name)(Osgi.defaultBundleSymbolicName),
       bundleVersion <<= version,
       dynamicImportPackage := Nil,
       exportPackage := Nil,
@@ -63,6 +65,4 @@ object SbtOsgi extends Plugin {
       embeddedJars := Nil
     )
   }
-
-  type OsgiManifestHeaders = com.typesafe.sbt.osgi.OsgiManifestHeaders
 }
