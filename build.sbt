@@ -17,7 +17,8 @@ scalacOptions ++= Seq(
 
 libraryDependencies ++= Seq(
   "biz.aQute.bnd" % "bndlib" % "2.1.0",
-  "org.specs2" %% "specs2" % "1.14" % "test"
+  "org.specs2" %% "specs2" % "1.14" % "test",
+  "com.jsuereth" %% "scala-arm" % "1.3"
 )
 
 sbtPlugin := true

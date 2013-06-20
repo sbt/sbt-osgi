@@ -21,29 +21,45 @@ import aQute.bnd.osgi.Constants._
 import java.util.Properties
 import sbt._
 import sbt.Keys._
+import resource._
+import java.io.{ FileInputStream, FileOutputStream }
 
 private object Osgi {
-
   def bundleTask(
     headers: OsgiManifestHeaders,
     additionalHeaders: Map[String, String],
     fullClasspath: Seq[Attributed[File]],
     artifactPath: File,
     resourceDirectories: Seq[File],
-    embeddedJars: Seq[File]): File = {
-    val builder = new Builder
-    builder.setClasspath(fullClasspath map (_.data) toArray)
-    builder.setProperties(headersToProperties(headers, additionalHeaders))
-    //builder.setProperty(aQute.lib.osgi.Constants.INCLUDE_RESOURCE, "")
-    includeResourceProperty(resourceDirectories, embeddedJars) foreach (dirs =>
-      builder.setProperty(INCLUDE_RESOURCE, dirs)
-    )
-    bundleClasspathProperty(embeddedJars) foreach (jars =>
-      builder.setProperty(BUNDLE_CLASSPATH, jars)
-    )
-    val jar = builder.build
-    jar.write(artifactPath)
-    artifactPath
+    embeddedJars: Seq[File], target: File): File = {
+
+    val manifest = target / "manifest.xml"
+
+    val props = headersToProperties(headers, additionalHeaders)
+    val oldProps = new Properties()
+
+    if (manifest.exists) managed(new FileInputStream(manifest)) foreach oldProps.load
+    if (!oldProps.equals(props)) managed(new FileOutputStream(manifest)) foreach (props.store(_, ""))
+
+    def expandClasspath(f: File): Array[File] = if (f.isDirectory) f.listFiles() flatMap expandClasspath else Array(f)
+
+    val cachedFunction = FileFunction.cached(target / "package-cache", FilesInfo.lastModified, FilesInfo.exists) {
+      (changes: Set[File]) ⇒
+        val builder = new Builder
+        builder.setClasspath(fullClasspath map (_.data) toArray)
+        builder.setProperties(props)
+        includeResourceProperty(resourceDirectories, embeddedJars) foreach (dirs ⇒
+          builder.setProperty(INCLUDE_RESOURCE, dirs)
+        )
+        bundleClasspathProperty(embeddedJars) foreach (jars ⇒
+          builder.setProperty(BUNDLE_CLASSPATH, jars)
+        )
+        val jar = builder.build
+        jar.write(artifactPath)
+        Set(artifactPath)
+    }
+
+    cachedFunction((fullClasspath flatMap (a ⇒ expandClasspath(a.data)) toSet) ++ resourceDirectories.toSet ++ embeddedJars.toSet + manifest).head
   }
 
   def headersToProperties(headers: OsgiManifestHeaders, additionalHeaders: Map[String, String]): Properties = {
