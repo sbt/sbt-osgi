@@ -18,7 +18,7 @@ In order to add sbt-osgi as a plugin, just add the below setting to the relevant
 ```
 // Other stuff
 
-addSbtPlugin("com.typesafe.sbt" % "sbt-osgi" % "0.5.0")
+addSbtPlugin("com.typesafe.sbt" % "sbt-osgi" % "0.6.0")
 ```
 
 If you want to use the latest and greates features, you can also give the latest snapshot release a try:
@@ -28,7 +28,7 @@ If you want to use the latest and greates features, you can also give the latest
 
 resolvers += Classpaths.sbtPluginSnapshots
 
-addSbtPlugin("com.typesafe.sbt" % "sbt-osgi" % "0.6.0-SNAPSHOT")
+addSbtPlugin("com.typesafe.sbt" % "sbt-osgi" % "0.7.0-SNAPSHOT")
 ```
 
 Using sbt-osgi

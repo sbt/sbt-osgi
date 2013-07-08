@@ -2,7 +2,7 @@ organization := "com.typesafe.sbt"
 
 name := "sbt-osgi"
 
-version := "0.6.0-SNAPSHOT"
+version := "0.6.0"
 
 libraryDependencies ++= Dependencies.sbtOsgi
 
