@@ -41,8 +41,12 @@ private object Osgi {
     bundleClasspathProperty(embeddedJars) foreach (jars =>
       builder.setProperty(BUNDLE_CLASSPATH, jars)
     )
+    // Write to a temporary file to prevent trying to simultaneously read from and write to the
+    // same jar file in exportJars mode (which causes a NullPointerException).
+    val tmpArtifactPath = file(artifactPath.absolutePath + ".tmp")
     val jar = builder.build
-    jar.write(artifactPath)
+    jar.write(tmpArtifactPath)
+    IO.move(tmpArtifactPath, artifactPath)
     artifactPath
   }
 
