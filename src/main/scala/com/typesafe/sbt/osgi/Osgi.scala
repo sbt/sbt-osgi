@@ -36,7 +36,7 @@ private object Osgi {
     builder.setProperties(headersToProperties(headers, additionalHeaders))
     //builder.setProperty(aQute.lib.osgi.Constants.INCLUDE_RESOURCE, "")
     includeResourceProperty(resourceDirectories, embeddedJars) foreach (dirs =>
-      builder.setProperty(INCLUDE_RESOURCE, dirs)
+      builder.setProperty(INCLUDERESOURCE, dirs)
     )
     bundleClasspathProperty(embeddedJars) foreach (jars =>
       builder.setProperty(BUNDLE_CLASSPATH, jars)
