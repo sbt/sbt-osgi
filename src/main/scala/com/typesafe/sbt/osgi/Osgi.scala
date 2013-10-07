@@ -21,6 +21,7 @@ import aQute.bnd.osgi.Constants._
 import java.util.Properties
 import sbt._
 import sbt.Keys._
+import scala.collection.JavaConversions._
 
 private object Osgi {
 
@@ -30,19 +31,27 @@ private object Osgi {
     fullClasspath: Seq[Attributed[File]],
     artifactPath: File,
     resourceDirectories: Seq[File],
-    embeddedJars: Seq[File]): File = {
+    embeddedJars: Seq[File],
+    streams: TaskStreams): File = {
     val builder = new Builder
     builder.setClasspath(fullClasspath map (_.data) toArray)
     builder.setProperties(headersToProperties(headers, additionalHeaders))
     //builder.setProperty(aQute.lib.osgi.Constants.INCLUDE_RESOURCE, "")
-    includeResourceProperty(resourceDirectories, embeddedJars) foreach (dirs =>
+    includeResourceProperty(resourceDirectories.filter(_.exists), embeddedJars) foreach (dirs =>
       builder.setProperty(INCLUDE_RESOURCE, dirs)
     )
     bundleClasspathProperty(embeddedJars) foreach (jars =>
       builder.setProperty(BUNDLE_CLASSPATH, jars)
     )
+    // Write to a temporary file to prevent trying to simultaneously read from and write to the
+    // same jar file in exportJars mode (which causes a NullPointerException).
+    val tmpArtifactPath = file(artifactPath.absolutePath + ".tmp")
     val jar = builder.build
-    jar.write(artifactPath)
+    val log = streams.log
+    builder.getWarnings.foreach(s => log.warn(s"bnd: $s"))
+    builder.getErrors.foreach(s => log.error(s"bnd: $s"))
+    jar.write(tmpArtifactPath)
+    IO.move(tmpArtifactPath, artifactPath)
     artifactPath
   }
 
