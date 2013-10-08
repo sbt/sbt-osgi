@@ -24,14 +24,10 @@ TaskKey[Unit]("verify-bundle") <<= OsgiKeys.bundle map { file =>
   // Verify manifest
   try {
     val manifest = jarFile.getManifest
-    if (manifest == null) 
-      error("No MANIFEST.MF in JAR file")
-    else
-    {
-      val attributes = manifest.getMainAttributes
-      if (attributes containsKey "Include-Resource")
-        error("MANIFEST.MF contains unexpected Include-Resource attribute; value=" + attributes.getValue("Include-Resource"))
-    }
+    assert(manifest != null, "No MANIFEST.MF in JAR file")
+    val attributes = manifest.getMainAttributes
+    val includeResource = attributes.getValue("Include-Resource")
+    assert(includeResource == null, "MANIFEST.MF contains unexpected Include-Resource attribute; value=" + includeResource)
   } catch {
     case e: IOException => error("Expected to be able to read the manifest, but got exception!" + newLine + e)
   } finally manifestIn.close()
