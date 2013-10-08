@@ -30,7 +30,7 @@ TaskKey[Unit]("verify-bundle") <<= OsgiKeys.bundle map { file =>
     assert(includeResource == null, "MANIFEST.MF contains unexpected Include-Resource attribute; value=" + includeResource)
   } catch {
     case e: IOException => error("Expected to be able to read the manifest, but got exception!" + newLine + e)
-  } finally manifestIn.close()
+  }
   // Verify resources
   val propertiesEntry = jarFile.getEntry("foo.properties")
   if (propertiesEntry != null) {
