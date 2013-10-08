@@ -17,21 +17,28 @@ OsgiKeys.exportPackage := Seq("com.typesafe.sbt.osgi.test")
 
 TaskKey[Unit]("verify-bundle") <<= OsgiKeys.bundle map { file =>
   import java.io.IOException
-  import java.util.zip.ZipFile
+  import java.util.jar.JarFile
   import scala.io.Source
   val newLine = System.getProperty("line.separator")
-  val zipFile = new ZipFile(file) 
+  val jarFile = new JarFile(file)
   // Verify manifest
-  val manifestIn = zipFile.getInputStream(zipFile.getEntry("META-INF/MANIFEST.MF"))
   try {
-    val lines = Source.fromInputStream(manifestIn).getLines().toList
+    val manifest = jarFile.getManifest
+    if (manifest == null) 
+      error("No MANIFEST.MF in JAR file")
+    else
+    {
+      val attributes = manifest.getMainAttributes
+      if (attributes containsKey "Include-Resource")
+        error("MANIFEST.MF contains unexpected Include-Resource attribute; value=" + attributes.getValue("Include-Resource"))
+    }
   } catch {
     case e: IOException => error("Expected to be able to read the manifest, but got exception!" + newLine + e)
   } finally manifestIn.close()
   // Verify resources
-  val propertiesEntry = zipFile.getEntry("foo.properties")
+  val propertiesEntry = jarFile.getEntry("foo.properties")
   if (propertiesEntry != null) {
-    val resourcesIn = zipFile.getInputStream(propertiesEntry)
+    val resourcesIn = jarFile.getInputStream(propertiesEntry)
     try {
       val lines = Source.fromInputStream(resourcesIn).getLines().toList
       val allLines = lines mkString newLine
