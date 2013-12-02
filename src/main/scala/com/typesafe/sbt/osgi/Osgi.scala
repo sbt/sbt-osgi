@@ -46,7 +46,11 @@ private object Osgi {
     // Write to a temporary file to prevent trying to simultaneously read from and write to the
     // same jar file in exportJars mode (which causes a NullPointerException).
     val tmpArtifactPath = file(artifactPath.absolutePath + ".tmp")
-    val jar = builder.build
+    // builder.build is not thread-safe because it uses a static SimpleDateFormat.  This ensures
+    // that all calls to builder.build are serialized.
+    val jar = synchronized {
+      builder.build
+    }
     val log = streams.log
     builder.getWarnings.foreach(s => log.warn(s"bnd: $s"))
     builder.getErrors.foreach(s => log.error(s"bnd: $s"))
