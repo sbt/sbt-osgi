@@ -2,8 +2,6 @@ organization := "com.typesafe.sbt"
 
 name := "sbt-osgi"
 
-version := "0.7.0-SNAPSHOT"
-
 libraryDependencies ++= Dependencies.sbtOsgi
 
 scalacOptions ++= Seq(
