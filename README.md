@@ -28,7 +28,7 @@ If you want to use the latest and greates features, you can also give the latest
 
 resolvers += Classpaths.sbtPluginSnapshots
 
-addSbtPlugin("com.typesafe.sbt" % "sbt-osgi" % "0.7.0-SNAPSHOT")
+addSbtPlugin("com.typesafe.sbt" % "sbt-osgi" % "0.8.0-SNAPSHOT")
 ```
 
 Using sbt-osgi
