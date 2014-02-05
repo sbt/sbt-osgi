@@ -36,14 +36,19 @@ private object Osgi {
     streams: TaskStreams, 
     target: File): File = {
 
+    //this is a cache file generated to check that the bnd parameters have not changed
     val manifest = target / "manifest.xml"
 
     val props = headersToProperties(headers, additionalHeaders)
     val oldProps = new Properties()
 
+    //loads the previous set of headers into oldProps if we have a manifest.xml
     if (manifest.exists) managed(new FileInputStream(manifest)) foreach oldProps.load
+    //saves the new properties into manifest.xml if they are different from the previous properties.
     if (!oldProps.equals(props)) managed(new FileOutputStream(manifest)) foreach (props.store(_, ""))
 
+    //A helper function that turns a File object f into a flat array of Files, expanding f into its child files if f is a directory. If f has directories within it
+    //  it expands those recursively.
     def expandClasspath(f: File): Array[File] = if (f.isDirectory) f.listFiles() flatMap expandClasspath else Array(f)
 
     //FileFunction.cached produces a function that takes a Set[File] and runs the function if the files in that set have changed at all, producing another Set[File].
