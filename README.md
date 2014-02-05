@@ -6,19 +6,19 @@ Plugin for [sbt](http://www.scala-sbt.org) to to create [OSGi](http://www.osgi.o
 Installing sbt-osgi
 -------------------
 
-sbt-osgi is a plugin for sbt. In order to install sbt, please refer to the [sbt documentation](http://www.scala-sbt.org/release/docs/Getting-Started/Setup.html). Please make sure that you are using a suitable version of sbt: 
+sbt-osgi is a plugin for sbt. In order to install sbt, please refer to the [sbt documentation](http://www.scala-sbt.org/release/docs/Getting-Started/Setup.html). Please make sure that you are using a suitable version of sbt:
 
 - sbt-osgi 0.5 → sbt 0.12
-- sbt-osgi 0.6 → sbt 0.13
+- sbt-osgi 0.7 → sbt 0.13
 
-As sbt-osgi is a plugin for sbt, it is installed like any other sbt plugin, that is by mere configuration: just add sbt-osgi to your global or local plugin definition. Global plugins are defined in `~/.sbt/<SBT_VERSION>/plugins/plugins.sbt` and local plugins are defined in `project/plugins.sbt` in your project. 
+As sbt-osgi is a plugin for sbt, it is installed like any other sbt plugin, that is by mere configuration: just add sbt-osgi to your global or local plugin definition. Global plugins are defined in `~/.sbt/<SBT_VERSION>/plugins/plugins.sbt` and local plugins are defined in `project/plugins.sbt` in your project.
 
 In order to add sbt-osgi as a plugin, just add the below setting to the relevant plugin definition, paying attention to blank lines between settings:
 
 ```
 // Other stuff
 
-addSbtPlugin("com.typesafe.sbt" % "sbt-osgi" % "0.5.0")
+addSbtPlugin("com.typesafe.sbt" % "sbt-osgi" % "0.7.0")
 ```
 
 If you want to use the latest and greates features, you can also give the latest snapshot release a try:
@@ -28,7 +28,7 @@ If you want to use the latest and greates features, you can also give the latest
 
 resolvers += Classpaths.sbtPluginSnapshots
 
-addSbtPlugin("com.typesafe.sbt" % "sbt-osgi" % "0.6.0-SNAPSHOT")
+addSbtPlugin("com.typesafe.sbt" % "sbt-osgi" % "0.8.0-SNAPSHOT")
 ```
 
 Using sbt-osgi

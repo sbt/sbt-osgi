@@ -40,6 +40,7 @@ object SbtOsgi extends Plugin {
         artifactPath in (Compile, packageBin),
         resourceDirectories in Compile,
         embeddedJars,
+        streams,
         target
       ) map Osgi.bundleTask,
       manifestHeaders <<= (
