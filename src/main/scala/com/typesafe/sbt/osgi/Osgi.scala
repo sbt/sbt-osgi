@@ -16,14 +16,17 @@
 
 package com.typesafe.sbt.osgi
 
-import aQute.bnd.osgi.Builder
+import aQute.bnd.osgi.{ Descriptors, Builder }
 import aQute.bnd.osgi.Constants._
 import java.util.Properties
 import sbt._
 import sbt.Keys._
 import scala.collection.JavaConversions._
+import aQute.bnd.header.Attrs
 
 private object Osgi {
+
+  val identityImportTransformer: ((Descriptors.PackageRef, Attrs)) => (Descriptors.PackageRef, Attrs) = identity
 
   def bundleTask(
     headers: OsgiManifestHeaders,
@@ -32,8 +35,20 @@ private object Osgi {
     artifactPath: File,
     resourceDirectories: Seq[File],
     embeddedJars: Seq[File],
+    transformImports: ((Descriptors.PackageRef, Attrs)) => (Descriptors.PackageRef, Attrs),
     streams: TaskStreams): File = {
-    val builder = new Builder
+    val builder = new Builder {
+      import scala.collection.JavaConverters._
+      override def analyze {
+        super.analyze
+        if (transformImports ne identityImportTransformer) {
+          val i = getImports
+          val newI = i.asScala.map { case (p, a) => transformImports((p, a)) }.asJava
+          i.clear()
+          i.putAll(newI)
+        }
+      }
+    }
     builder.setClasspath(fullClasspath map (_.data) toArray)
     builder.setProperties(headersToProperties(headers, additionalHeaders))
     includeResourceProperty(resourceDirectories.filter(_.exists), embeddedJars) foreach (dirs =>

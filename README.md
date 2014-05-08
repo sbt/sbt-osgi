@@ -67,6 +67,7 @@ sbt-osgi can be configured with the following settings:
 - `requireBundle`: values for `Require-Bundle` header, default is the empty sequence
 - `additionalHeaders`: map of additional headers to be passed to BND, default is the empty sequence
 - `embeddedJars`: list of dependencies to embed inside the bundle which are automatically added to `Bundle-Classpath`
+- `transformImports`: a function to transform the imports computed by BND
 
 Example `build.sbt`:
 

@@ -18,6 +18,9 @@ package com.typesafe.sbt.osgi
 
 import sbt._
 import sbt.Keys._
+import aQute.bnd.osgi.{ Descriptors, Packages }
+import aQute.bnd.header.Attrs
+import java.util.regex.Pattern
 
 object OsgiKeys {
 
@@ -93,6 +96,12 @@ object OsgiKeys {
       "Additional headers to pass to BND."
     )
 
+  val transformImports: SettingKey[((Descriptors.PackageRef, Attrs)) => (Descriptors.PackageRef, Attrs)] =
+    SettingKey[((Descriptors.PackageRef, Attrs)) => (Descriptors.PackageRef, Attrs)](
+      prefix("transform-imports"),
+      "A function to transform the imports computed by BND."
+    )
+
   val embeddedJars: TaskKey[Seq[File]] =
     TaskKey[Seq[File]](
       prefix("embedded-jars"),
@@ -100,4 +109,40 @@ object OsgiKeys {
     )
 
   private def prefix(key: String) = "osgi-" + key
+
+  /**
+   * Create an import transformer from a sequence of glob patterns and version ranges.
+   * The FQN of the import package is tested against each glob pattern in the given
+   * order. The first matching pattern (if any) specifies the new version range.
+   */
+  def simpleImportVersionTransformer(mappings: Seq[(String, String)]): ((Descriptors.PackageRef, Attrs)) => (Descriptors.PackageRef, Attrs) = {
+    val compiledMappings = mappings.map { case (k, v) => (compileGlobPattern(k), v) }
+    new Function1[(Descriptors.PackageRef, Attrs), (Descriptors.PackageRef, Attrs)] {
+      def apply(t: (Descriptors.PackageRef, Attrs)) = t match {
+        case (packageRef, attrs) =>
+          val rangeOpt: Option[String] = compiledMappings.find {
+            case (pat, _) => pat.matcher(packageRef.getFQN).matches()
+          }.map(_._2)
+          val newAttrs = rangeOpt match {
+            case Some(range) =>
+              val newAttrs = new Attrs(attrs)
+              newAttrs.put("version", range)
+              newAttrs
+            case None => attrs
+          }
+          (packageRef, newAttrs)
+      }
+    }
+  }
+
+  /** Transform a simple glob pattern into a regexp. */
+  private def compileGlobPattern(expr: String): Pattern = {
+    val a = expr.split("\\*", -1)
+    val b = new StringBuilder
+    for (i <- 0 until a.length) {
+      if (i != 0) b.append(".*")
+      if (!a(i).isEmpty) b.append(Pattern.quote(a(i).replaceAll("\n", "\\n")))
+    }
+    Pattern.compile(b.toString)
+  }
 }

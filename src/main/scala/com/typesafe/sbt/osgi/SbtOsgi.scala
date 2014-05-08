@@ -40,6 +40,7 @@ object SbtOsgi extends Plugin {
         artifactPath in (Compile, packageBin),
         resourceDirectories in Compile,
         embeddedJars,
+        transformImports,
         streams
       ) map Osgi.bundleTask,
       manifestHeaders <<= (
@@ -63,7 +64,8 @@ object SbtOsgi extends Plugin {
       privatePackage <<= bundleSymbolicName(name => List(name + ".*")),
       requireBundle := Nil,
       additionalHeaders := Map.empty,
-      embeddedJars := Nil
+      embeddedJars := Nil,
+      transformImports := Osgi.identityImportTransformer
     )
   }
 }
