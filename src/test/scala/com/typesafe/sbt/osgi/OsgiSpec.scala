@@ -90,11 +90,12 @@ class OsgiSpec extends Specification {
   }
 
   "Calling includeResourceProperty" should {
-    "add resources and embedded jars to INCLUDERESOURCE" in {
+    "add resources and embedded jars and exploded jars to INCLUDERESOURCE" in {
       val resourceDir = new File("/resource")
       val jar = new File("/aJar.jar")
-      val actual = includeResourceProperty(Seq(resourceDir), Seq(jar))
-      actual must beEqualTo(Some(resourceDir.getAbsolutePath + "," + jar.getAbsolutePath))
+      val anotherJar = new File("/anotherJar.jar")
+      val actual = includeResourceProperty(Seq(resourceDir), Seq(jar), Seq(anotherJar))
+      actual must beEqualTo(Some(resourceDir.getAbsolutePath + "," + jar.getAbsolutePath + ",@" + anotherJar.getAbsolutePath))
     }
   }
 

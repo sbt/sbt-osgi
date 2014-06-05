@@ -32,11 +32,12 @@ private object Osgi {
     artifactPath: File,
     resourceDirectories: Seq[File],
     embeddedJars: Seq[File],
+    explodedJars: Seq[File],
     streams: TaskStreams): File = {
     val builder = new Builder
     builder.setClasspath(fullClasspath map (_.data) toArray)
     builder.setProperties(headersToProperties(headers, additionalHeaders))
-    includeResourceProperty(resourceDirectories.filter(_.exists), embeddedJars) foreach (dirs =>
+    includeResourceProperty(resourceDirectories.filter(_.exists), embeddedJars, explodedJars) foreach (dirs =>
       builder.setProperty(INCLUDERESOURCE, dirs)
     )
     bundleClasspathProperty(embeddedJars) foreach (jars =>
@@ -85,8 +86,11 @@ private object Osgi {
 
   def strToStrOpt(s: String): Option[String] = Option(s).filter(_.trim nonEmpty)
 
-  def includeResourceProperty(resourceDirectories: Seq[File], embeddedJars: Seq[File]) =
-    seqToStrOpt(resourceDirectories ++ embeddedJars)(_.getAbsolutePath)
+  def includeResourceProperty(resourceDirectories: Seq[File], embeddedJars: Seq[File], explodedJars: Seq[File]) = {
+    val paths: Seq[String] =
+      (resourceDirectories ++ embeddedJars).map(_.getAbsolutePath) ++ explodedJars.map(f => "@" + f.getAbsolutePath)
+    seqToStrOpt(paths)(identity)
+  }
 
   def bundleClasspathProperty(embeddedJars: Seq[File]) =
     seqToStrOpt(embeddedJars)(_.getName) map (".," + _)

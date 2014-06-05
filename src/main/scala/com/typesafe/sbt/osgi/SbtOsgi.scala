@@ -49,6 +49,7 @@ object SbtOsgi extends AutoPlugin {
         artifactPath in (Compile, packageBin),
         resourceDirectories in Compile,
         embeddedJars,
+        explodedJars,
         streams
       ) map Osgi.bundleTask,
       manifestHeaders := OsgiManifestHeaders(
@@ -79,7 +80,8 @@ object SbtOsgi extends AutoPlugin {
       privatePackage <<= bundleSymbolicName(name => List(name + ".*")),
       requireBundle := Nil,
       additionalHeaders := Map.empty,
-      embeddedJars := Nil
+      embeddedJars := Nil,
+      explodedJars := Nil
     )
   }
 }
