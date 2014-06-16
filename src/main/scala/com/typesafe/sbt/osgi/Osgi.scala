@@ -34,7 +34,7 @@ private object Osgi {
     embeddedJars: Seq[File],
     streams: TaskStreams): File = {
     val builder = new Builder
-    builder.setClasspath(fullClasspath map (_.data) toArray)
+    builder.setClasspath(fullClasspath map (_.data) filter (_.exists) toArray)
     builder.setProperties(headersToProperties(headers, additionalHeaders))
     includeResourceProperty(resourceDirectories.filter(_.exists), embeddedJars) foreach (dirs =>
       builder.setProperty(INCLUDERESOURCE, dirs)
