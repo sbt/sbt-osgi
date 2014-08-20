@@ -54,7 +54,7 @@ object SbtOsgi extends Plugin {
         requireBundle
       )(OsgiManifestHeaders),
       bundleActivator := None,
-      bundleSymbolicName <<= (organization, name)(Osgi.defaultBundleSymbolicName),
+      bundleSymbolicName <<= (organization, normalizedName)(Osgi.defaultBundleSymbolicName),
       bundleVersion <<= version,
       dynamicImportPackage := Nil,
       exportPackage := Nil,
