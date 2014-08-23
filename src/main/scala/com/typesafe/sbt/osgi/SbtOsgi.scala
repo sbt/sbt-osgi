@@ -18,17 +18,26 @@ package com.typesafe.sbt.osgi
 
 import sbt._
 import sbt.Keys._
+import sbt.plugins.JvmPlugin
 
-object SbtOsgi extends Plugin {
+object SbtOsgi extends AutoPlugin {
 
-  type OsgiManifestHeaders = com.typesafe.sbt.osgi.OsgiManifestHeaders
+  override val trigger: PluginTrigger = noTrigger
 
-  val OsgiKeys = com.typesafe.sbt.osgi.OsgiKeys
+  override val requires: Plugins = JvmPlugin
 
-  def osgiSettings: Seq[Setting[_]] = defaultOsgiSettings ++ Seq(
-    packagedArtifact in (Compile, packageBin) <<= (artifact in (Compile, packageBin), OsgiKeys.bundle).identityMap,
-    artifact in (Compile, packageBin) ~= (_.copy(`type` = "bundle"))
-  )
+  override lazy val projectSettings: Seq[Def.Setting[_]] = defaultOsgiSettings
+
+  object autoImport {
+    type OsgiManifestHeaders = com.typesafe.sbt.osgi.OsgiManifestHeaders
+
+    val OsgiKeys = com.typesafe.sbt.osgi.OsgiKeys
+
+    def osgiSettings: Seq[Setting[_]] = Seq(
+      packagedArtifact in (Compile, packageBin) <<= (artifact in (Compile, packageBin), OsgiKeys.bundle).identityMap,
+      artifact in (Compile, packageBin) ~= (_.copy(`type` = "bundle"))
+    )
+  }
 
   def defaultOsgiSettings: Seq[Setting[_]] = {
     import OsgiKeys._
@@ -54,7 +63,7 @@ object SbtOsgi extends Plugin {
         requireBundle
       )(OsgiManifestHeaders),
       bundleActivator := None,
-      bundleSymbolicName <<= (organization, name)(Osgi.defaultBundleSymbolicName),
+      bundleSymbolicName <<= (organization, normalizedName)(Osgi.defaultBundleSymbolicName),
       bundleVersion <<= version,
       dynamicImportPackage := Nil,
       exportPackage := Nil,

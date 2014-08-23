@@ -34,6 +34,47 @@ addSbtPlugin("com.typesafe.sbt" % "sbt-osgi" % "0.8.0-SNAPSHOT")
 Using sbt-osgi
 ---------------
 
+#### Version 0.8.0 and above
+As, since version `0.8.0`, sbt-osgi uses the sbt 0.13.5 *Autoplugin* feature, it can be enabled for individual projects like any other sbt Autoplugin. For more information on enabling and disabling plugins, refer to the [sbt plugins tutorial](http://www.scala-sbt.org/release/tutorial/Using-Plugins.html#Enabling+and+disabling+auto+plugins).
+
+To enable sbt-osgi for a specific Project, use the project instance `enablePlugins(Plugins*)` method providing it with `SbtOsgi` as a parameter value. If using only '*.sbt' definition files with only the implicitly declared root project you will be required to obtain a reference to the project by explicitly declaring it in your build file. This may easily be done using the `project` macro, as shown in the example below.
+
+Example `<PROJECT_ROOT>/build.sbt`:
+
+```scala
+lazy val fooProject = (project in file(".")) // Obtain the root project reference
+  .enablePlugins(SbtOsgi)  // Enables sbt-osgi for this project. This will automatically append
+                           // the plugin's default settings to this project thus providing the
+                           // `osgiBundle` task.
+```
+
+Example `<PROJECT_ROOT>/project/Build.scala`:
+```scala
+import sbt._
+import com.typesafe.sbt.SbtOsgi.autoImport._  // The autoImport object contains everything which would normally be
+                                              // imported automatically in '*.sbt' project definition files.
+
+object Build extends sbt.Build {
+
+  lazy val fooProject = Project("foo-project", file("."))
+    .enablePlugins(SbtOsgi)  // Enables sbt-osgi for this project. This will automatically append
+                             // the plugin's default settings to this project thus providing the
+                             // `osgiBundle` task.
+}
+
+```
+
+To also override the default publish behaviour, also add the `osgiSettings` settings to your project via your preferred method.
+
+Example `<PROJECT_ROOT>/build.sbt`:
+
+```scala
+// Other settings
+
+osgiSettings
+```
+
+#### Version 0.7.0 and below
 Add the below line to your sbt build definition, which adds the task `osgiBundle` which creates an OSGi bundle for your project and also changes the `publish` task to publish an OSGi bundle instead of a raw JAR archive. Again, pay attention to the blank line between settings:
 
 ```
