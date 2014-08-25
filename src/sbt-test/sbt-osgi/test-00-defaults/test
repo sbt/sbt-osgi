@@ -10,5 +10,5 @@
 > verify-require-bundle
 
 # Existence of JAR file
-> osgi-bundle
+> osgiBundle
 $ exists target/scala-2.10/sbt-osgi-test_2.10-1.2.3.jar
