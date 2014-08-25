@@ -1,3 +1,4 @@
+lazy val test00 = (project in file ("")).enablePlugins(SbtOsgi)
 
 organization := "com.typesafe.sbt"
 
