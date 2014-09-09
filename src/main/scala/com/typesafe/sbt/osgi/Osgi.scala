@@ -64,6 +64,12 @@ private object Osgi {
     properties.put(BUNDLE_SYMBOLICNAME, bundleSymbolicName)
     properties.put(BUNDLE_VERSION, bundleVersion)
     bundleActivator foreach (properties.put(BUNDLE_ACTIVATOR, _))
+    strToStrOpt(bundleDescription) foreach (properties.put(BUNDLE_DESCRIPTION, _))
+    bundleDocURL foreach (u => properties.put(BUNDLE_DOCURL, u.toString))
+    bundleLicense.headOption foreach (l => properties.put(BUNDLE_LICENSE, s"${l._2.toString};description=${l._1}"))
+    strToStrOpt(bundleName) foreach (properties.put(BUNDLE_NAME, _))
+    seqToStrOpt(bundleRequiredExecutionEnvironment)(id) foreach (properties.put(BUNDLE_REQUIREDEXECUTIONENVIRONMENT, _))
+    strToStrOpt(bundleVendor) foreach (properties.put(BUNDLE_VENDOR, _))
     seqToStrOpt(dynamicImportPackage)(id) foreach (properties.put(DYNAMICIMPORT_PACKAGE, _))
     seqToStrOpt(exportPackage)(id) foreach (properties.put(EXPORT_PACKAGE, _))
     seqToStrOpt(importPackage)(id) foreach (properties.put(IMPORT_PACKAGE, _))
@@ -76,6 +82,8 @@ private object Osgi {
 
   def seqToStrOpt[A](seq: Seq[A])(f: A => String): Option[String] =
     if (seq.isEmpty) None else Some(seq map f mkString ",")
+
+  def strToStrOpt(s: String): Option[String] = Option(s).filter(_.trim nonEmpty)
 
   def includeResourceProperty(resourceDirectories: Seq[File], embeddedJars: Seq[File]) =
     seqToStrOpt(resourceDirectories ++ embeddedJars)(_.getAbsolutePath)

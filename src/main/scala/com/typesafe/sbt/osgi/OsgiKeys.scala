@@ -51,6 +51,12 @@ object OsgiKeys {
       "Value for *Bundle-Version* header."
     )
 
+  val bundleRequiredExecutionEnvironment: SettingKey[Seq[String]] =
+    SettingKey[Seq[String]](
+      prefix("BundleRequiredExecutionEnvironment"),
+      "Value for *Bundle-RequiredExecutionEnvironment* header."
+    )
+
   val dynamicImportPackage: SettingKey[Seq[String]] =
     SettingKey[Seq[String]](
       prefix("DynamicImportPackage"),

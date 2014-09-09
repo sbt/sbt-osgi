@@ -20,6 +20,7 @@ import aQute.bnd.osgi.Constants._
 import java.util.Properties
 import java.io.File
 import org.specs2.mutable.Specification
+import sbt.URL
 import scala.collection.JavaConverters._
 
 class OsgiSpec extends Specification {
@@ -40,6 +41,12 @@ class OsgiSpec extends Specification {
     "return the proper properties" in {
       val headers = OsgiManifestHeaders(
         Some("bundleActivator"),
+        "bundleDescription",
+        Some(sbt.url("http://example.example")),
+        Seq(("License", sbt.url("http://license.license"))),
+        "bundleName",
+        Seq("req1", "req2"),
+        "bundleVendor",
         "bundleSymbolicName",
         "bundleVersion",
         Seq("dynamicImportPackage"),
@@ -53,6 +60,12 @@ class OsgiSpec extends Specification {
       properties.asScala must havePairs(
         BUNDLE_ACTIVATOR -> "bundleActivator",
         BUNDLE_SYMBOLICNAME -> "bundleSymbolicName",
+        BUNDLE_DESCRIPTION -> "bundleDescription",
+        BUNDLE_DOCURL -> sbt.url("http://example.example").toString,
+        BUNDLE_LICENSE -> "http://license.license;description=License",
+        BUNDLE_NAME -> "bundleName",
+        BUNDLE_REQUIREDEXECUTIONENVIRONMENT -> "req1,req2",
+        BUNDLE_VENDOR -> "bundleVendor",
         BUNDLE_VERSION -> "bundleVersion",
         DYNAMICIMPORT_PACKAGE -> "dynamicImportPackage",
         EXPORT_PACKAGE -> "exportPackage1,exportPackage2,exportPackage3",
