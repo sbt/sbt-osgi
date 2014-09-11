@@ -49,7 +49,8 @@ object SbtOsgi extends AutoPlugin {
         artifactPath in (Compile, packageBin),
         resourceDirectories in Compile,
         embeddedJars,
-        streams
+        streams,
+        target
       ) map Osgi.bundleTask,
       manifestHeaders := OsgiManifestHeaders(
         bundleActivator.value,
