@@ -1,3 +1,4 @@
+lazy val test00 = (project in file ("")).enablePlugins(SbtOsgi)
 
 organization := "com.typesafe.sbt"
 
@@ -17,6 +18,10 @@ TaskKey[Unit]("verify-bundle-symbolic-name") <<= OsgiKeys.bundleSymbolicName map
   if (name != "com.typesafe.sbt.osgi.test")
     error("Expected bundle-symbolic-name to be %s, but was %s!".format("com.typesafe.sbt.osgi.test", name))
 )
+
+TaskKey[Unit]("verify-bundle-required-execution-environment") <<= OsgiKeys.bundleRequiredExecutionEnvironment map (re =>
+  if (re.nonEmpty) sys.error("Expected bundleRequiredExecutionEnvironment to be Nil, but was %s!" format re)
+  )
 
 TaskKey[Unit]("verify-bundle-verion") <<= OsgiKeys.bundleVersion map (version =>
   if (version != "1.2.3")
