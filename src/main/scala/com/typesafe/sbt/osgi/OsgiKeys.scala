@@ -105,5 +105,12 @@ object OsgiKeys {
       "Jar files to be embedded inside the bundle."
     )
 
+  val explodedJars: TaskKey[Seq[File]] =
+    TaskKey[Seq[File]](
+      prefix("ExplodedJars"),
+      "Jar files to be exploded into the bundle."
+    )
+
   private def prefix(key: String) = "osgi" + key
+
 }
