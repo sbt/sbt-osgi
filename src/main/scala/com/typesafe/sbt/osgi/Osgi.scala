@@ -95,14 +95,14 @@ private object Osgi {
   def bundleClasspathProperty(embeddedJars: Seq[File]) =
     seqToStrOpt(embeddedJars)(_.getName) map (".," + _)
 
-  def defaultBundleSymbolicName(organization: String, name: String): String = {
+  def defaultBundleSymbolicName(organization: String, name: String, scalaVersion: String): String = {
     val organizationParts = parts(organization)
     val nameParts = parts(name)
     val partsWithoutOverlap = (organizationParts.lastOption, nameParts.headOption) match {
       case (Some(last), Some(head)) if (last == head) => organizationParts ++ nameParts.tail
       case _ => organizationParts ++ nameParts
     }
-    partsWithoutOverlap mkString "."
+    (partsWithoutOverlap mkString ".") + "_" + scalaVersion
   }
 
   def id(s: String) = s

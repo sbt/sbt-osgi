@@ -70,7 +70,7 @@ object SbtOsgi extends AutoPlugin {
         requireBundle.value
       ),
       bundleActivator := None,
-      bundleSymbolicName <<= (organization, normalizedName)(Osgi.defaultBundleSymbolicName),
+      bundleSymbolicName <<= (organization, normalizedName, scalaBinaryVersion)(Osgi.defaultBundleSymbolicName),
       bundleVersion <<= version,
       bundleRequiredExecutionEnvironment := Nil,
       dynamicImportPackage := Nil,
