@@ -20,6 +20,7 @@ import aQute.bnd.osgi.Builder
 import aQute.bnd.osgi.Constants._
 import java.util.Properties
 import sbt._
+import compiler.JavaTool
 import sbt.Keys._
 import scala.collection.JavaConversions._
 
@@ -59,6 +60,22 @@ private object Osgi {
     artifactPath
   }
 
+  def requireCapabilityTask(compiler: JavaTool, logger: Logger): String = {
+    def version: String = {
+      var v = ""
+      compiler(Nil, Nil, file("."), Seq("-version"))(new Logger {
+        override def log(level: Level.Value, message: ⇒ String): Unit =
+          if (level == Level.Warn && message.startsWith("javac "))
+            v = message.substring(6, message.indexOf('.', message.indexOf('.') + 1))
+          else logger.log(level, message)
+        override def success(message: ⇒ String): Unit = logger.success(message)
+        override def trace(t: ⇒ Throwable): Unit = logger.trace(t)
+      })
+      v
+    }
+    "osgi.ee;filter:=\"(&(osgi.ee=JavaSE)(version=%s))\"".format(version)
+  }
+
   def headersToProperties(headers: OsgiManifestHeaders, additionalHeaders: Map[String, String]): Properties = {
     import headers._
     val properties = new Properties
@@ -77,6 +94,7 @@ private object Osgi {
     fragmentHost foreach (properties.put(FRAGMENT_HOST, _))
     seqToStrOpt(privatePackage)(id) foreach (properties.put(PRIVATE_PACKAGE, _))
     seqToStrOpt(requireBundle)(id) foreach (properties.put(REQUIRE_BUNDLE, _))
+    strToStrOpt(requireCapability) foreach (properties.put(REQUIRE_CAPABILITY, _))
     additionalHeaders foreach { case (k, v) => properties.put(k, v) }
     properties
   }

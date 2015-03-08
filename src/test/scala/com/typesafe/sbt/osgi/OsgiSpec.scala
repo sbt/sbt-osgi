@@ -17,10 +17,8 @@
 package com.typesafe.sbt.osgi
 
 import aQute.bnd.osgi.Constants._
-import java.util.Properties
 import java.io.File
 import org.specs2.mutable.Specification
-import sbt.URL
 import scala.collection.JavaConverters._
 
 class OsgiSpec extends Specification {
@@ -54,7 +52,8 @@ class OsgiSpec extends Specification {
         Seq("importPackage"),
         None,
         Seq("privatePackage"),
-        Nil
+        Nil,
+        "requireCapability"
       )
       val properties = headersToProperties(headers, Map.empty)
       properties.asScala must havePairs(
@@ -70,7 +69,8 @@ class OsgiSpec extends Specification {
         DYNAMICIMPORT_PACKAGE -> "dynamicImportPackage",
         EXPORT_PACKAGE -> "exportPackage1,exportPackage2,exportPackage3",
         IMPORT_PACKAGE -> "importPackage",
-        PRIVATE_PACKAGE -> "privatePackage"
+        PRIVATE_PACKAGE -> "privatePackage",
+        REQUIRE_CAPABILITY → "requireCapability"
       )
       properties.asScala must not(haveKey(FRAGMENT_HOST))
       properties.asScala must not(haveKey(REQUIRE_BUNDLE))

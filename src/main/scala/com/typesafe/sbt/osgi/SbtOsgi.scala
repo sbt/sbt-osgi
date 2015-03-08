@@ -67,7 +67,8 @@ object SbtOsgi extends AutoPlugin {
         importPackage.value,
         fragmentHost.value,
         privatePackage.value,
-        requireBundle.value
+        requireBundle.value,
+        requireCapability.value
       ),
       bundleActivator := None,
       bundleSymbolicName <<= (organization, normalizedName)(Osgi.defaultBundleSymbolicName),
@@ -79,6 +80,9 @@ object SbtOsgi extends AutoPlugin {
       fragmentHost := None,
       privatePackage <<= bundleSymbolicName(name => List(name + ".*")),
       requireBundle := Nil,
+      requireCapability := Osgi.requireCapabilityTask(
+        (compileInputs in (Compile, compile)).value.compilers.javac,
+        streams.value.log),
       additionalHeaders := Map.empty,
       embeddedJars := Nil,
       explodedJars := Nil
