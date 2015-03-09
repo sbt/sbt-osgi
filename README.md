@@ -38,7 +38,7 @@ Using sbt-osgi
 #### Version 0.8.0 and above
 As, since version `0.8.0`, sbt-osgi uses the sbt 0.13.5 *Autoplugin* feature, it can be enabled for individual projects like any other sbt Autoplugin. For more information on enabling and disabling plugins, refer to the [sbt plugins tutorial](http://www.scala-sbt.org/release/tutorial/Using-Plugins.html#Enabling+and+disabling+auto+plugins).
 
-To enable sbt-osgi for a specific Project, use the project instance `enablePlugins(Plugins*)` method providing it with `SbtOsgi` as a parameter value. If using only '*.sbt' definition files with only the implicitly declared root project with sbt 0.13.5 you will be required to obtain a reference to the project by explicitly declaring it in your build file. This may easily be done using the `project` macro, as shown in the example below. If using sbt 0.13.6 or greater, `enablePlugins(Plugins*)` is directly available in `*.sbt` files.
+To enable sbt-osgi for a specific Project, use the project instance `enablePlugins(Plugins*)` method providing it with `SbtOsgi` as a parameter value. If using only '.sbt' definition files with only the implicitly declared root project with sbt 0.13.5 you will be required to obtain a reference to the project by explicitly declaring it in your build file. This may easily be done using the `project` macro, as shown in the example below. If using sbt 0.13.6 or greater, `enablePlugins(Plugins*)` is directly available in `.sbt` files.
 
 Example `<PROJECT_ROOT>/build.sbt`:
 
