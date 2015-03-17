@@ -33,4 +33,5 @@ case class OsgiManifestHeaders(
   importPackage: Seq[String],
   fragmentHost: Option[String],
   privatePackage: Seq[String],
-  requireBundle: Seq[String])
+  requireBundle: Seq[String],
+  requireCapability: String)

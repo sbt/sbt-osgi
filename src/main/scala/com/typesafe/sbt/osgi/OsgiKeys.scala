@@ -17,7 +17,6 @@
 package com.typesafe.sbt.osgi
 
 import sbt._
-import sbt.Keys._
 
 object OsgiKeys {
 
@@ -27,8 +26,8 @@ object OsgiKeys {
       "Create an OSGi bundle."
     )
 
-  val manifestHeaders: SettingKey[OsgiManifestHeaders] =
-    SettingKey[OsgiManifestHeaders](
+  val manifestHeaders: TaskKey[OsgiManifestHeaders] =
+    TaskKey[OsgiManifestHeaders](
       prefix("ManifestHeaders"),
       "The aggregated manifest headers."
     )
@@ -110,6 +109,10 @@ object OsgiKeys {
       prefix("ExplodedJars"),
       "Jar files to be exploded into the bundle."
     )
+
+  val requireCapability: TaskKey[String] =
+    TaskKey[String](prefix("RequireCapability"), "Value for *Require-Capability* header. If not" +
+      "specified defaults to 'osgi.ee;filter:=\"(&(osgi.ee=JavaSE)(version=*PROJECT JAVA VERSION*))\"'.")
 
   private def prefix(key: String) = "osgi" + key
 

@@ -21,14 +21,15 @@ In order to add sbt-osgi as a plugin, just add the below setting to the relevant
 addSbtPlugin("com.typesafe.sbt" % "sbt-osgi" % "0.7.0")
 ```
 
-If you want to use the latest and greates features, you can also give the latest snapshot release a try:
+If you want to use the latest and greatest features, you can instead have sbt depend on and locally build the current source snapshot by adding the following to your plugin definition file.
+Example `<PROJECT_ROOT>/project/plugins.sbt`:
+```scala
+lazy val plugins = (project in file("."))
+  .dependsOn(sbtOsgi)
 
-```
 // Other stuff
 
-resolvers += Classpaths.sbtPluginSnapshots
-
-addSbtPlugin("com.typesafe.sbt" % "sbt-osgi" % "0.8.0-SNAPSHOT")
+def sbtOsgi = uri("git://github.com/sbt/sbt-osgi.git")
 ```
 
 Using sbt-osgi
@@ -37,15 +38,19 @@ Using sbt-osgi
 #### Version 0.8.0 and above
 As, since version `0.8.0`, sbt-osgi uses the sbt 0.13.5 *Autoplugin* feature, it can be enabled for individual projects like any other sbt Autoplugin. For more information on enabling and disabling plugins, refer to the [sbt plugins tutorial](http://www.scala-sbt.org/release/tutorial/Using-Plugins.html#Enabling+and+disabling+auto+plugins).
 
-To enable sbt-osgi for a specific Project, use the project instance `enablePlugins(Plugins*)` method providing it with `SbtOsgi` as a parameter value. If using only '*.sbt' definition files with only the implicitly declared root project you will be required to obtain a reference to the project by explicitly declaring it in your build file. This may easily be done using the `project` macro, as shown in the example below.
+To enable sbt-osgi for a specific Project, use the project instance `enablePlugins(Plugins*)` method providing it with `SbtOsgi` as a parameter value. If using only '.sbt' definition files with only the implicitly declared root project with sbt 0.13.5 you will be required to obtain a reference to the project by explicitly declaring it in your build file. This may easily be done using the `project` macro, as shown in the example below. If using sbt 0.13.6 or greater, `enablePlugins(Plugins*)` is directly available in `.sbt` files.
 
 Example `<PROJECT_ROOT>/build.sbt`:
 
 ```scala
+// sbt 0.13.5
 lazy val fooProject = (project in file(".")) // Obtain the root project reference
   .enablePlugins(SbtOsgi)  // Enables sbt-osgi for this project. This will automatically append
                            // the plugin's default settings to this project thus providing the
                            // `osgiBundle` task.
+
+// sbt 0.13.6+
+enablePlugins(SbtOsgi) // No need to obtain root project reference on single project builds for sbt 0.13.6+
 ```
 
 Example `<PROJECT_ROOT>/project/Build.scala`:
@@ -98,6 +103,7 @@ Settings
 sbt-osgi can be configured with the following settings:
 
 - `bundleActivator`: value for `Bundle-Activator` header, default is `None`
+- `bundleRequiredExecutionEnvironment`: value for `Bundle-RequiredExecutionEnvironment` header, default is an empty string.
 - `bundleSymbolicName`: value for `Bundle-SymbolicName` header, default is `organization` plus `name`
 - `bundleVersion`: value for `Bundle-Version` header, default is `version`
 - `dynamicImportPackage`: values for `Dynamic-ImportPackage` header, default is the empty sequence
@@ -109,6 +115,7 @@ sbt-osgi can be configured with the following settings:
 - `additionalHeaders`: map of additional headers to be passed to BND, default is the empty sequence
 - `embeddedJars`: list of dependencies to embed inside the bundle which are automatically added to `Bundle-Classpath`
 - `explodedJars`: list of jarfiles to explode into the bundle
+- `requireCapability`: value for `Require-Capability` header, defaults to `osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=*PROJECT JAVAC VERSION*))"`
 
 Example `build.sbt`:
 
