@@ -1,6 +1,6 @@
 import bintray.Keys._
 
-bintrayPublishSettings
+bintraySettings
 
 repository in bintray := "sbt-plugins"
 

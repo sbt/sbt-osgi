@@ -2,6 +2,8 @@ organization := "com.typesafe.sbt"
 
 name := "sbt-osgi"
 
+licenses += ("Apache-2.0", url("https://www.apache.org/licenses/LICENSE-2.0.html"))
+
 libraryDependencies ++= Dependencies.sbtOsgi
 
 scalacOptions ++= Seq(
@@ -14,11 +16,5 @@ scalacOptions ++= Seq(
 )
 
 sbtPlugin := true
-
-publishTo := {
-  import Classpaths._
-  val repo = if (isSnapshot.value) sbtPluginSnapshots else sbtPluginReleases
-  Some(repo)
-}
 
 publishMavenStyle := false
