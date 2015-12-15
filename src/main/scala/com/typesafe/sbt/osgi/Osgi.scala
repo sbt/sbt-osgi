@@ -29,14 +29,15 @@ private object Osgi {
   def bundleTask(
     headers: OsgiManifestHeaders,
     additionalHeaders: Map[String, String],
-    fullClasspath: Seq[Attributed[File]],
+    dependencyClasspath: Seq[Attributed[File]],
+    products: Seq[File],
     artifactPath: File,
     resourceDirectories: Seq[File],
     embeddedJars: Seq[File],
     explodedJars: Seq[File],
     streams: TaskStreams): File = {
     val builder = new Builder
-    builder.setClasspath(fullClasspath map (_.data) toArray)
+    builder.setClasspath((dependencyClasspath.files ++ products) toArray)
     builder.setProperties(headersToProperties(headers, additionalHeaders))
     includeResourceProperty(resourceDirectories.filter(_.exists), embeddedJars, explodedJars) foreach (dirs =>
       builder.setProperty(INCLUDERESOURCE, dirs)
