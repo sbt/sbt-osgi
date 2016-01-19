@@ -34,7 +34,7 @@ object SbtOsgi extends AutoPlugin {
     val OsgiKeys = com.typesafe.sbt.osgi.OsgiKeys
 
     def osgiSettings: Seq[Setting[_]] = Seq(
-      packagedArtifact in (Compile, packageBin) <<= (artifact in (Compile, packageBin), OsgiKeys.bundle).identityMap,
+      packageBin in Compile <<= OsgiKeys.bundle,
       artifact in (Compile, packageBin) ~= (_.copy(`type` = "bundle"))
     )
   }
@@ -45,7 +45,8 @@ object SbtOsgi extends AutoPlugin {
       bundle <<= (
         manifestHeaders,
         additionalHeaders,
-        fullClasspath in Compile,
+        dependencyClasspath in Compile,
+        products in Compile,
         artifactPath in (Compile, packageBin),
         resourceDirectories in Compile,
         embeddedJars,
