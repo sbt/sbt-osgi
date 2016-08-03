@@ -18,7 +18,7 @@ In order to add sbt-osgi as a plugin, just add the below setting to the relevant
 ```
 // Other stuff
 
-addSbtPlugin("com.typesafe.sbt" % "sbt-osgi" % "0.7.0")
+addSbtPlugin("com.typesafe.sbt" % "sbt-osgi" % "0.9.0")
 ```
 
 If you want to use the latest and greatest features, you can instead have sbt depend on and locally build the current source snapshot by adding the following to your plugin definition file.
@@ -116,6 +116,7 @@ sbt-osgi can be configured with the following settings:
 - `embeddedJars`: list of dependencies to embed inside the bundle which are automatically added to `Bundle-Classpath`
 - `explodedJars`: list of jarfiles to explode into the bundle
 - `requireCapability`: value for `Require-Capability` header, defaults to `osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=*PROJECT JAVAC VERSION*))"`
+- `failOnUndecidedPackage`: allows failing the build when a package is neither exported nor private (instead of silently dropping it), `false` by default to be compatible with previous behaviour 
 
 Example `build.sbt`:
 
