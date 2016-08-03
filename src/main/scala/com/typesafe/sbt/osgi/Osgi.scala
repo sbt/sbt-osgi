@@ -16,13 +16,20 @@
 
 package com.typesafe.sbt.osgi
 
+import java.nio.file.{ FileVisitOption, Files, Path }
+
 import aQute.bnd.osgi.Builder
 import aQute.bnd.osgi.Constants._
 import java.util.Properties
+import java.util.function.{ Function, Predicate }
+import java.util.stream.Collectors
+
 import sbt._
 import compiler.JavaTool
 import sbt.Keys._
+
 import scala.collection.JavaConversions._
+import scala.language.implicitConversions
 
 private object Osgi {
 
@@ -34,8 +41,18 @@ private object Osgi {
     resourceDirectories: Seq[File],
     embeddedJars: Seq[File],
     explodedJars: Seq[File],
+    failOnUndecidedPackage: Boolean,
+    sourceDirectories: Seq[File],
     streams: TaskStreams): File = {
     val builder = new Builder
+
+    if (failOnUndecidedPackage) {
+      streams.log.info("Validating all packages are set private or exported for OSGi explicitly...")
+      val internal = headers.privatePackage
+      val exported = headers.exportPackage
+      validateAllPackagesDecidedAbout(internal, exported, sourceDirectories)
+    }
+
     builder.setClasspath(fullClasspath map (_.data) toArray)
     builder.setProperties(headersToProperties(headers, additionalHeaders))
     includeResourceProperty(resourceDirectories.filter(_.exists), embeddedJars, explodedJars) foreach (dirs =>
@@ -58,6 +75,47 @@ private object Osgi {
     jar.write(tmpArtifactPath)
     IO.move(tmpArtifactPath, artifactPath)
     artifactPath
+  }
+
+  def validateAllPackagesDecidedAbout(internal: Seq[String], exported: Seq[String], sourceDirectories: Seq[File]): Unit = {
+    val allPackages = sourceDirectories.flatMap { baseFile =>
+      if (!baseFile.exists()) Nil
+      else {
+        val packages =
+          Files.walk(baseFile.toPath, FileVisitOption.FOLLOW_LINKS)
+            .filter((p: Path) => p.toFile.isDirectory) // uses conversions defined below to not look horrible
+            .filter((p: Path) => p.toFile.listFiles().exists(f => f.isFile)) // uses conversions defined below to not look horrible
+            .map[String]((p: Path) => {
+              val pack = p.toString.replace(baseFile.toString, "").replaceAll("/", ".")
+              if (pack.startsWith(".")) pack.substring(1) else pack
+            })
+            .collect(Collectors.toSet())
+
+        import scala.collection.JavaConverters._
+        packages.asScala
+      }
+    }.toSet
+
+    def validateAllPackagesDecidedAbout(internal: Seq[String], exported: Seq[String], realPackages: List[String]): Unit =
+      if (internal.isEmpty && exported.isEmpty && realPackages.nonEmpty) {
+        throw new RuntimeException(s"Remaining packages are undecided about (private or exported) for OSGi (this is rather dangerous!): ${realPackages}")
+      } else
+        realPackages match {
+          case Nil => // OK!
+          case pack :: remainingPackages =>
+            def startsWith(it: String, prefixes: Seq[String]): Boolean =
+              prefixes.exists(it.startsWith)
+
+            if (startsWith(pack, internal) || startsWith(pack, exported)) {
+              validateAllPackagesDecidedAbout(internal, exported, remainingPackages)
+            } else throw new RuntimeException(s"Unable to determine if [$pack] package is meant to be private or exported! " +
+              s"Please define what to do with this package for OSGi explicitly! \n" +
+              s"  Private packages : $internal\n" +
+              s"  Exported packages: $exported\n" +
+              s"  Offending package: $pack\n")
+        }
+
+    validateAllPackagesDecidedAbout(internal, exported, allPackages.toList)
   }
 
   def requireCapabilityTask(compiler: JavaTool, logger: Logger): String = {
@@ -110,7 +168,7 @@ private object Osgi {
     seqToStrOpt(paths)(identity)
   }
 
-  def bundleClasspathProperty(embeddedJars: Seq[File]) =
+  def bundleClasspathProperty(embeddedJars: Seq[File]): Option[String] =
     seqToStrOpt(embeddedJars)(_.getName) map (".," + _)
 
   def defaultBundleSymbolicName(organization: String, name: String): String = {
@@ -126,4 +184,15 @@ private object Osgi {
   def id(s: String) = s
 
   def parts(s: String) = s split "[.-]" filterNot (_.isEmpty)
+
+  // ------------ Poor Man's Java 8 make-it-look-nice inter-op ----------------
+  implicit def asPredicate[T](f: (T) => Boolean): Predicate[T] =
+    new Predicate[T] {
+      override def test(t: T): Boolean = f(t)
+    }
+  implicit def asFunction[A, B](f: (A) => B): java.util.function.Function[A, B] =
+    new java.util.function.Function[A, B] {
+      override def apply(a: A): B = f(a)
+    }
+  // ------------ Poor Man's Java 8 make-it-look-nice inter-op ----------------
 }

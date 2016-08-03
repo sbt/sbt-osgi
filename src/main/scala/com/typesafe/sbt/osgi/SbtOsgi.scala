@@ -42,16 +42,17 @@ object SbtOsgi extends AutoPlugin {
   def defaultOsgiSettings: Seq[Setting[_]] = {
     import OsgiKeys._
     Seq(
-      bundle <<= (
-        manifestHeaders,
-        additionalHeaders,
-        fullClasspath in Compile,
-        artifactPath in (Compile, packageBin),
-        resourceDirectories in Compile,
-        embeddedJars,
-        explodedJars,
-        streams
-      ) map Osgi.bundleTask,
+      bundle := Osgi.bundleTask(
+        manifestHeaders.value,
+        additionalHeaders.value,
+        (fullClasspath in Compile).value,
+        (artifactPath in(Compile, packageBin)).value,
+        (resourceDirectories in Compile).value,
+        embeddedJars.value,
+        explodedJars.value,
+        failOnUndecidedPackage.value,
+        (sourceDirectories in Compile).value,
+        streams.value),
       manifestHeaders := OsgiManifestHeaders(
         bundleActivator.value,
         description.value,
@@ -80,6 +81,7 @@ object SbtOsgi extends AutoPlugin {
       fragmentHost := None,
       privatePackage <<= bundleSymbolicName(name => List(name + ".*")),
       requireBundle := Nil,
+      failOnUndecidedPackage := false,
       requireCapability := Osgi.requireCapabilityTask(
         (compileInputs in (Compile, compile)).value.compilers.javac,
         streams.value.log),

@@ -114,6 +114,10 @@ object OsgiKeys {
     TaskKey[String](prefix("RequireCapability"), "Value for *Require-Capability* header. If not" +
       "specified defaults to 'osgi.ee;filter:=\"(&(osgi.ee=JavaSE)(version=*PROJECT JAVA VERSION*))\"'.")
 
+  val failOnUndecidedPackage: SettingKey[Boolean] =
+    SettingKey[Boolean](prefix("FailOnUndecidedPackage"), "Fail the build if a package is neither exported or private." +
+      "Without this setting such classes might be just transparently removed from the resulting artifact!")
+
   private def prefix(key: String) = "osgi" + key
 
 }
