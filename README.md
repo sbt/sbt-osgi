@@ -18,7 +18,7 @@ In order to add sbt-osgi as a plugin, just add the below setting to the relevant
 ```
 // Other stuff
 
-addSbtPlugin("com.typesafe.sbt" % "sbt-osgi" % "0.9.0")
+addSbtPlugin("com.typesafe.sbt" % "sbt-osgi" % "0.9.1")
 ```
 
 If you want to use the latest and greatest features, you can instead have sbt depend on and locally build the current source snapshot by adding the following to your plugin definition file.
@@ -139,7 +139,8 @@ OsgiKeys.bundleActivator := Option("com.typesafe.sbt.osgidemo.internal.Activator
 Contribution policy
 -------------------
 
-Contributions via GitHub pull requests are gladly accepted from their original author. Before we can accept pull requests, you will need to agree to the [Typesafe Contributor License Agreement](http://www.typesafe.com/contribute/cla) online, using your GitHub account - it takes 30 seconds.
+Contributions via GitHub pull requests are gladly accepted from their original author. 
+Before we can accept pull requests, you will need to agree to the [Typesafe Contributor License Agreement](http://www.typesafe.com/contribute/cla) online, using your GitHub account - it takes 30 seconds.
 
 License
 -------

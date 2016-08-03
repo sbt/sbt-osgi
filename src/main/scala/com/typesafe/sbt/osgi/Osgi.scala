@@ -115,7 +115,9 @@ private object Osgi {
               s"  Offending package: $pack\n")
         }
 
-    validateAllPackagesDecidedAbout(internal, exported, allPackages.toList)
+    val i = internal.map(_.replaceAll(".*", ""))
+    val e = exported.map(_.replaceAll(".*", ""))
+    validateAllPackagesDecidedAbout(i, e, allPackages.toList)
   }
 
   def requireCapabilityTask(compiler: JavaTool, logger: Logger): String = {
