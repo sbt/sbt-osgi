@@ -79,14 +79,15 @@ class OsgiSpec extends Specification {
 
   "Calling defaultBundleSymbolicName" should {
     "concatenate organization and name properly" in {
-      defaultBundleSymbolicName("a.b.c", "d.c") must beEqualTo("a.b.c.d.c")
-      defaultBundleSymbolicName("a.b.c", "d-c") must beEqualTo("a.b.c.d.c")
-      defaultBundleSymbolicName("a.b.c", "c.d") must beEqualTo("a.b.c.d")
-      defaultBundleSymbolicName("a.b.c", "c-d") must beEqualTo("a.b.c.d")
-      defaultBundleSymbolicName("", "a") must beEqualTo("a")
-      defaultBundleSymbolicName("a", "") must beEqualTo("a")
-      defaultBundleSymbolicName("", "") must beEqualTo("")
+      defaultBundleSymbolicName("a.b.c", "d.c", "2.10") must beEqualTo("a.b.c.d.c_2.10")
+      defaultBundleSymbolicName("a.b.c", "d-c", "2.10") must beEqualTo("a.b.c.d.c_2.10")
+      defaultBundleSymbolicName("a.b.c", "c.d", "2.10") must beEqualTo("a.b.c.d_2.10")
+      defaultBundleSymbolicName("a.b.c", "c-d", "2.10") must beEqualTo("a.b.c.d_2.10")
+      defaultBundleSymbolicName("", "a", "2.10") must beEqualTo("a_2.10")
+      defaultBundleSymbolicName("a", "", "2.10") must beEqualTo("a_2.10")
+      defaultBundleSymbolicName("", "", "2.10") must beEqualTo("_2.10")
     }
+
   }
 
   "Calling includeResourceProperty" should {
