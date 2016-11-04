@@ -34,7 +34,7 @@ object SbtOsgi extends AutoPlugin {
     val OsgiKeys = com.typesafe.sbt.osgi.OsgiKeys
 
     def osgiSettings: Seq[Setting[_]] = Seq(
-      packagedArtifact in (Compile, packageBin) <<= (artifact in (Compile, packageBin), OsgiKeys.bundle).identityMap,
+      packagedArtifact in (Compile, packageBin) := Scoped.mkTuple2((artifact in (Compile, packageBin)).value, OsgiKeys.bundle.value),
       artifact in (Compile, packageBin) ~= (_.copy(`type` = "bundle"))
     )
   }
@@ -72,14 +72,14 @@ object SbtOsgi extends AutoPlugin {
         requireCapability.value
       ),
       bundleActivator := None,
-      bundleSymbolicName <<= (organization, normalizedName)(Osgi.defaultBundleSymbolicName),
-      bundleVersion <<= version,
+      bundleSymbolicName := Osgi.defaultBundleSymbolicName(organization.value, normalizedName.value),
+      bundleVersion := version.value,
       bundleRequiredExecutionEnvironment := Nil,
       dynamicImportPackage := Nil,
       exportPackage := Nil,
       importPackage := List("*"),
       fragmentHost := None,
-      privatePackage <<= bundleSymbolicName(name => List(name + ".*")),
+      privatePackage := bundleSymbolicName(name => List(name + ".*")).value,
       requireBundle := Nil,
       failOnUndecidedPackage := false,
       requireCapability := Osgi.requireCapabilityTask(
