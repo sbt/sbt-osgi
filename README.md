@@ -1,6 +1,8 @@
 sbt-osgi
 ========
 
+[![Build Status](https://travis-ci.org/sbt/sbt-osgi.svg?branch=master)](https://travis-ci.org/sbt/sbt-osgi)
+
 Plugin for [sbt](http://www.scala-sbt.org) to to create [OSGi](http://www.osgi.org/) bundles.
 
 Installing sbt-osgi
