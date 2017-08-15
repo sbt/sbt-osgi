@@ -4,11 +4,11 @@ object Library {
 
   // Versions
   val bndVersion = "2.4.0"
-  val specs2Version = "1.14"
+  val specs2Version = "3.9.4"
 
   // Libraries
   val bndLib = "biz.aQute.bnd" % "bndlib" % bndVersion
-  val specs2 = "org.specs2" %% "specs2" % specs2Version
+  val specs2 = "org.specs2" %% "specs2-core" % specs2Version
 }
 
 object Dependencies {
