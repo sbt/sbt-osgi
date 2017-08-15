@@ -99,7 +99,7 @@ private object Osgi {
     def validateAllPackagesDecidedAbout(internal: Seq[String], exported: Seq[String], realPackages: List[String]): Unit =
       if (internal.isEmpty && exported.isEmpty && realPackages.nonEmpty) {
         throw new RuntimeException(s"Remaining packages are undecided about (private or exported) for OSGi (this is rather dangerous!): ${realPackages}")
-      } else
+      } else {
         realPackages match {
           case Nil => // OK!
           case pack :: remainingPackages =>
@@ -114,9 +114,10 @@ private object Osgi {
               s"  Exported packages: $exported\n" +
               s"  Offending package: $pack\n")
         }
+      }
 
-    val i = internal.map(_.replaceAll(".*", ""))
-    val e = exported.map(_.replaceAll(".*", ""))
+    val i = internal.map(p => if (p.endsWith(".*")) p.dropRight(2) else p)
+    val e = exported.map(p => if (p.endsWith(".*")) p.dropRight(2) else p)
     validateAllPackagesDecidedAbout(i, e, allPackages.toList)
   }
 
