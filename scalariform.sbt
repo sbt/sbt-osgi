@@ -1,5 +1,4 @@
 import scalariform.formatter.preferences.AlignSingleLineCaseStatements
-
-scalariformSettings
+import com.typesafe.sbt.SbtScalariform.ScalariformKeys
 
 ScalariformKeys.preferences := ScalariformKeys.preferences.value.setPreference(AlignSingleLineCaseStatements, true)

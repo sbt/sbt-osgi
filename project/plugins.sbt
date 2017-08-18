@@ -1,5 +1,5 @@
-addSbtPlugin("com.typesafe.sbt" % "sbt-scalariform" % "1.1.0")
+addSbtPlugin("org.scalariform" % "sbt-scalariform" % "1.8.0")
 
-addSbtPlugin("me.lessis" % "bintray-sbt" % "0.2.1")
+addSbtPlugin("org.foundweekends" % "sbt-bintray" % "0.5.1")
 
 libraryDependencies += ("org.scala-sbt" % "scripted-plugin" % sbtVersion.value)
