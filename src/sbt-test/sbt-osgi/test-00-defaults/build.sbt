@@ -10,50 +10,62 @@ libraryDependencies += "org.osgi" % "org.osgi.core" % "4.3.0" % "provided"
 
 osgiSettings
 
-TaskKey[Unit]("verify-bundle-activator") <<= OsgiKeys.bundleActivator map (activator =>
-  if (activator.isDefined) error("Expected bundle-activator to be None, but was %s!" format activator)
-)
+TaskKey[Unit]("verifyBundleActivator") := {
+  val activator = OsgiKeys.bundleActivator.value
+  if (activator.isDefined) 
+    sys.error("Expected bundle-activator to be None, but was %s!" format activator)
+}
 
-TaskKey[Unit]("verify-bundle-symbolic-name") <<= OsgiKeys.bundleSymbolicName map (name =>
+TaskKey[Unit]("verifyBundleSymbolicName") := {
+  val name = OsgiKeys.bundleSymbolicName.value
   if (name != "com.typesafe.sbt.osgi.test")
-    error("Expected bundle-symbolic-name to be %s, but was %s!".format("com.typesafe.sbt.osgi.test", name))
-)
+    sys.error("Expected bundle-symbolic-name to be %s, but was %s!".format("com.typesafe.sbt.osgi.test", name))
+}
 
-TaskKey[Unit]("verify-bundle-required-execution-environment") <<= OsgiKeys.bundleRequiredExecutionEnvironment map (re =>
-  if (re.nonEmpty) sys.error("Expected bundleRequiredExecutionEnvironment to be Nil, but was %s!" format re)
-  )
+TaskKey[Unit]("verifyBundleRequiredExecutionEnvironment") := {
+  val re = OsgiKeys.bundleRequiredExecutionEnvironment.value
+  if (re.nonEmpty) 
+    sys.error("Expected bundleRequiredExecutionEnvironment to be Nil, but was %s!" format re)
+}
 
-TaskKey[Unit]("verify-bundle-verion") <<= OsgiKeys.bundleVersion map (version =>
+TaskKey[Unit]("verifyBundleVerion") := {
+  val version = OsgiKeys.bundleVersion.value
   if (version != "1.2.3")
-    error("Expected bundle-version to be %s, but was %s!".format("1.2.3", version))
-)
+    sys.error("Expected bundle-version to be %s, but was %s!".format("1.2.3", version))
+}
 
-TaskKey[Unit]("verify-dynamic-import-package") <<= OsgiKeys.dynamicImportPackage map (pkg =>
+TaskKey[Unit]("verifyDynamicImportPackage") := {
+  val pkg = OsgiKeys.dynamicImportPackage.value
   if (!pkg.isEmpty)
-    error("Expected dynamic-import-package to be empty, but was %s!" format pkg)
-)
+    sys.error("Expected dynamic-import-package to be empty, but was %s!" format pkg)
+}
 
-TaskKey[Unit]("verify-export-package") <<= OsgiKeys.exportPackage map (pkg =>
+TaskKey[Unit]("verifyExportPackage") := {
+  val pkg = OsgiKeys.exportPackage.value
   if (!pkg.isEmpty)
-    error("Expected export-package to be empty, but was %s!" format pkg)
-)
+    sys.error("Expected export-package to be empty, but was %s!" format pkg)
+}
 
-TaskKey[Unit]("verify-import-package") <<= OsgiKeys.importPackage map (pkg =>
+TaskKey[Unit]("verifyImportPackage") := {
+  val pkg = OsgiKeys.importPackage.value
   if (pkg != Seq("*"))
-    error("Expected import-package to be %s, but was %s!".format(Seq("*"), pkg))
-)
+    sys.error("Expected import-package to be %s, but was %s!".format(Seq("*"), pkg))
+}
 
-TaskKey[Unit]("verify-fragment-host") <<= OsgiKeys.fragmentHost map (host =>
+TaskKey[Unit]("verifyFragmentHost") := {
+  val host = OsgiKeys.fragmentHost.value
   if (host != None)
-    error("Expected fragment-host to be None, but was %s!" format host)
-)
+    sys.error("Expected fragment-host to be None, but was %s!" format host)
+}
 
-TaskKey[Unit]("verify-private-package") <<= OsgiKeys.privatePackage map (pkg =>
+TaskKey[Unit]("verifyPrivatePackage") := {
+  val pkg = OsgiKeys.privatePackage.value
   if (pkg != Seq("com.typesafe.sbt.osgi.test.*"))
-    error("Expected private-package to be %s, but was %s!".format(Seq("com.typesafe.sbt.osgi.test.*"), pkg))
-)
+    sys.error("Expected private-package to be %s, but was %s!".format(Seq("com.typesafe.sbt.osgi.test.*"), pkg))
+}
 
-TaskKey[Unit]("verify-require-bundle") <<= OsgiKeys.requireBundle map (bundle =>
+TaskKey[Unit]("verifyRequireBundle") := {
+  val bundle = OsgiKeys.requireBundle.value
   if (!bundle.isEmpty)
-    error("Expected require-bundle to be empty, but was %s!" format bundle)
-)
+    sys.error("Expected require-bundle to be empty, but was %s!" format bundle)
+}

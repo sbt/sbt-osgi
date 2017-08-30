@@ -21,11 +21,10 @@ import java.nio.file.{ FileVisitOption, Files, Path }
 import aQute.bnd.osgi.Builder
 import aQute.bnd.osgi.Constants._
 import java.util.Properties
-import java.util.function.{ Function, Predicate }
+import java.util.function.Predicate
 import java.util.stream.Collectors
 
 import sbt._
-import compiler.JavaTool
 import sbt.Keys._
 
 import scala.collection.JavaConversions._
@@ -56,11 +55,9 @@ private object Osgi {
     builder.setClasspath(fullClasspath map (_.data) toArray)
     builder.setProperties(headersToProperties(headers, additionalHeaders))
     includeResourceProperty(resourceDirectories.filter(_.exists), embeddedJars, explodedJars) foreach (dirs =>
-      builder.setProperty(INCLUDERESOURCE, dirs)
-    )
+      builder.setProperty(INCLUDERESOURCE, dirs))
     bundleClasspathProperty(embeddedJars) foreach (jars =>
-      builder.setProperty(BUNDLE_CLASSPATH, jars)
-    )
+      builder.setProperty(BUNDLE_CLASSPATH, jars))
     // Write to a temporary file to prevent trying to simultaneously read from and write to the
     // same jar file in exportJars mode (which causes a NullPointerException).
     val tmpArtifactPath = file(artifactPath.absolutePath + ".tmp")
@@ -120,19 +117,8 @@ private object Osgi {
     validateAllPackagesDecidedAbout(i, e, allPackages.toList)
   }
 
-  def requireCapabilityTask(compiler: JavaTool, logger: Logger): String = {
-    def version: String = {
-      var v = ""
-      compiler(Nil, Nil, file("."), Seq("-version"))(new Logger {
-        override def log(level: Level.Value, message: ⇒ String): Unit =
-          if (level == Level.Warn && message.startsWith("javac "))
-            v = message.substring(6, message.indexOf('.', message.indexOf('.') + 1))
-          else logger.log(level, message)
-        override def success(message: ⇒ String): Unit = logger.success(message)
-        override def trace(t: ⇒ Throwable): Unit = logger.trace(t)
-      })
-      v
-    }
+  def requireCapabilityTask(): String = {
+    val version = System.getProperty("java.version")
     "osgi.ee;filter:=\"(&(osgi.ee=JavaSE)(version=%s))\"".format(version)
   }
 

@@ -17,6 +17,5 @@ object Dependencies {
 
   val sbtOsgi = List(
     bndLib,
-    specs2  % "test"
-  )
+    specs2 % "test")
 }

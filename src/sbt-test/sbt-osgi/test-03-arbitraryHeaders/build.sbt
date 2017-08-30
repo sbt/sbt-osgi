@@ -12,10 +12,11 @@ OsgiKeys.additionalHeaders := Map(
   "Main-Class" -> "com.typesafe.sbt.osgi.test.App"
 )
 
-TaskKey[Unit]("verify-bundle") <<= OsgiKeys.bundle map { file =>
+TaskKey[Unit]("verifyBundle") :=  {
   import java.io.IOException
   import java.util.zip.ZipFile
   import scala.io.Source
+  val file = OsgiKeys.bundle.value
   val newLine = System.getProperty("line.separator")
   val zipFile = new ZipFile(file)
   // Verify manifest
@@ -25,8 +26,8 @@ TaskKey[Unit]("verify-bundle") <<= OsgiKeys.bundle map { file =>
     val allLines = lines mkString newLine
     val butWas = newLine + "But was:" + newLine + allLines
     if (!(lines contains "Main-Class: com.typesafe.sbt.osgi.test.App"))
-      error("Expected 'Main-Class: com.typesafe.sbt.osgi.test.App' in manifest!" + butWas)
+      sys.error("Expected 'Main-Class: com.typesafe.sbt.osgi.test.App' in manifest!" + butWas)
   } catch {
-    case e: IOException => error("Expected to be able to read the manifest, but got exception!" + newLine + e)
+    case e: IOException => sys.error("Expected to be able to read the manifest, but got exception!" + newLine + e)
   } finally manifestIn.close()
 }

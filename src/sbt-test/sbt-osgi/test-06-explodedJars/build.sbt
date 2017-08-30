@@ -10,9 +10,10 @@ osgiSettings
 
 OsgiKeys.explodedJars += file("tiny.jar")
 
-TaskKey[Unit]("verify-bundle") <<= OsgiKeys.bundle map { file =>
+TaskKey[Unit]("verifyBundle") := {
   import scala.collection.JavaConverters._
   import java.util.jar.JarFile
+  val file = OsgiKeys.bundle.value
   val (tiny, bundle) = (new JarFile("tiny.jar"), new JarFile(file))
   // Everything in tiny other than its manifest should exist in bundle
   val entries = tiny.entries.asScala.toList.map(e => (e, Option(bundle.getEntry(e.getName))))

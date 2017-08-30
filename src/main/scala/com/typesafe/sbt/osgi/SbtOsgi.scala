@@ -35,8 +35,7 @@ object SbtOsgi extends AutoPlugin {
 
     def osgiSettings: Seq[Setting[_]] = Seq(
       packagedArtifact in (Compile, packageBin) := Scoped.mkTuple2((artifact in (Compile, packageBin)).value, OsgiKeys.bundle.value),
-      artifact in (Compile, packageBin) ~= (_.copy(`type` = "bundle"))
-    )
+      artifact in (Compile, packageBin) ~= (_.withType("bundle")))
   }
 
   def defaultOsgiSettings: Seq[Setting[_]] = {
@@ -46,7 +45,7 @@ object SbtOsgi extends AutoPlugin {
         manifestHeaders.value,
         additionalHeaders.value,
         (fullClasspath in Compile).value,
-        (artifactPath in(Compile, packageBin)).value,
+        (artifactPath in (Compile, packageBin)).value,
         (resourceDirectories in Compile).value,
         embeddedJars.value,
         explodedJars.value,
@@ -69,8 +68,7 @@ object SbtOsgi extends AutoPlugin {
         fragmentHost.value,
         privatePackage.value,
         requireBundle.value,
-        requireCapability.value
-      ),
+        requireCapability.value),
       bundleActivator := None,
       bundleSymbolicName := Osgi.defaultBundleSymbolicName(organization.value, normalizedName.value),
       bundleVersion := version.value,
@@ -82,12 +80,9 @@ object SbtOsgi extends AutoPlugin {
       privatePackage := bundleSymbolicName(name => List(name + ".*")).value,
       requireBundle := Nil,
       failOnUndecidedPackage := false,
-      requireCapability := Osgi.requireCapabilityTask(
-        (compileInputs in (Compile, compile)).value.compilers.javac,
-        streams.value.log),
+      requireCapability := Osgi.requireCapabilityTask(),
       additionalHeaders := Map.empty,
       embeddedJars := Nil,
-      explodedJars := Nil
-    )
+      explodedJars := Nil)
   }
 }
