@@ -33,7 +33,7 @@ apiURL := Some(url("http://typesafe.com"))
 licenses += ("license" -> url("http://license.license"))
 
 
-TaskKey[Unit]("verify-bundle") := {
+TaskKey[Unit]("verifyBundle") := {
   import java.io.IOException
   import java.util.zip.ZipFile
   import scala.io.Source
