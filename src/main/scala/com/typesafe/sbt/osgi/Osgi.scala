@@ -118,10 +118,10 @@ private object Osgi {
   }
 
   def requireCapabilityTask(): String = {
-    val version = Option(System.getProperty("java.version"))
+    Option(System.getProperty("java.version"))
       .map(v => v.split("[.]", 3).take(2).mkString("."))
-      .getOrElse("1.6")
-    "osgi.ee;filter:=\"(&(osgi.ee=JavaSE)(version=%s))\"".format(version)
+      .map(version => "osgi.ee;filter:=\"(&(osgi.ee=JavaSE)(version=%s))\"".format(version))
+      .getOrElse("")
   }
 
   def headersToProperties(headers: OsgiManifestHeaders, additionalHeaders: Map[String, String]): Properties = {
