@@ -26,6 +26,7 @@ import java.util.stream.Collectors
 
 import sbt._
 import sbt.Keys._
+import sbt.Package.ManifestAttributes
 
 import scala.collection.JavaConversions._
 import scala.language.implicitConversions
@@ -42,6 +43,7 @@ private object Osgi {
     explodedJars: Seq[File],
     failOnUndecidedPackage: Boolean,
     sourceDirectories: Seq[File],
+    packageOptions: scala.Seq[sbt.PackageOption],
     streams: TaskStreams): File = {
     val builder = new Builder
 
@@ -53,7 +55,11 @@ private object Osgi {
     }
 
     builder.setClasspath(fullClasspath map (_.data) toArray)
-    builder.setProperties(headersToProperties(headers, additionalHeaders))
+
+    val props = headersToProperties(headers, additionalHeaders)
+    addPackageOptions(props, packageOptions)
+    builder.setProperties(props)
+
     includeResourceProperty(resourceDirectories.filter(_.exists), embeddedJars, explodedJars) foreach (dirs =>
       builder.setProperty(INCLUDERESOURCE, dirs))
     bundleClasspathProperty(embeddedJars) foreach (jars =>
@@ -72,6 +78,14 @@ private object Osgi {
     jar.write(tmpArtifactPath)
     IO.move(tmpArtifactPath, artifactPath)
     artifactPath
+  }
+
+  private def addPackageOptions(props: Properties, packageOptions: Seq[PackageOption]) = {
+    packageOptions
+      .collect({ case attr: ManifestAttributes ⇒ attr.attributes })
+      .flatten
+      .foreach { case (name, value) ⇒ props.put(name.toString, value) }
+    props
   }
 
   def validateAllPackagesDecidedAbout(internal: Seq[String], exported: Seq[String], sourceDirectories: Seq[File]): Unit = {
