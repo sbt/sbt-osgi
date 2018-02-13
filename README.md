@@ -129,6 +129,8 @@ name := "osgi.demo"
 
 version := "1.0.0"
 
+enablePlugins(SbtOsgi)
+
 libraryDependencies += "org.osgi" % "org.osgi.core" % "4.3.0" % "provided"
 
 osgiSettings
