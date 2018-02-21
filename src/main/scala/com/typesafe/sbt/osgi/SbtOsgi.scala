@@ -35,7 +35,7 @@ object SbtOsgi extends AutoPlugin {
 
     def osgiSettings: Seq[Setting[_]] = Seq(
       packagedArtifact in (Compile, packageBin) := Scoped.mkTuple2((artifact in (Compile, packageBin)).value, OsgiKeys.bundle.value),
-      artifact in (Compile, packageBin) ~= (_.withType("bundle")))
+      SbtCompat.packageBinBundle)
   }
 
   def defaultOsgiSettings: Seq[Setting[_]] = {
