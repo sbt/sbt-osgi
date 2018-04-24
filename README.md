@@ -1,6 +1,8 @@
 sbt-osgi
 ========
 
+[![Build Status](https://travis-ci.org/sbt/sbt-osgi.svg?branch=master)](https://travis-ci.org/sbt/sbt-osgi)
+
 Plugin for [sbt](http://www.scala-sbt.org) to to create [OSGi](http://www.osgi.org/) bundles.
 
 Installing sbt-osgi
@@ -10,6 +12,7 @@ sbt-osgi is a plugin for sbt. In order to install sbt, please refer to the [sbt 
 
 - sbt-osgi 0.5 → sbt 0.12
 - sbt-osgi 0.7 → sbt 0.13
+- sbt-osgi 0.9 → sbt 0.13 / sbt 1.x
 
 As sbt-osgi is a plugin for sbt, it is installed like any other sbt plugin, that is by mere configuration: just add sbt-osgi to your global or local plugin definition. Global plugins are defined in `~/.sbt/<SBT_VERSION>/plugins/plugins.sbt` and local plugins are defined in `project/plugins.sbt` in your project.
 
@@ -18,7 +21,7 @@ In order to add sbt-osgi as a plugin, just add the below setting to the relevant
 ```
 // Other stuff
 
-addSbtPlugin("com.typesafe.sbt" % "sbt-osgi" % "0.9.1")
+addSbtPlugin("com.typesafe.sbt" % "sbt-osgi" % "0.9.3")
 ```
 
 If you want to use the latest and greatest features, you can instead have sbt depend on and locally build the current source snapshot by adding the following to your plugin definition file.
@@ -126,6 +129,8 @@ organization := "com.typesafe.sbt"
 name := "osgi.demo"
 
 version := "1.0.0"
+
+enablePlugins(SbtOsgi)
 
 libraryDependencies += "org.osgi" % "org.osgi.core" % "4.3.0" % "provided"
 

@@ -53,8 +53,7 @@ class OsgiSpec extends Specification {
         None,
         Seq("privatePackage"),
         Nil,
-        "requireCapability"
-      )
+        "requireCapability")
       val properties = headersToProperties(headers, Map.empty)
       properties.asScala must havePairs(
         BUNDLE_ACTIVATOR -> "bundleActivator",
@@ -70,8 +69,7 @@ class OsgiSpec extends Specification {
         EXPORT_PACKAGE -> "exportPackage1,exportPackage2,exportPackage3",
         IMPORT_PACKAGE -> "importPackage",
         PRIVATE_PACKAGE -> "privatePackage",
-        REQUIRE_CAPABILITY → "requireCapability"
-      )
+        REQUIRE_CAPABILITY → "requireCapability")
       properties.asScala must not(haveKey(FRAGMENT_HOST))
       properties.asScala must not(haveKey(REQUIRE_BUNDLE))
     }

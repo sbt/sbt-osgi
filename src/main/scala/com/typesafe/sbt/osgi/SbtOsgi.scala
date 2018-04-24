@@ -34,9 +34,8 @@ object SbtOsgi extends AutoPlugin {
     val OsgiKeys = com.typesafe.sbt.osgi.OsgiKeys
 
     def osgiSettings: Seq[Setting[_]] = Seq(
-      packagedArtifact in (Compile, packageBin) <<= (artifact in (Compile, packageBin), OsgiKeys.bundle).identityMap,
-      artifact in (Compile, packageBin) ~= (_.copy(`type` = "bundle"))
-    )
+      packagedArtifact in (Compile, packageBin) := Scoped.mkTuple2((artifact in (Compile, packageBin)).value, OsgiKeys.bundle.value),
+      SbtCompat.packageBinBundle)
   }
 
   def defaultOsgiSettings: Seq[Setting[_]] = {
@@ -46,12 +45,13 @@ object SbtOsgi extends AutoPlugin {
         manifestHeaders.value,
         additionalHeaders.value,
         (fullClasspath in Compile).value,
-        (artifactPath in(Compile, packageBin)).value,
+        (artifactPath in (Compile, packageBin)).value,
         (resourceDirectories in Compile).value,
         embeddedJars.value,
         explodedJars.value,
         failOnUndecidedPackage.value,
         (sourceDirectories in Compile).value,
+        (packageOptions in (Compile, packageBin)).value,
         streams.value),
       manifestHeaders := OsgiManifestHeaders(
         bundleActivator.value,
@@ -69,25 +69,21 @@ object SbtOsgi extends AutoPlugin {
         fragmentHost.value,
         privatePackage.value,
         requireBundle.value,
-        requireCapability.value
-      ),
+        requireCapability.value),
       bundleActivator := None,
-      bundleSymbolicName <<= (organization, normalizedName)(Osgi.defaultBundleSymbolicName),
-      bundleVersion <<= version,
+      bundleSymbolicName := Osgi.defaultBundleSymbolicName(organization.value, normalizedName.value),
+      bundleVersion := version.value,
       bundleRequiredExecutionEnvironment := Nil,
       dynamicImportPackage := Nil,
       exportPackage := Nil,
       importPackage := List("*"),
       fragmentHost := None,
-      privatePackage <<= bundleSymbolicName(name => List(name + ".*")),
+      privatePackage := bundleSymbolicName(name => List(name + ".*")).value,
       requireBundle := Nil,
       failOnUndecidedPackage := false,
-      requireCapability := Osgi.requireCapabilityTask(
-        (compileInputs in (Compile, compile)).value.compilers.javac,
-        streams.value.log),
+      requireCapability := Osgi.requireCapabilityTask(),
       additionalHeaders := Map.empty,
       embeddedJars := Nil,
-      explodedJars := Nil
-    )
+      explodedJars := Nil)
   }
 }

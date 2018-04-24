@@ -21,12 +21,12 @@ import java.nio.file.{ FileVisitOption, Files, Path }
 import aQute.bnd.osgi.Builder
 import aQute.bnd.osgi.Constants._
 import java.util.Properties
-import java.util.function.{ Function, Predicate }
+import java.util.function.Predicate
 import java.util.stream.Collectors
 
 import sbt._
-import compiler.JavaTool
 import sbt.Keys._
+import sbt.Package.ManifestAttributes
 
 import scala.collection.JavaConversions._
 import scala.language.implicitConversions
@@ -43,6 +43,7 @@ private object Osgi {
     explodedJars: Seq[File],
     failOnUndecidedPackage: Boolean,
     sourceDirectories: Seq[File],
+    packageOptions: scala.Seq[sbt.PackageOption],
     streams: TaskStreams): File = {
     val builder = new Builder
 
@@ -54,13 +55,15 @@ private object Osgi {
     }
 
     builder.setClasspath(fullClasspath map (_.data) toArray)
-    builder.setProperties(headersToProperties(headers, additionalHeaders))
+
+    val props = headersToProperties(headers, additionalHeaders)
+    addPackageOptions(props, packageOptions)
+    builder.setProperties(props)
+
     includeResourceProperty(resourceDirectories.filter(_.exists), embeddedJars, explodedJars) foreach (dirs =>
-      builder.setProperty(INCLUDERESOURCE, dirs)
-    )
+      builder.setProperty(INCLUDERESOURCE, dirs))
     bundleClasspathProperty(embeddedJars) foreach (jars =>
-      builder.setProperty(BUNDLE_CLASSPATH, jars)
-    )
+      builder.setProperty(BUNDLE_CLASSPATH, jars))
     // Write to a temporary file to prevent trying to simultaneously read from and write to the
     // same jar file in exportJars mode (which causes a NullPointerException).
     val tmpArtifactPath = file(artifactPath.absolutePath + ".tmp")
@@ -75,6 +78,14 @@ private object Osgi {
     jar.write(tmpArtifactPath)
     IO.move(tmpArtifactPath, artifactPath)
     artifactPath
+  }
+
+  private def addPackageOptions(props: Properties, packageOptions: Seq[PackageOption]) = {
+    packageOptions
+      .collect({ case attr: ManifestAttributes ⇒ attr.attributes })
+      .flatten
+      .foreach { case (name, value) ⇒ props.put(name.toString, value) }
+    props
   }
 
   def validateAllPackagesDecidedAbout(internal: Seq[String], exported: Seq[String], sourceDirectories: Seq[File]): Unit = {
@@ -121,20 +132,11 @@ private object Osgi {
     validateAllPackagesDecidedAbout(i, e, allPackages.toList)
   }
 
-  def requireCapabilityTask(compiler: JavaTool, logger: Logger): String = {
-    def version: String = {
-      var v = ""
-      compiler(Nil, Nil, file("."), Seq("-version"))(new Logger {
-        override def log(level: Level.Value, message: ⇒ String): Unit =
-          if (level == Level.Warn && message.startsWith("javac "))
-            v = message.substring(6, message.indexOf('.', message.indexOf('.') + 1))
-          else logger.log(level, message)
-        override def success(message: ⇒ String): Unit = logger.success(message)
-        override def trace(t: ⇒ Throwable): Unit = logger.trace(t)
-      })
-      v
-    }
-    "osgi.ee;filter:=\"(&(osgi.ee=JavaSE)(version=%s))\"".format(version)
+  def requireCapabilityTask(): String = {
+    Option(System.getProperty("java.version"))
+      .map(v => v.split("[.]", 3).take(2).mkString("."))
+      .map(version => "osgi.ee;filter:=\"(&(osgi.ee=JavaSE)(version=%s))\"".format(version))
+      .getOrElse("")
   }
 
   def headersToProperties(headers: OsgiManifestHeaders, additionalHeaders: Map[String, String]): Properties = {

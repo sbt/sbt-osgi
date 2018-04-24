@@ -1,8 +1,6 @@
 
-scriptedSettings
-
 scriptedLaunchOpts += "-Xmx1024m"
 
-scriptedLaunchOpts <+= version apply { v => "-Dproject.version="+v }
+scriptedLaunchOpts += s"-Dproject.version=${version.value}"
 
 // scriptedBufferLog := false

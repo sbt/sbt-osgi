@@ -1,8 +1,3 @@
-import bintray.Keys._
+bintrayRepository := "sbt-plugins"
 
-bintraySettings
-
-repository in bintray := "sbt-plugins"
-
-bintrayOrganization in bintray := None
-
+bintrayOrganization := None
