@@ -3,3 +3,4 @@ sudo: false
 script: sbt '; test; scripted' 
 jdk:
   - oraclejdk8
+  - oraclejdk10
