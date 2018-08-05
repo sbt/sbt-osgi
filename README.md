@@ -8,7 +8,7 @@ Plugin for [sbt](http://www.scala-sbt.org) to to create [OSGi](http://www.osgi.o
 Installing sbt-osgi
 -------------------
 
-sbt-osgi is a plugin for sbt. In order to install sbt, please refer to the sbt documentation([0.13](https://www.scala-sbt.org/0.13/docs/Setup.html),[1.x](https://www.scala-sbt.org/1.x/docs/Setup.html)). Please make sure that you are using a suitable version of sbt:
+sbt-osgi is a plugin for sbt. In order to install sbt, please refer to the sbt documentation([0.13](https://www.scala-sbt.org/0.13/docs/Setup.html), [1.x](https://www.scala-sbt.org/1.x/docs/Setup.html)). Please make sure that you are using a suitable version of sbt:
 
 - sbt-osgi 0.5 → sbt 0.12
 - sbt-osgi 0.7 → sbt 0.13
