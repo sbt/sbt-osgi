@@ -44,7 +44,7 @@ object SbtOsgi extends AutoPlugin {
       bundle := Osgi.bundleTask(
         manifestHeaders.value,
         additionalHeaders.value,
-        (fullClasspath in Compile).value,
+        (dependencyClasspathAsJars in Compile).value.map(_.data) ++ (products in Compile).value,
         (artifactPath in (Compile, packageBin)).value,
         (resourceDirectories in Compile).value,
         embeddedJars.value,
