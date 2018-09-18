@@ -56,6 +56,7 @@ scalacOptions ++= Seq(
 }
 scriptedLaunchOpts += "-Xmx1024m"
 scriptedLaunchOpts ++= Seq("-Dplugin.version=" + version.value)
+scriptedLaunchOpts += "-debug"
 // scriptedBufferLog := false
 
 ThisBuild / licenses += ("Apache-2.0", url("https://www.apache.org/licenses/LICENSE-2.0.html"))
