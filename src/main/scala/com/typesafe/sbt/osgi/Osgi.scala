@@ -36,7 +36,7 @@ private object Osgi {
   def bundleTask(
     headers: OsgiManifestHeaders,
     additionalHeaders: Map[String, String],
-    fullClasspath: Seq[File],
+    fullClasspath: Seq[Attributed[File]],
     artifactPath: File,
     resourceDirectories: Seq[File],
     embeddedJars: Seq[File],
@@ -54,7 +54,7 @@ private object Osgi {
       validateAllPackagesDecidedAbout(internal, exported, sourceDirectories)
     }
 
-    builder.setClasspath(fullClasspath.toArray)
+    builder.setClasspath(fullClasspath map (_.data) toArray)
 
     val props = headersToProperties(headers, additionalHeaders)
     addPackageOptions(props, packageOptions)
