@@ -8,7 +8,7 @@ licenses += ("Apache-2.0", url("https://www.apache.org/licenses/LICENSE-2.0.html
 
 libraryDependencies ++= Dependencies.sbtOsgi
 
-crossSbtVersions := Seq("0.13.18", "1.2.8")
+crossSbtVersions := Seq("1.2.8")
 
 scalacOptions ++= Seq(
   "-unchecked",
