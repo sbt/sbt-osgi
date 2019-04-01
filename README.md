@@ -12,8 +12,8 @@ sbt-osgi is a plugin for sbt. In order to install sbt, please refer to the sbt d
 
 - sbt-osgi 0.5 → sbt 0.12
 - sbt-osgi 0.7 → sbt 0.13
-- sbt-osgi 0.9 → sbt 0.13 / sbt 1.x
-- sbt-osgi 0.9.5+ → sbt 1.x
+- sbt-osgi 0.9.{0-3} → sbt 0.13 / sbt 1.x
+- sbt-osgi 0.9.{4-5} -> sbt 1.x
 
 As sbt-osgi is a plugin for sbt, it is installed like any other sbt plugin, that is by mere configuration: just add sbt-osgi to your global or local plugin definition. Global plugins are defined in `~/.sbt/<SBT_VERSION>/plugins/plugins.sbt` and local plugins are defined in `project/plugins.sbt` in your project.
 
