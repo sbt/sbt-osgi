@@ -3,8 +3,8 @@ import sbt._
 object Library {
 
   // Versions
-  val bndVersion = "4.2.0"
-  val specs2Version = "3.9.4"
+  val bndVersion = "5.1.2"
+  val specs2Version = "4.10.3"
 
   // Libraries
   val bndLib = "biz.aQute.bnd" % "biz.aQute.bndlib" % bndVersion

@@ -28,7 +28,7 @@ import sbt._
 import sbt.Keys._
 import sbt.Package.ManifestAttributes
 
-import scala.collection.JavaConversions._
+import scala.collection.JavaConverters._
 import scala.language.implicitConversions
 
 private object Osgi {
@@ -73,8 +73,8 @@ private object Osgi {
       builder.build
     }
     val log = streams.log
-    builder.getWarnings.foreach(s => log.warn(s"bnd: $s"))
-    builder.getErrors.foreach(s => log.error(s"bnd: $s"))
+    builder.getWarnings.asScala.foreach(s => log.warn(s"bnd: $s"))
+    builder.getErrors.asScala.foreach(s => log.error(s"bnd: $s"))
     jar.write(tmpArtifactPath)
     IO.move(tmpArtifactPath, artifactPath)
     artifactPath
