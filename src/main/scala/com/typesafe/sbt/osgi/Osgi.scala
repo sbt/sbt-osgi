@@ -77,7 +77,7 @@ private object Osgi {
     builder.getWarnings.foreach(s => log.warn(s"bnd: $s"))
     builder.getErrors.foreach(s => log.error(s"bnd: $s"))
 
-    if(!useJVMJar) jar.write(tmpArtifactPath)
+    if (!useJVMJar) jar.write(tmpArtifactPath)
     else {
       val tmpArtifactDirectoryPath = file(artifactPath.absolutePath + "_tmpdir")
       IO.delete(tmpArtifactDirectoryPath)
