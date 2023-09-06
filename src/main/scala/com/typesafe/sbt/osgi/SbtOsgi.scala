@@ -52,7 +52,8 @@ object SbtOsgi extends AutoPlugin {
         failOnUndecidedPackage.value,
         (sourceDirectories in Compile).value,
         (packageOptions in (Compile, packageBin)).value,
-        streams.value),
+        streams.value,
+        packageWithJVMJar.value),
       manifestHeaders := OsgiManifestHeaders(
         bundleActivator.value,
         description.value,
@@ -84,6 +85,7 @@ object SbtOsgi extends AutoPlugin {
       requireCapability := Osgi.requireCapabilityTask(),
       additionalHeaders := Map.empty,
       embeddedJars := Nil,
-      explodedJars := Nil)
+      explodedJars := Nil,
+      packageWithJVMJar := false)
   }
 }
