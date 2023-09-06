@@ -77,7 +77,7 @@ private object Osgi {
     builder.getWarnings.asScala.foreach(s => log.warn(s"bnd: $s"))
     builder.getErrors.asScala.foreach(s => log.error(s"bnd: $s"))
 
-    if(!useJVMJar) jar.write(tmpArtifactPath)
+    if (!useJVMJar) jar.write(tmpArtifactPath)
     else {
       val tmpArtifactDirectoryPath = file(artifactPath.absolutePath + "_tmpdir")
       IO.delete(tmpArtifactDirectoryPath)
@@ -92,7 +92,7 @@ private object Osgi {
       IO.jar(content, tmpArtifactPath, manifest)
       IO.delete(tmpArtifactDirectoryPath)
     }
-    
+
     IO.move(tmpArtifactPath, artifactPath)
     artifactPath
   }
