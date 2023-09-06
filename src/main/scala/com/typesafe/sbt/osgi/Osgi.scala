@@ -44,7 +44,8 @@ private object Osgi {
     failOnUndecidedPackage: Boolean,
     sourceDirectories: Seq[File],
     packageOptions: scala.Seq[sbt.PackageOption],
-    streams: TaskStreams): File = {
+    streams: TaskStreams,
+    useJVMJar: Boolean): File = {
     val builder = new Builder
 
     if (failOnUndecidedPackage) {
@@ -75,7 +76,23 @@ private object Osgi {
     val log = streams.log
     builder.getWarnings.asScala.foreach(s => log.warn(s"bnd: $s"))
     builder.getErrors.asScala.foreach(s => log.error(s"bnd: $s"))
-    jar.write(tmpArtifactPath)
+
+    if(!useJVMJar) jar.write(tmpArtifactPath)
+    else {
+      val tmpArtifactDirectoryPath = file(artifactPath.absolutePath + "_tmpdir")
+      IO.delete(tmpArtifactDirectoryPath)
+      tmpArtifactDirectoryPath.mkdirs()
+
+      val manifest = jar.getManifest
+      jar.writeFolder(tmpArtifactDirectoryPath)
+
+      def content =
+        sbt.Path.contentOf(tmpArtifactDirectoryPath).filterNot { case (_, p) => p == "META-INF/MANIFEST.MF" }
+
+      IO.jar(content, tmpArtifactPath, manifest)
+      IO.delete(tmpArtifactDirectoryPath)
+    }
+    
     IO.move(tmpArtifactPath, artifactPath)
     artifactPath
   }
