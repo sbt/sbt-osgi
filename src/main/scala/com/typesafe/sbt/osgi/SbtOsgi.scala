@@ -45,7 +45,7 @@ object SbtOsgi extends AutoPlugin {
         manifestHeaders.value,
         additionalHeaders.value,
         (dependencyClasspathAsJars in Compile).value.map(_.data) ++ (products in Compile).value,
-        (artifactPath in (Compile, packageBin)).value,
+        (Compile / sbt.Keys.`package`).value,
         (resourceDirectories in Compile).value,
         embeddedJars.value,
         explodedJars.value,
