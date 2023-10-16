@@ -103,6 +103,10 @@ object OsgiKeys {
     SettingKey[Boolean](prefix("FailOnUndecidedPackage"), "Fail the build if a package is neither exported or private." +
       "Without this setting such classes might be just transparently removed from the resulting artifact!")
 
+  val packageWithJVMJar: SettingKey[Boolean] =
+    SettingKey[Boolean](prefix("PackageWithJVMJar"), "Use the JVM jar tools to craft the bundle instead of the one from BND." +
+      "Without this setting the produced bundle are detected as corrupted by recent JVMs")
+
   private def prefix(key: String) = "osgi" + key
 
 }
