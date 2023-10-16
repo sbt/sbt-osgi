@@ -70,9 +70,27 @@ ThisBuild / scmInfo := Some(
 ThisBuild / description := "sbt plugin for creating OSGi bundles"
 ThisBuild / developers := List(
   Developer(
+    id = "eed3si9n",
+    name = "Eugene Yokota",
+    email = "eed3si9n@gmail.com",
+    url = url("https://github.com/eed3si9n")
+  ),
+  Developer(
     id = "hseeberger",
     name = "Heiko Seeberger",
     email = "@hseeberger",
     url = url("https://github.com/hseeberger")
   ),
+  Developer(
+    id = "mdedetrich",
+    name = "Matthew de Detrich",
+    email = "mdedetrich@gmail.com",
+    url = url("https://github.com/mdedetrich/incubator-pekko")
+  ),
+  Developer(
+    id = "romainreuillon",
+    name = "Romain Reuillon",
+    email = "romain.reuillon@iscpif.fr",
+    url = url("https://github.com/romainreuillon")
+  )
 )
