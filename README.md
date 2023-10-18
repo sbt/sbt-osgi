@@ -1,7 +1,7 @@
 sbt-osgi
 ========
 
-[![Build Status](https://travis-ci.org/sbt/sbt-osgi.svg?branch=master)](https://travis-ci.org/sbt/sbt-osgi)
+[![Build Status](https://github.com/sbt/sbt-osgi/actions/workflows/ci.yml/badge.svg)](https://github.com/sbt/sbt-osgi/actions/workflows/ci.yml)
 
 Plugin for [sbt](http://www.scala-sbt.org) to to create [OSGi](http://www.osgi.org/) bundles.
 
