@@ -85,7 +85,7 @@ ThisBuild / developers := List(
     id = "mdedetrich",
     name = "Matthew de Detrich",
     email = "mdedetrich@gmail.com",
-    url = url("https://github.com/mdedetrich/incubator-pekko")
+    url = url("https://github.com/mdedetrich")
   ),
   Developer(
     id = "romainreuillon",
