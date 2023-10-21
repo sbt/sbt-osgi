@@ -3,7 +3,7 @@ import sbt._
 object Library {
 
   // Versions
-  val bndVersion = "5.1.2"
+  val bndVersion = "6.4.0"
   val specs2Version = "4.10.3"
 
   // Libraries
@@ -17,5 +17,5 @@ object Dependencies {
 
   val sbtOsgi = List(
     bndLib,
-    specs2 % "test")
+    specs2 % Test)
 }
