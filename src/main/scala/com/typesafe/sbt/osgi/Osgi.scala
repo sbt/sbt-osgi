@@ -90,7 +90,7 @@ private object Osgi {
         import _root_.java.nio.file.*
         import _root_.scala.collection.JavaConverters.*
         val path = tmpArtifactDirectoryPath.toPath
-        Files.walk(path).iterator.asScala.map(f => f.toFile -> path.relativize(f).toString).toTraversable
+        Files.walk(path).iterator.asScala.map(f => f.toFile -> path.relativize(f).toString).filterNot { case (_, p) => p == "META-INF/MANIFEST.MF" }.toTraversable
       }
 
       IO.jar(content, tmpArtifactPath, manifest)
