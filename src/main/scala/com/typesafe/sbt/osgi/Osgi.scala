@@ -86,8 +86,12 @@ private object Osgi {
       val manifest = jar.getManifest
       jar.writeFolder(tmpArtifactDirectoryPath)
 
-      def content =
-        sbt.Path.contentOf(tmpArtifactDirectoryPath).filterNot { case (_, p) => p == "META-INF/MANIFEST.MF" }
+      def content = {
+        import _root_.java.nio.file._
+        import _root_.scala.collection.JavaConverters._
+        val path = tmpArtifactDirectoryPath.toPath
+        Files.walk(path).iterator.asScala.map(f => f.toFile -> path.relativize(f).toString).filterNot { case (_, p) => p == "META-INF/MANIFEST.MF" }.toTraversable
+      }
 
       IO.jar(content, tmpArtifactPath, manifest)
       IO.delete(tmpArtifactDirectoryPath)
