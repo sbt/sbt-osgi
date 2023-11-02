@@ -40,6 +40,14 @@ ThisBuild / githubWorkflowPublish := Seq(
   )
 )
 
+ThisBuild / githubWorkflowOSes := Seq("ubuntu-latest", "macos-latest", "windows-latest")
+
+ThisBuild / githubWorkflowJavaVersions := Seq(
+  JavaSpec.temurin("8"),
+  JavaSpec.temurin("11"),
+  JavaSpec.temurin("17")
+)
+
 name := "sbt-osgi"
 enablePlugins(SbtPlugin)
 libraryDependencies ++= Dependencies.sbtOsgi
@@ -49,11 +57,6 @@ scalacOptions ++= Seq(
   "-Xlint",
   "-encoding", "UTF-8"
 )
-(pluginCrossBuild / sbtVersion) := {
-  scalaBinaryVersion.value match {
-    case "2.12" => "1.2.8"
-  }
-}
 scriptedLaunchOpts += "-Xmx1024m"
 scriptedLaunchOpts ++= Seq("-Dplugin.version=" + version.value)
 scriptedLaunchOpts += "-debug"
