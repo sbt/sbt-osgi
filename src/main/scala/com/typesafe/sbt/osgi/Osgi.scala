@@ -47,23 +47,26 @@ private object Osgi {
     useJVMJar: Boolean,
     cacheBundle: Boolean): Option[File] = {
 
-    def footprint = {
-      val serialised =
-        s"""${headers}
-          |${additionalHeaders}
-          |${fullClasspath.map(f => FileInfo.lastModified(f).lastModified)}
-          |${artifactPath}
-          |${resourceDirectories.map(f => FileInfo.lastModified(f).lastModified)}
-          |${embeddedJars.map(f => FileInfo.lastModified(f).lastModified)}
-          |${explodedJars.map(f => FileInfo.lastModified(f).lastModified)}
-          |$failOnUndecidedPackage
-          |${sourceDirectories.map(f => FileInfo.lastModified(f).lastModified)}
-          |${packageOptions}
-          |$useJVMJar
-          |""".stripMargin
+    def fileFootprint(file: File) =
+      if(!file.exists()) Seq()
+      else if(file.isDirectory) Files.walk(file.toPath).iterator().asScala.map(f => f.toAbsolutePath.toString -> FileInfo.hash(f.toFile).hash.mkString(" ")).toSeq
+      else Seq(file.absolutePath -> FileInfo.hash(file).hash.mkString(" "))
 
-      Hash.apply(serialised).mkString("")
-    }
+    def serialized =
+      s"""${headers}
+         |${additionalHeaders}
+         |${fullClasspath.flatMap(fileFootprint)}
+         |${artifactPath}
+         |${resourceDirectories.flatMap(fileFootprint)}
+         |${embeddedJars.flatMap(fileFootprint)}
+         |${explodedJars.flatMap(fileFootprint)}
+         |$failOnUndecidedPackage
+         |${sourceDirectories.flatMap(fileFootprint)}
+         |${packageOptions}
+         |$useJVMJar
+         |""".stripMargin
+
+    def footprint = Hash.apply(serialized).mkString("")
 
     if (!cacheBundle) None
     else {
