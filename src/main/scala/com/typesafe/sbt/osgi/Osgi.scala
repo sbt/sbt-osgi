@@ -48,9 +48,9 @@ private object Osgi {
     cacheBundle: Boolean): Option[File] = {
 
     def fileFootprint(file: File) =
-      if(!file.exists()) Seq()
-      else if(file.isDirectory) Files.walk(file.toPath).iterator().asScala.map(f => f.toAbsolutePath.toString -> FileInfo.hash(f.toFile).hash.mkString(" ")).toSeq
-      else Seq(file.absolutePath -> FileInfo.hash(file).hash.mkString(" "))
+      if (!file.exists()) Seq()
+      else if (file.isDirectory) Files.walk(file.toPath).iterator().asScala.map(f => f.toAbsolutePath.toString -> Hash.toHex(FileInfo.hash(f.toFile).hash.toArray)).toSeq
+      else Seq(file.absolutePath -> Hash.toHex(FileInfo.hash(file).hash.toArray))
 
     def serialized =
       s"""${headers}
@@ -73,13 +73,12 @@ private object Osgi {
       val footprintValue = footprint
       val bundleCacheFootprint = file(artifactPath.absolutePath + "_footprint")
 
-      if(!bundleCacheFootprint.exists() || IO.read(bundleCacheFootprint) != footprintValue) {
+      if (!bundleCacheFootprint.exists() || IO.read(bundleCacheFootprint) != footprintValue) {
         IO.write(bundleCacheFootprint, footprintValue)
         None
-      } else if(artifactPath.exists()) Some(artifactPath) else None
+      } else if (artifactPath.exists()) Some(artifactPath) else None
     }
   }
-
   def withCache(
     headers: OsgiManifestHeaders,
     additionalHeaders: Map[String, String],
