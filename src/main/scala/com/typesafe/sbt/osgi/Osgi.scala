@@ -16,19 +16,19 @@
 
 package com.typesafe.sbt.osgi
 
-import java.nio.file.{ FileVisitOption, Files, Path }
-
+import java.nio.file.{FileVisitOption, Files, Path}
 import aQute.bnd.osgi.Builder
-import aQute.bnd.osgi.Constants._
+import aQute.bnd.osgi.Constants.*
+import com.typesafe.sbt.osgi.OsgiKeys.CacheStrategy
+
 import java.util.Properties
 import java.util.function.Predicate
 import java.util.stream.Collectors
-
-import sbt._
-import sbt.Keys._
+import sbt.*
+import sbt.Keys.*
 import sbt.Package.ManifestAttributes
 
-import scala.collection.JavaConverters._
+import scala.collection.JavaConverters.*
 import scala.language.implicitConversions
 
 private object Osgi {
@@ -45,12 +45,19 @@ private object Osgi {
     sourceDirectories: Seq[File],
     packageOptions: scala.Seq[sbt.PackageOption],
     useJVMJar: Boolean,
-    cacheBundle: Boolean): Option[File] = {
+    cacheStrategy: Option[CacheStrategy]): Option[File] = cacheStrategy.flatMap { strategy =>
 
-    def fileFootprint(file: File) =
+    def fileFootprint(file: File) = {
+      def footprint(f: File) =
+        strategy match {
+          case CacheStrategy.LastModified => FileInfo.lastModified(f).lastModified.toString
+          case CacheStrategy.Hash => Hash.toHex(FileInfo.hash(f).hash.toArray)
+        }
+
       if (!file.exists()) Seq()
-      else if (file.isDirectory) Files.walk(file.toPath).iterator().asScala.map(f => f.toAbsolutePath.toString -> Hash.toHex(FileInfo.hash(f.toFile).hash.toArray)).toSeq
-      else Seq(file.absolutePath -> Hash.toHex(FileInfo.hash(file).hash.toArray))
+      else if (file.isDirectory) Files.walk(file.toPath).iterator().asScala.map(f => f.toAbsolutePath.toString -> footprint(f.toFile).toSeq)
+      else Seq(file.absolutePath -> footprint(file))
+    }
 
     def serialized =
       s"""${headers}
@@ -68,16 +75,13 @@ private object Osgi {
 
     def footprint = Hash.apply(serialized).mkString("")
 
-    if (!cacheBundle) None
-    else {
-      val footprintValue = footprint
-      val bundleCacheFootprint = file(artifactPath.absolutePath + "_footprint")
+    val footprintValue = footprint
+    val bundleCacheFootprint = file(artifactPath.absolutePath + "_footprint")
 
-      if (!bundleCacheFootprint.exists() || IO.read(bundleCacheFootprint) != footprintValue) {
-        IO.write(bundleCacheFootprint, footprintValue)
-        None
-      } else if (artifactPath.exists()) Some(artifactPath) else None
-    }
+    if (!bundleCacheFootprint.exists() || IO.read(bundleCacheFootprint) != footprintValue) {
+      IO.write(bundleCacheFootprint, footprintValue)
+      None
+    } else if (artifactPath.exists()) Some(artifactPath) else None
   }
   def withCache(
     headers: OsgiManifestHeaders,
@@ -91,7 +95,7 @@ private object Osgi {
     sourceDirectories: Seq[File],
     packageOptions: scala.Seq[sbt.PackageOption],
     useJVMJar: Boolean,
-    cacheBundle: Boolean)(produce: => File): File =
+    cacheStrategy: Option[CacheStrategy])(produce: => File): File =
     cachedBundle(
       headers,
       additionalHeaders,
@@ -104,7 +108,7 @@ private object Osgi {
       sourceDirectories,
       packageOptions,
       useJVMJar,
-      cacheBundle
+      cacheStrategy
     ).getOrElse(produce)
 
   def bundleTask(
@@ -119,7 +123,7 @@ private object Osgi {
     sourceDirectories: Seq[File],
     packageOptions: scala.Seq[sbt.PackageOption],
     useJVMJar: Boolean,
-    cacheBundle: Boolean,
+    cacheStrategy: Option[CacheStrategy],
     streams: TaskStreams): File =
     withCache(headers,
       additionalHeaders,
@@ -132,7 +136,7 @@ private object Osgi {
       sourceDirectories,
       packageOptions,
       useJVMJar,
-      cacheBundle) {
+      cacheStrategy) {
         val builder = new Builder
 
         if (failOnUndecidedPackage) {

@@ -53,7 +53,7 @@ object SbtOsgi extends AutoPlugin {
         (sourceDirectories in Compile).value,
         (packageOptions in (Compile, packageBin)).value,
         packageWithJVMJar.value,
-        cacheBundle.value,
+        cacheStrategy.value,
         streams.value),
       Compile / sbt.Keys.packageBin := bundle.value,
       manifestHeaders := OsgiManifestHeaders(
@@ -89,6 +89,6 @@ object SbtOsgi extends AutoPlugin {
       embeddedJars := Nil,
       explodedJars := Nil,
       packageWithJVMJar := false,
-      cacheBundle := false)
+      cacheStrategy := None)
   }
 }
