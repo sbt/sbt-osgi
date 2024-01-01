@@ -16,22 +16,100 @@
 
 package com.typesafe.sbt.osgi
 
-import java.nio.file.{ FileVisitOption, Files, Path }
-
+import java.nio.file.{FileVisitOption, Files, Path}
 import aQute.bnd.osgi.Builder
-import aQute.bnd.osgi.Constants._
+import aQute.bnd.osgi.Constants.*
+import com.typesafe.sbt.osgi.OsgiKeys.CacheStrategy
+
 import java.util.Properties
 import java.util.function.Predicate
 import java.util.stream.Collectors
-
-import sbt._
-import sbt.Keys._
+import sbt.*
+import sbt.Keys.*
 import sbt.Package.ManifestAttributes
 
-import scala.collection.JavaConverters._
+import scala.collection.JavaConverters.*
 import scala.language.implicitConversions
 
 private object Osgi {
+
+  def cachedBundle(
+    headers: OsgiManifestHeaders,
+    additionalHeaders: Map[String, String],
+    fullClasspath: Seq[File],
+    artifactPath: File,
+    resourceDirectories: Seq[File],
+    embeddedJars: Seq[File],
+    explodedJars: Seq[File],
+    failOnUndecidedPackage: Boolean,
+    sourceDirectories: Seq[File],
+    packageOptions: scala.Seq[sbt.PackageOption],
+    useJVMJar: Boolean,
+    cacheStrategy: Option[CacheStrategy]): Option[File] = cacheStrategy.flatMap { strategy =>
+
+    def fileFootprint(file: File) = {
+      def footprint(f: File) =
+        strategy match {
+          case CacheStrategy.LastModified => FileInfo.lastModified(f).lastModified.toString
+          case CacheStrategy.Hash => Hash.toHex(FileInfo.hash(f).hash.toArray)
+        }
+
+      if (!file.exists()) Seq()
+      else if (file.isDirectory) Files.walk(file.toPath).iterator().asScala.map(f => f.toAbsolutePath.toString -> footprint(f.toFile).toSeq)
+      else Seq(file.absolutePath -> footprint(file))
+    }
+
+    def serialized =
+      s"""${headers}
+         |${additionalHeaders}
+         |${fullClasspath.flatMap(fileFootprint)}
+         |${artifactPath}
+         |${resourceDirectories.flatMap(fileFootprint)}
+         |${embeddedJars.flatMap(fileFootprint)}
+         |${explodedJars.flatMap(fileFootprint)}
+         |$failOnUndecidedPackage
+         |${sourceDirectories.flatMap(fileFootprint)}
+         |${packageOptions}
+         |$useJVMJar
+         |""".stripMargin
+
+    def footprint = Hash.apply(serialized).mkString("")
+
+    val footprintValue = footprint
+    val bundleCacheFootprint = file(artifactPath.absolutePath + "_footprint")
+
+    if (!bundleCacheFootprint.exists() || IO.read(bundleCacheFootprint) != footprintValue) {
+      IO.write(bundleCacheFootprint, footprintValue)
+      None
+    } else if (artifactPath.exists()) Some(artifactPath) else None
+  }
+  def withCache(
+    headers: OsgiManifestHeaders,
+    additionalHeaders: Map[String, String],
+    fullClasspath: Seq[File],
+    artifactPath: File,
+    resourceDirectories: Seq[File],
+    embeddedJars: Seq[File],
+    explodedJars: Seq[File],
+    failOnUndecidedPackage: Boolean,
+    sourceDirectories: Seq[File],
+    packageOptions: scala.Seq[sbt.PackageOption],
+    useJVMJar: Boolean,
+    cacheStrategy: Option[CacheStrategy])(produce: => File): File =
+    cachedBundle(
+      headers,
+      additionalHeaders,
+      fullClasspath,
+      artifactPath,
+      resourceDirectories,
+      embeddedJars,
+      explodedJars,
+      failOnUndecidedPackage,
+      sourceDirectories,
+      packageOptions,
+      useJVMJar,
+      cacheStrategy
+    ).getOrElse(produce)
 
   def bundleTask(
     headers: OsgiManifestHeaders,
@@ -44,62 +122,75 @@ private object Osgi {
     failOnUndecidedPackage: Boolean,
     sourceDirectories: Seq[File],
     packageOptions: scala.Seq[sbt.PackageOption],
-    streams: TaskStreams,
-    useJVMJar: Boolean): File = {
-    val builder = new Builder
+    useJVMJar: Boolean,
+    cacheStrategy: Option[CacheStrategy],
+    streams: TaskStreams): File =
+    withCache(headers,
+      additionalHeaders,
+      fullClasspath,
+      artifactPath,
+      resourceDirectories,
+      embeddedJars,
+      explodedJars,
+      failOnUndecidedPackage,
+      sourceDirectories,
+      packageOptions,
+      useJVMJar,
+      cacheStrategy) {
+        val builder = new Builder
 
-    if (failOnUndecidedPackage) {
-      streams.log.info("Validating all packages are set private or exported for OSGi explicitly...")
-      val internal = headers.privatePackage
-      val exported = headers.exportPackage
-      validateAllPackagesDecidedAbout(internal, exported, sourceDirectories)
+        if (failOnUndecidedPackage) {
+          streams.log.info("Validating all packages are set private or exported for OSGi explicitly...")
+          val internal = headers.privatePackage
+          val exported = headers.exportPackage
+          validateAllPackagesDecidedAbout(internal, exported, sourceDirectories)
+        }
+
+        builder.setClasspath(fullClasspath.toArray)
+
+        val props = headersToProperties(headers, additionalHeaders)
+        addPackageOptions(props, packageOptions)
+        builder.setProperties(props)
+
+        includeResourceProperty(resourceDirectories.filter(_.exists), embeddedJars, explodedJars) foreach (dirs =>
+          builder.setProperty(INCLUDERESOURCE, dirs))
+        bundleClasspathProperty(embeddedJars) foreach (jars =>
+          builder.setProperty(BUNDLE_CLASSPATH, jars))
+        // Write to a temporary file to prevent trying to simultaneously read from and write to the
+        // same jar file in exportJars mode (which causes a NullPointerException).
+        val tmpArtifactPath = file(artifactPath.absolutePath + ".tmp")
+        // builder.build is not thread-safe because it uses a static SimpleDateFormat.  This ensures
+        // that all calls to builder.build are serialized.
+        val jar = synchronized {
+          builder.build
+        }
+        val log = streams.log
+        builder.getWarnings.asScala.foreach(s => log.warn(s"bnd: $s"))
+        builder.getErrors.asScala.foreach(s => log.error(s"bnd: $s"))
+
+        if (!useJVMJar) jar.write(tmpArtifactPath)
+        else {
+          val tmpArtifactDirectoryPath = file(artifactPath.absolutePath + "_tmpdir")
+          IO.delete(tmpArtifactDirectoryPath)
+          tmpArtifactDirectoryPath.mkdirs()
+
+          val manifest = jar.getManifest
+          jar.writeFolder(tmpArtifactDirectoryPath)
+
+          def content = {
+            import _root_.java.nio.file._
+            import _root_.scala.collection.JavaConverters._
+            val path = tmpArtifactDirectoryPath.toPath
+            Files.walk(path).iterator.asScala.map(f => f.toFile -> path.relativize(f).toString).filterNot { case (_, p) => p == "META-INF/MANIFEST.MF" }.toTraversable
+          }
+
+          IO.jar(content, tmpArtifactPath, manifest)
+          IO.delete(tmpArtifactDirectoryPath)
+        }
+
+        IO.move(tmpArtifactPath, artifactPath)
+        artifactPath
     }
-
-    builder.setClasspath(fullClasspath.toArray)
-
-    val props = headersToProperties(headers, additionalHeaders)
-    addPackageOptions(props, packageOptions)
-    builder.setProperties(props)
-
-    includeResourceProperty(resourceDirectories.filter(_.exists), embeddedJars, explodedJars) foreach (dirs =>
-      builder.setProperty(INCLUDERESOURCE, dirs))
-    bundleClasspathProperty(embeddedJars) foreach (jars =>
-      builder.setProperty(BUNDLE_CLASSPATH, jars))
-    // Write to a temporary file to prevent trying to simultaneously read from and write to the
-    // same jar file in exportJars mode (which causes a NullPointerException).
-    val tmpArtifactPath = file(artifactPath.absolutePath + ".tmp")
-    // builder.build is not thread-safe because it uses a static SimpleDateFormat.  This ensures
-    // that all calls to builder.build are serialized.
-    val jar = synchronized {
-      builder.build
-    }
-    val log = streams.log
-    builder.getWarnings.asScala.foreach(s => log.warn(s"bnd: $s"))
-    builder.getErrors.asScala.foreach(s => log.error(s"bnd: $s"))
-
-    if (!useJVMJar) jar.write(tmpArtifactPath)
-    else {
-      val tmpArtifactDirectoryPath = file(artifactPath.absolutePath + "_tmpdir")
-      IO.delete(tmpArtifactDirectoryPath)
-      tmpArtifactDirectoryPath.mkdirs()
-
-      val manifest = jar.getManifest
-      jar.writeFolder(tmpArtifactDirectoryPath)
-
-      def content = {
-        import _root_.java.nio.file._
-        import _root_.scala.collection.JavaConverters._
-        val path = tmpArtifactDirectoryPath.toPath
-        Files.walk(path).iterator.asScala.map(f => f.toFile -> path.relativize(f).toString).filterNot { case (_, p) => p == "META-INF/MANIFEST.MF" }.toTraversable
-      }
-
-      IO.jar(content, tmpArtifactPath, manifest)
-      IO.delete(tmpArtifactDirectoryPath)
-    }
-
-    IO.move(tmpArtifactPath, artifactPath)
-    artifactPath
-  }
 
   private def addPackageOptions(props: Properties, packageOptions: Seq[PackageOption]) = {
     packageOptions

@@ -107,6 +107,17 @@ object OsgiKeys {
     SettingKey[Boolean](prefix("PackageWithJVMJar"), "Use the JVM jar tools to craft the bundle instead of the one from BND." +
       "Without this setting the produced bundle are detected as corrupted by recent JVMs")
 
+  val cacheStrategy: SettingKey[Option[CacheStrategy]] =
+    SettingKey[Option[CacheStrategy]](prefix("CacheBundle"), "Do not build a new bundle if a bundle already exists and has been crafted from identical inputs")
+
+
   private def prefix(key: String) = "osgi" + key
 
+
+  sealed trait CacheStrategy
+
+  object CacheStrategy {
+    object Hash extends CacheStrategy
+    object LastModified extends CacheStrategy
+  }
 }
