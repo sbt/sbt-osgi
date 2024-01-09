@@ -41,21 +41,25 @@ object SbtOsgi extends AutoPlugin {
   def defaultOsgiSettings: Seq[Setting[_]] = {
     import OsgiKeys._
     Seq(
-      bundle := Osgi.bundleTask(
-        manifestHeaders.value,
-        additionalHeaders.value,
-        (dependencyClasspathAsJars in Compile).value.map(_.data) ++ (products in Compile).value,
-        (artifactPath in (Compile, packageBin)).value,
-        (resourceDirectories in Compile).value,
-        embeddedJars.value,
-        explodedJars.value,
-        failOnUndecidedPackage.value,
-        (sourceDirectories in Compile).value,
-        (packageOptions in (Compile, packageBin)).value,
-        packageWithJVMJar.value,
-        cacheStrategy.value,
-        streams.value),
-      Compile / sbt.Keys.packageBin := bundle.value,
+      bundle := {
+        // This is here to forcefully evaluate `Compile / packageBin` before doing any
+        // Osgi bundling to deal with any asynchronicity/ordering issues.
+        (Compile / sbt.Keys.packageBin).value
+        Osgi.bundleTask(
+          manifestHeaders.value,
+          additionalHeaders.value,
+          (dependencyClasspathAsJars in Compile).value.map(_.data) ++ (products in Compile).value,
+          (artifactPath in (Compile, packageBin)).value,
+          (resourceDirectories in Compile).value,
+          embeddedJars.value,
+          explodedJars.value,
+          failOnUndecidedPackage.value,
+          (sourceDirectories in Compile).value,
+          (packageOptions in (Compile, packageBin)).value,
+          packageWithJVMJar.value,
+          cacheStrategy.value,
+          streams.value)
+      },
       manifestHeaders := OsgiManifestHeaders(
         bundleActivator.value,
         description.value,
