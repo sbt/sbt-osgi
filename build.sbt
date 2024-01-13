@@ -1,4 +1,4 @@
-lazy val scala212 = "2.12.18"
+lazy val scala212 = "2.13.12"
 ThisBuild / crossScalaVersions := Seq(scala212)
 ThisBuild / scalaVersion := scala212
 ThisBuild / dynverSonatypeSnapshots := true
