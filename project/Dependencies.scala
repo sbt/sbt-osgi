@@ -4,7 +4,7 @@ object Library {
 
   // Versions
   val bndVersion = "6.4.0"
-  val specs2Version = "4.10.3"
+  val specs2Version = "4.10.6"
 
   // Libraries
   val bndLib = "biz.aQute.bnd" % "biz.aQute.bndlib" % bndVersion
