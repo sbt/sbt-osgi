@@ -38,13 +38,27 @@ object SbtOsgi extends AutoPlugin {
       SbtCompat.packageBinBundle)
   }
 
+  private def calculateClassPath(dependencyClasspathAsJarsInCompile: Seq[File],
+                                 productsInCompile: Seq[File],
+                                 fullClassPathInCompile: Seq[File]): Seq[File] = {
+    val initialClassPath = dependencyClasspathAsJarsInCompile ++ productsInCompile
+    val initialClassPathFileNames = initialClassPath.map(_.getName)
+
+    fullClassPathInCompile.filterNot(fullFile => initialClassPathFileNames.contains(fullFile.getName)) ++
+      initialClassPath
+  }
+
   def defaultOsgiSettings: Seq[Setting[_]] = {
     import OsgiKeys._
     Seq(
       bundle := Osgi.bundleTask(
         manifestHeaders.value,
         additionalHeaders.value,
-        (dependencyClasspathAsJars in Compile).value.map(_.data) ++ (products in Compile).value,
+        calculateClassPath(
+          (dependencyClasspathAsJars in Compile).value.map(_.data),
+          (products in Compile).value,
+          (fullClasspath in Compile).value.map(_.data)
+        ),
         (artifactPath in (Compile, packageBin)).value,
         (resourceDirectories in Compile).value,
         embeddedJars.value,
