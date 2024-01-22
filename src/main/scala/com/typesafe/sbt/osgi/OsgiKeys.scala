@@ -18,96 +18,96 @@ package com.typesafe.sbt.osgi
 
 import sbt._
 
-object OsgiKeys {
+trait OsgiKeys {
 
-  val bundle: TaskKey[File] =
+  lazy val bundle: TaskKey[File] =
     TaskKey[File](
       prefix("Bundle"),
       "Create an OSGi bundle.")
 
-  val manifestHeaders: TaskKey[OsgiManifestHeaders] =
+  lazy val manifestHeaders: TaskKey[OsgiManifestHeaders] =
     TaskKey[OsgiManifestHeaders](
       prefix("ManifestHeaders"),
       "The aggregated manifest headers.")
 
-  val bundleActivator: SettingKey[Option[String]] =
+  lazy val bundleActivator: SettingKey[Option[String]] =
     SettingKey[Option[String]](
       prefix("BundleActivator"),
       "Optional value for *Bundle-Activator* header.")
 
-  val bundleSymbolicName: SettingKey[String] =
+  lazy val bundleSymbolicName: SettingKey[String] =
     SettingKey[String](
       prefix("BundleSymbolicName"),
       "Value for *Bundle-SymbolicName* header.")
 
-  val bundleVersion: SettingKey[String] =
+  lazy val bundleVersion: SettingKey[String] =
     SettingKey[String](
       prefix("BundleVersion"),
       "Value for *Bundle-Version* header.")
 
-  val bundleRequiredExecutionEnvironment: SettingKey[Seq[String]] =
+  lazy val bundleRequiredExecutionEnvironment: SettingKey[Seq[String]] =
     SettingKey[Seq[String]](
       prefix("BundleRequiredExecutionEnvironment"),
       "Value for *Bundle-RequiredExecutionEnvironment* header.")
 
-  val dynamicImportPackage: SettingKey[Seq[String]] =
+  lazy val dynamicImportPackage: SettingKey[Seq[String]] =
     SettingKey[Seq[String]](
       prefix("DynamicImportPackage"),
       "Values for *Dynamic-ImportPackage* header.")
 
-  val exportPackage: SettingKey[Seq[String]] =
+  lazy val exportPackage: SettingKey[Seq[String]] =
     SettingKey[Seq[String]](
       prefix("ExportPackage"),
       "Values for *Export-Package* header.")
 
-  val importPackage: SettingKey[Seq[String]] =
+  lazy val importPackage: SettingKey[Seq[String]] =
     SettingKey[Seq[String]](
       prefix("import-package"),
       "Values for *Import-Package* header.")
 
-  val fragmentHost: SettingKey[Option[String]] =
+  lazy val fragmentHost: SettingKey[Option[String]] =
     SettingKey[Option[String]](
       prefix("FragmentHost"),
       "Optional value for *Fragment-Host* header.")
 
-  val privatePackage: SettingKey[Seq[String]] =
+  lazy val privatePackage: SettingKey[Seq[String]] =
     SettingKey[Seq[String]](
       prefix("PrivatePackage"),
       "Values for *Private-Package* header.")
 
-  val requireBundle: SettingKey[Seq[String]] =
+  lazy val requireBundle: SettingKey[Seq[String]] =
     SettingKey[Seq[String]](
       prefix("RequireBundle"),
       "Values for *Require-Bundle* header.")
 
-  val additionalHeaders: SettingKey[Map[String, String]] =
+  lazy val additionalHeaders: SettingKey[Map[String, String]] =
     SettingKey[Map[String, String]](
       prefix("AdditionalHeaders"),
       "Additional headers to pass to BND.")
 
-  val embeddedJars: TaskKey[Seq[File]] =
+  lazy val embeddedJars: TaskKey[Seq[File]] =
     TaskKey[Seq[File]](
       prefix("EmbeddedJars"),
       "Jar files to be embedded inside the bundle.")
 
-  val explodedJars: TaskKey[Seq[File]] =
+  lazy val explodedJars: TaskKey[Seq[File]] =
     TaskKey[Seq[File]](
       prefix("ExplodedJars"),
       "Jar files to be exploded into the bundle.")
 
-  val requireCapability: TaskKey[String] =
+  lazy val requireCapability: TaskKey[String] =
     TaskKey[String](prefix("RequireCapability"), "Value for *Require-Capability* header. If not" +
       "specified defaults to 'osgi.ee;filter:=\"(&(osgi.ee=JavaSE)(version=*PROJECT JAVA VERSION*))\"'.")
 
-  val failOnUndecidedPackage: SettingKey[Boolean] =
+  lazy val failOnUndecidedPackage: SettingKey[Boolean] =
     SettingKey[Boolean](prefix("FailOnUndecidedPackage"), "Fail the build if a package is neither exported or private." +
       "Without this setting such classes might be just transparently removed from the resulting artifact!")
 
-  val packageWithJVMJar: SettingKey[Boolean] =
+  lazy val packageWithJVMJar: SettingKey[Boolean] =
     SettingKey[Boolean](prefix("PackageWithJVMJar"), "Use the JVM jar tools to craft the bundle instead of the one from BND." +
       "Without this setting the produced bundle are detected as corrupted by recent JVMs")
 
-  val cacheStrategy: SettingKey[Option[CacheStrategy]] =
+  lazy val cacheStrategy: SettingKey[Option[CacheStrategy]] =
     SettingKey[Option[CacheStrategy]](prefix("CacheBundle"), "Do not build a new bundle if a bundle already exists and has been crafted from identical inputs")
 
 
@@ -121,3 +121,5 @@ object OsgiKeys {
     object LastModified extends CacheStrategy
   }
 }
+
+object OsgiKeys extends OsgiKeys

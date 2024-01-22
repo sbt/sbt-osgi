@@ -22,9 +22,9 @@ import sbt.plugins.JvmPlugin
 
 object SbtOsgi extends AutoPlugin {
 
-  override val trigger: PluginTrigger = noTrigger
+  override lazy val trigger: PluginTrigger = noTrigger
 
-  override val requires: Plugins = JvmPlugin
+  override lazy val requires: Plugins = JvmPlugin
 
   override lazy val projectSettings: Seq[Def.Setting[_]] = defaultOsgiSettings
 
@@ -38,7 +38,7 @@ object SbtOsgi extends AutoPlugin {
       SbtCompat.packageBinBundle)
   }
 
-  def defaultOsgiSettings: Seq[Setting[_]] = {
+  lazy val defaultOsgiSettings: Seq[Setting[_]] = {
     import OsgiKeys._
     Seq(
       bundle := Osgi.bundleTask(
