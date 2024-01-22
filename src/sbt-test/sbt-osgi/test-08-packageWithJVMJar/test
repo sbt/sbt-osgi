@@ -1,0 +1,15 @@
+# Default settings
+> verifyBundleActivator
+> verifyBundleSymbolicName
+> verifyBundleVerion
+> verifyBundleRequiredExecutionEnvironment
+> verifyDynamicImportPackage
+> verifyExportPackage
+> verifyImportPackage
+> verifyFragmentHost
+> verifyPrivatePackage
+> verifyRequireBundle
+
+# Existence of JAR file
+> osgiBundle
+$ exists target/scala-2.12/sbt-osgi-test_2.12-1.2.3.jar
