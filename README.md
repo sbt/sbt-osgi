@@ -22,7 +22,7 @@ In order to add sbt-osgi as a plugin, just add the below setting to the relevant
 ```
 // Other stuff
 
-addSbtPlugin("com.typesafe.sbt" % "sbt-osgi" % "0.9.6")
+addSbtPlugin("com.github.sbt" % "sbt-osgi" % "0.9.11")
 ```
 
 If you want to use the latest and greatest features, you can instead have sbt depend on and locally build the current source snapshot by adding the following to your plugin definition file.
