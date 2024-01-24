@@ -22,9 +22,9 @@ import sbt.plugins.JvmPlugin
 
 object SbtOsgi extends AutoPlugin {
 
-  override val trigger: PluginTrigger = noTrigger
+  override lazy val trigger: PluginTrigger = noTrigger
 
-  override val requires: Plugins = JvmPlugin
+  override lazy val requires: Plugins = JvmPlugin
 
   override lazy val projectSettings: Seq[Def.Setting[_]] = defaultOsgiSettings
 
@@ -33,25 +33,25 @@ object SbtOsgi extends AutoPlugin {
 
     val OsgiKeys = com.typesafe.sbt.osgi.OsgiKeys
 
-    def osgiSettings: Seq[Setting[_]] = Seq(
-      packagedArtifact in (Compile, packageBin) := Scoped.mkTuple2((artifact in (Compile, packageBin)).value, OsgiKeys.bundle.value),
-      SbtCompat.packageBinBundle)
+    lazy val osgiSettings: Seq[Setting[_]] = Seq(
+      Compile / packageBin / packagedArtifact := Scoped.mkTuple2((Compile / packageBin / artifact).value, OsgiKeys.bundle.value),
+      Compile / packageBin / artifact ~= (_.withType("bundle")) )
   }
 
-  def defaultOsgiSettings: Seq[Setting[_]] = {
+  lazy val defaultOsgiSettings: Seq[Setting[_]] = {
     import OsgiKeys._
     Seq(
       bundle := Osgi.bundleTask(
         manifestHeaders.value,
         additionalHeaders.value,
-        (dependencyClasspathAsJars in Compile).value.map(_.data) ++ (products in Compile).value,
-        (artifactPath in (Compile, packageBin)).value,
-        (resourceDirectories in Compile).value,
+        (Compile / dependencyClasspathAsJars).value.map(_.data) ++ (Compile / products).value,
+        (Compile / packageBin / artifactPath).value,
+        (Compile / resourceDirectories).value,
         embeddedJars.value,
         explodedJars.value,
         failOnUndecidedPackage.value,
-        (sourceDirectories in Compile).value,
-        (packageOptions in (Compile, packageBin)).value,
+        (Compile / sourceDirectories).value,
+        (Compile /  packageBin / packageOptions).value,
         packageWithJVMJar.value,
         cacheStrategy.value,
         streams.value),

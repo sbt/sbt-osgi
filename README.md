@@ -8,11 +8,8 @@ Plugin for [sbt](http://www.scala-sbt.org) to to create [OSGi](http://www.osgi.o
 Installing sbt-osgi
 -------------------
 
-sbt-osgi is a plugin for sbt. In order to install sbt, please refer to the sbt documentation([0.13](https://www.scala-sbt.org/0.13/docs/Setup.html), [1.x](https://www.scala-sbt.org/1.x/docs/Setup.html)). Please make sure that you are using a suitable version of sbt:
+sbt-osgi is a plugin for sbt. In order to install sbt, please refer to the sbt [1.x](https://www.scala-sbt.org/1.x/docs/Setup.html)). Please make sure that you are using a suitable version of sbt:
 
-- sbt-osgi 0.5 → sbt 0.12
-- sbt-osgi 0.7 → sbt 0.13
-- sbt-osgi 0.9.{0-3} → sbt 0.13 / sbt 1.x
 - sbt-osgi 0.9.{4-x} -> sbt 1.6.2+ (older versions of sbt may work but 1.6.2+ supports all JDK LTS versions)
 
 As sbt-osgi is a plugin for sbt, it is installed like any other sbt plugin, that is by mere configuration: just add sbt-osgi to your global or local plugin definition. Global plugins are defined in `~/.sbt/<SBT_VERSION>/plugins/plugins.sbt` and local plugins are defined in `project/plugins.sbt` in your project.
@@ -42,19 +39,10 @@ Using sbt-osgi
 #### Version 0.8.0 and above
 As, since version `0.8.0`, sbt-osgi uses the sbt 0.13.5 *Autoplugin* feature, it can be enabled for individual projects like any other sbt Autoplugin. For more information on enabling and disabling plugins, refer to the [sbt plugins tutorial](http://www.scala-sbt.org/release/tutorial/Using-Plugins.html#Enabling+and+disabling+auto+plugins).
 
-To enable sbt-osgi for a specific Project, use the project instance `enablePlugins(Plugins*)` method providing it with `SbtOsgi` as a parameter value. If using only '.sbt' definition files with only the implicitly declared root project with sbt 0.13.5 you will be required to obtain a reference to the project by explicitly declaring it in your build file. This may easily be done using the `project` macro, as shown in the example below. If using sbt 0.13.6 or greater, `enablePlugins(Plugins*)` is directly available in `.sbt` files.
-
 Example `<PROJECT_ROOT>/build.sbt`:
 
 ```scala
-// sbt 0.13.5
-lazy val fooProject = (project in file(".")) // Obtain the root project reference
-  .enablePlugins(SbtOsgi)  // Enables sbt-osgi for this project. This will automatically append
-                           // the plugin's default settings to this project thus providing the
-                           // `osgiBundle` task.
-
-// sbt 0.13.6+
-enablePlugins(SbtOsgi) // No need to obtain root project reference on single project builds for sbt 0.13.6+
+enablePlugins(SbtOsgi)
 ```
 
 Example `<PROJECT_ROOT>/project/Build.scala`:

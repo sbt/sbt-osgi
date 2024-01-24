@@ -18,7 +18,7 @@ package com.typesafe.sbt.osgi
 
 import sbt.URL
 
-case class OsgiManifestHeaders(
+final case class OsgiManifestHeaders(
   bundleActivator: Option[String],
   bundleDescription: String,
   bundleDocURL: Option[URL],
