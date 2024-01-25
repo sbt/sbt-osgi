@@ -36,27 +36,30 @@ object SbtOsgi extends AutoPlugin {
     val OsgiKeys = com.typesafe.sbt.osgi.OsgiKeys
 
     lazy val osgiSettings: Seq[Setting[_]] = Seq(
-      Compile / packageBin / packagedArtifact := Scoped.mkTuple2((Compile / packageBin / artifact).value, OsgiKeys.bundle.value),
-      Compile / packageBin / artifact ~= (_.withType("bundle")) )
+      Compile / packageBin / packagedArtifact := Scoped
+        .mkTuple2((Compile / packageBin / artifact).value, OsgiKeys.bundle.value),
+      Compile / packageBin / artifact ~= (_.withType("bundle"))
+    )
   }
 
   lazy val defaultOsgiSettings: Seq[Setting[_]] = {
     import OsgiKeys._
     Seq(
       bundle := Osgi.bundleTask(
-      manifestHeaders.value,
-      additionalHeaders.value,
-      (Compile / dependencyClasspathAsJars).value.map(_.data) ++ (Compile / products).value,
-      (Compile / packageBin / artifactPath).value,
-      (Compile / resourceDirectories).value,
-      embeddedJars.value,
-      explodedJars.value,
-      failOnUndecidedPackage.value,
-      (Compile / sourceDirectories).value,
-      (Compile /  packageBin / packageOptions).value,
-      packageWithJVMJar.value,
-      cacheStrategy.value,
-      streams.value),
+        manifestHeaders.value,
+        additionalHeaders.value,
+        (Compile / dependencyClasspathAsJars).value.map(_.data) ++ (Compile / products).value,
+        (Compile / packageBin / artifactPath).value,
+        (Compile / resourceDirectories).value,
+        embeddedJars.value,
+        explodedJars.value,
+        failOnUndecidedPackage.value,
+        (Compile / sourceDirectories).value,
+        (Compile / packageBin / packageOptions).value,
+        packageWithJVMJar.value,
+        cacheStrategy.value,
+        streams.value
+      ),
       manifestHeaders := OsgiManifestHeaders(
         bundleActivator.value,
         description.value,
@@ -73,7 +76,8 @@ object SbtOsgi extends AutoPlugin {
         fragmentHost.value,
         privatePackage.value,
         requireBundle.value,
-        requireCapability.value),
+        requireCapability.value
+      ),
       Compile / sbt.Keys.packageBin := bundle.value,
       bundleSymbolicName := Osgi.defaultBundleSymbolicName(organization.value, normalizedName.value),
       privatePackage := bundleSymbolicName(name => List(name + ".*")).value,
@@ -101,6 +105,7 @@ object SbtOsgi extends AutoPlugin {
       embeddedJars := Nil,
       explodedJars := Nil,
       packageWithJVMJar := false,
-      cacheStrategy := None)
+      cacheStrategy := None
+    )
   }
 }

@@ -1,4 +1,4 @@
-lazy val test01 = (project in file (".")).enablePlugins(SbtOsgi)
+lazy val test01 = (project in file(".")).enablePlugins(SbtOsgi)
 
 organization := "com.typesafe.sbt"
 
@@ -26,8 +26,7 @@ apiURL := Some(url("http://typesafe.com"))
 
 licenses += ("license" -> url("http://license.license"))
 
-
-TaskKey[Unit]("verifyBundle") :=  {
+TaskKey[Unit]("verifyBundle") := {
   import java.io.IOException
   import java.util.zip.ZipFile
   import scala.io.Source

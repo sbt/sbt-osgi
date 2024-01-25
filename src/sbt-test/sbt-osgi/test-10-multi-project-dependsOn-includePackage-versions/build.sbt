@@ -1,30 +1,33 @@
 import com.typesafe.sbt.osgi.SbtOsgi
 import com.typesafe.sbt.osgi.OsgiKeys
 
+inThisBuild(
+  Seq(
+    organization := "com.typesafe.sbt",
+    homepage := Some(url("https://github.com/woq-blended/blended")),
+    version := "1.2.3",
+    libraryDependencies += "org.osgi" % "org.osgi.core" % "4.3.0" % "provided",
+    licenses += ("Apache 2.0", url("https://www.apache.org/licenses/LICENSE-2.0.html")),
+    scalaVersion := "2.12.6"
+  )
+)
 
-inThisBuild(Seq(
-  organization := "com.typesafe.sbt",
-  homepage := Some(url("https://github.com/woq-blended/blended")),
-  version := "1.2.3",
-  libraryDependencies += "org.osgi" % "org.osgi.core" % "4.3.0" % "provided",
-  licenses += ("Apache 2.0", url("https://www.apache.org/licenses/LICENSE-2.0.html")),
-  scalaVersion := "2.12.6"
-))
-
-lazy val root = project.in(file("."))
+lazy val root = project
+  .in(file("."))
   .aggregate(proj1, proj2)
 
-lazy val proj1 = project.in(file("proj1"))
+lazy val proj1 = project
+  .in(file("proj1"))
   .enablePlugins(SbtOsgi)
   .settings(
     name := "proj1",
     OsgiKeys.bundleSymbolicName := "proj1",
     OsgiKeys.bundleVersion := version.value,
     OsgiKeys.exportPackage := Seq("proj1")
-
   )
 
-lazy val proj2 = project.in(file("proj2"))
+lazy val proj2 = project
+  .in(file("proj2"))
   .enablePlugins(SbtOsgi)
   .dependsOn(proj1)
   .settings(
@@ -33,7 +36,6 @@ lazy val proj2 = project.in(file("proj2"))
     OsgiKeys.bundleVersion := version.value,
     OsgiKeys.exportPackage := Seq("proj2")
   )
-
 
 TaskKey[Unit]("verifyBundle") := {
   import java.io.IOException

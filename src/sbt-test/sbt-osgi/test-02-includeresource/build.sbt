@@ -1,4 +1,4 @@
-lazy val test02 = (project in file ("")).enablePlugins(SbtOsgi)
+lazy val test02 = (project in file("")).enablePlugins(SbtOsgi)
 
 organization := "com.typesafe.sbt"
 
@@ -28,7 +28,10 @@ TaskKey[Unit]("verifyBundle") := {
     assert(manifest != null, "No MANIFEST.MF in JAR file")
     val attributes = manifest.getMainAttributes
     val includeResource = attributes.getValue("Include-Resource")
-    assert(includeResource == null, "MANIFEST.MF contains unexpected Include-Resource attribute; value=" + includeResource)
+    assert(
+      includeResource == null,
+      "MANIFEST.MF contains unexpected Include-Resource attribute; value=" + includeResource
+    )
   } catch {
     case e: IOException => sys.error("Expected to be able to read the manifest, but got exception!" + newLine + e)
   }

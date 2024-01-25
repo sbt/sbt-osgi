@@ -53,7 +53,8 @@ class OsgiSpec extends Specification {
         None,
         Seq("privatePackage"),
         Nil,
-        "requireCapability")
+        "requireCapability"
+      )
       val properties = headersToProperties(headers, Map.empty)
       properties.asScala must havePairs(
         BUNDLE_ACTIVATOR -> "bundleActivator",
@@ -69,7 +70,8 @@ class OsgiSpec extends Specification {
         EXPORT_PACKAGE -> "exportPackage1,exportPackage2,exportPackage3",
         IMPORT_PACKAGE -> "importPackage",
         PRIVATE_PACKAGE -> "privatePackage",
-        REQUIRE_CAPABILITY → "requireCapability")
+        REQUIRE_CAPABILITY → "requireCapability"
+      )
       properties.asScala must not(haveKey(FRAGMENT_HOST))
       properties.asScala must not(haveKey(REQUIRE_BUNDLE))
     }
@@ -93,7 +95,9 @@ class OsgiSpec extends Specification {
       val jar = new File("/aJar.jar")
       val anotherJar = new File("/anotherJar.jar")
       val actual = includeResourceProperty(Seq(resourceDir), Seq(jar), Seq(anotherJar))
-      actual must beEqualTo(Some(resourceDir.getAbsolutePath + "," + jar.getAbsolutePath + ",@" + anotherJar.getAbsolutePath))
+      actual must beEqualTo(
+        Some(resourceDir.getAbsolutePath + "," + jar.getAbsolutePath + ",@" + anotherJar.getAbsolutePath)
+      )
     }
   }
 

@@ -1,4 +1,4 @@
-lazy val test01 = (project in file (".")).enablePlugins(SbtOsgi)
+lazy val test01 = (project in file(".")).enablePlugins(SbtOsgi)
 
 organization := "com.typesafe.sbt"
 
@@ -22,14 +22,13 @@ apiURL := Some(url("http://typesafe.com"))
 
 licenses += ("license" -> url("http://license.license"))
 
-
-TaskKey[Unit]("verifyBundle") :=  {
+TaskKey[Unit]("verifyBundle") := {
   import java.io.IOException
   import java.util.zip.ZipFile
   import scala.io.Source
   val file = OsgiKeys.bundle.value
   val newLine = System.getProperty("line.separator")
-  val zipFile = new ZipFile(file) 
+  val zipFile = new ZipFile(file)
   // Verify manifest
   val manifestIn = zipFile.getInputStream(zipFile.getEntry("META-INF/MANIFEST.MF"))
   try {
@@ -59,7 +58,7 @@ TaskKey[Unit]("verifyBundle") :=  {
     if (!(lines exists (_ containsSlice "Export-Package: com.typesafe.sbt.osgi.test")))
       sys.error("Expected 'Export-Package: com.typesafe.sbt.osgi.test' in manifest!" + butWas)
     if (!(lines exists (l => (l containsSlice "org.osgi.framework") && (l containsSlice "Import-Package: "))))
-      sys.error("""Expected 'Import-Package: ' and 'org.osgi.framework' in manifest!""" + butWas) 
+      sys.error("""Expected 'Import-Package: ' and 'org.osgi.framework' in manifest!""" + butWas)
     if (!(lines contains "Private-Package: com.typesafe.sbt.osgi.test.internal"))
       sys.error("Expected 'Private-Package: com.typesafe.sbt.osgi.test.internal' in manifest!" + butWas)
   } catch {

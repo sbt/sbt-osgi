@@ -1,4 +1,4 @@
-lazy val test03 = (project in file ("")).enablePlugins(SbtOsgi)
+lazy val test03 = (project in file("")).enablePlugins(SbtOsgi)
 
 organization := "com.typesafe.sbt"
 
@@ -12,7 +12,7 @@ OsgiKeys.additionalHeaders := Map(
   "Main-Class" -> "com.typesafe.sbt.osgi.test.App"
 )
 
-TaskKey[Unit]("verifyBundle") :=  {
+TaskKey[Unit]("verifyBundle") := {
   import java.io.IOException
   import java.util.zip.ZipFile
   import scala.io.Source
