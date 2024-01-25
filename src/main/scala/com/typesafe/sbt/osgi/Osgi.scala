@@ -16,19 +16,20 @@
 
 package com.typesafe.sbt.osgi
 
-import java.nio.file.{FileVisitOption, Files, Path}
-import aQute.bnd.osgi.Builder
-import aQute.bnd.osgi.Constants.*
-import com.typesafe.sbt.osgi.OsgiKeys.CacheStrategy
+import java.nio.file.{ FileVisitOption, Files, Path }
 
+import aQute.bnd.osgi.Builder
+import aQute.bnd.osgi.Constants._
+import com.typesafe.sbt.osgi.OsgiKeys.CacheStrategy
 import java.util.Properties
 import java.util.function.Predicate
 import java.util.stream.Collectors
-import sbt.*
-import sbt.Keys.*
+
+import sbt._
+import sbt.Keys._
 import sbt.Package.ManifestAttributes
 
-import scala.collection.JavaConverters.*
+import scala.collection.JavaConverters._
 import scala.language.implicitConversions
 
 private object Osgi {
@@ -260,7 +261,8 @@ private object Osgi {
     bundleActivator foreach (properties.put(BUNDLE_ACTIVATOR, _))
     strToStrOpt(bundleDescription) foreach (properties.put(BUNDLE_DESCRIPTION, _))
     bundleDocURL foreach (u => properties.put(BUNDLE_DOCURL, u.toString))
-    bundleLicense.headOption foreach (l => properties.put(BUNDLE_LICENSE, s"${l._2.toString};description=${l._1}"))
+    bundleLicense.headOption foreach {case (license, url) =>
+      properties.put(BUNDLE_LICENSE, s"${url.toString};description=$license")}
     strToStrOpt(bundleName) foreach (properties.put(BUNDLE_NAME, _))
     seqToStrOpt(bundleRequiredExecutionEnvironment)(id) foreach (properties.put(BUNDLE_REQUIREDEXECUTIONENVIRONMENT, _))
     strToStrOpt(bundleVendor) foreach (properties.put(BUNDLE_VENDOR, _))
@@ -293,7 +295,7 @@ private object Osgi {
     val organizationParts = parts(organization)
     val nameParts = parts(name)
     val partsWithoutOverlap = (organizationParts.lastOption, nameParts.headOption) match {
-      case (Some(last), Some(head)) if (last == head) => organizationParts ++ nameParts.tail
+      case (Some(last), Some(head)) if last == head => organizationParts ++ nameParts.tail
       case _ => organizationParts ++ nameParts
     }
     partsWithoutOverlap mkString "."
@@ -304,13 +306,9 @@ private object Osgi {
   def parts(s: String) = s split "[.-]" filterNot (_.isEmpty)
 
   // ------------ Poor Man's Java 8 make-it-look-nice inter-op ----------------
-  implicit def asPredicate[T](f: (T) => Boolean): Predicate[T] =
-    new Predicate[T] {
-      override def test(t: T): Boolean = f(t)
-    }
-  implicit def asFunction[A, B](f: (A) => B): java.util.function.Function[A, B] =
-    new java.util.function.Function[A, B] {
-      override def apply(a: A): B = f(a)
-    }
+  implicit def asPredicate[T](f: T => Boolean): Predicate[T] =
+    (t: T) => f(t)
+  implicit def asFunction[A, B](f: A => B): java.util.function.Function[A, B] =
+    (a: A) => f(a)
   // ------------ Poor Man's Java 8 make-it-look-nice inter-op ----------------
 }
