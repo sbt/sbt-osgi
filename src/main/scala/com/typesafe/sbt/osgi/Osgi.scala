@@ -246,7 +246,7 @@ private object Osgi {
     validateAllPackagesDecidedAbout(i, e, allPackages.toList)
   }
 
-  def requireCapabilityTask(): String = {
+  lazy val requireCapabilityTask: String = {
     Option(System.getProperty("java.version"))
       .map(v => v.split("[.]", 3).take(2).mkString("."))
       .map(version => "osgi.ee;filter:=\"(&(osgi.ee=JavaSE)(version=%s))\"".format(version))

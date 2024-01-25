@@ -28,6 +28,8 @@ object SbtOsgi extends AutoPlugin {
 
   override lazy val projectSettings: Seq[Def.Setting[_]] = defaultOsgiSettings
 
+  override lazy val globalSettings: Seq[Def.Setting[_]] = defaultGlobalSettings
+
   object autoImport {
     type OsgiManifestHeaders = com.typesafe.sbt.osgi.OsgiManifestHeaders
 
@@ -42,20 +44,19 @@ object SbtOsgi extends AutoPlugin {
     import OsgiKeys._
     Seq(
       bundle := Osgi.bundleTask(
-        manifestHeaders.value,
-        additionalHeaders.value,
-        (Compile / dependencyClasspathAsJars).value.map(_.data) ++ (Compile / products).value,
-        (Compile / packageBin / artifactPath).value,
-        (Compile / resourceDirectories).value,
-        embeddedJars.value,
-        explodedJars.value,
-        failOnUndecidedPackage.value,
-        (Compile / sourceDirectories).value,
-        (Compile /  packageBin / packageOptions).value,
-        packageWithJVMJar.value,
-        cacheStrategy.value,
-        streams.value),
-      Compile / sbt.Keys.packageBin := bundle.value,
+      manifestHeaders.value,
+      additionalHeaders.value,
+      (Compile / dependencyClasspathAsJars).value.map(_.data) ++ (Compile / products).value,
+      (Compile / packageBin / artifactPath).value,
+      (Compile / resourceDirectories).value,
+      embeddedJars.value,
+      explodedJars.value,
+      failOnUndecidedPackage.value,
+      (Compile / sourceDirectories).value,
+      (Compile /  packageBin / packageOptions).value,
+      packageWithJVMJar.value,
+      cacheStrategy.value,
+      streams.value),
       manifestHeaders := OsgiManifestHeaders(
         bundleActivator.value,
         description.value,
@@ -73,18 +74,29 @@ object SbtOsgi extends AutoPlugin {
         privatePackage.value,
         requireBundle.value,
         requireCapability.value),
-      bundleActivator := None,
+      Compile / sbt.Keys.packageBin := bundle.value,
       bundleSymbolicName := Osgi.defaultBundleSymbolicName(organization.value, normalizedName.value),
-      bundleVersion := version.value,
+      privatePackage := bundleSymbolicName(name => List(name + ".*")).value,
+      bundleVersion := version.value
+    )
+  }
+
+  lazy val defaultGlobalSettings: Seq[Setting[_]] = {
+    import OsgiKeys._
+    Seq(
+      bundle := file(""),
+      bundleActivator := None,
+      bundleSymbolicName := "",
+      bundleVersion := "",
       bundleRequiredExecutionEnvironment := Nil,
       dynamicImportPackage := Nil,
       exportPackage := Nil,
       importPackage := List("*"),
       fragmentHost := None,
-      privatePackage := bundleSymbolicName(name => List(name + ".*")).value,
+      privatePackage := Nil,
       requireBundle := Nil,
       failOnUndecidedPackage := false,
-      requireCapability := Osgi.requireCapabilityTask(),
+      requireCapability := Osgi.requireCapabilityTask,
       additionalHeaders := Map.empty,
       embeddedJars := Nil,
       explodedJars := Nil,
