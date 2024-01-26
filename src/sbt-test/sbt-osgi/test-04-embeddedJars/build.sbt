@@ -1,4 +1,4 @@
-lazy val test04 = (project in file ("")).enablePlugins(SbtOsgi)
+lazy val test04 = (project in file("")).enablePlugins(SbtOsgi)
 
 organization := "com.typesafe.sbt"
 
@@ -8,12 +8,11 @@ version := "1.2.3"
 
 osgiSettings
 
-OsgiKeys.embeddedJars := (Keys.externalDependencyClasspath in Compile).value map (_.data) filter (
-  _.getName startsWith "junit")
+OsgiKeys.embeddedJars := (Keys.externalDependencyClasspath in Compile).value map (_.data) filter (_.getName startsWith "junit")
 
 libraryDependencies += "junit" % "junit" % "4.11" // Not in test scope here!
 
-TaskKey[Unit]("verifyBundle") :=  {
+TaskKey[Unit]("verifyBundle") := {
   import java.io.IOException
   import java.util.zip.ZipFile
   import scala.io.Source
@@ -22,7 +21,7 @@ TaskKey[Unit]("verifyBundle") :=  {
   val zipFile = new ZipFile(file)
   // Verify bundle content
   val sampleJar = zipFile.getEntry("junit-4.11.jar")
-  assert(sampleJar != null, "Expected 'junit-4.11.jar' inside of the bundle")  
+  assert(sampleJar != null, "Expected 'junit-4.11.jar' inside of the bundle")
   // Verify manifest
   val manifestIn = zipFile.getInputStream(zipFile.getEntry("META-INF/MANIFEST.MF"))
   try {

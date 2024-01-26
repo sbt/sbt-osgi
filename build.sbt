@@ -5,9 +5,9 @@ ThisBuild / dynverSonatypeSnapshots := true
 
 // So that publishLocal doesn't continuously create new versions
 def versionFmt(out: sbtdynver.GitDescribeOutput): String = {
-  val snapshotSuffix = if
-    (out.isSnapshot()) "-SNAPSHOT"
-  else ""
+  val snapshotSuffix =
+    if (out.isSnapshot()) "-SNAPSHOT"
+    else ""
   out.ref.dropPrefix + snapshotSuffix
 }
 
@@ -55,7 +55,8 @@ scalacOptions ++= Seq(
   "-unchecked",
   "-deprecation",
   "-Xlint",
-  "-encoding", "UTF-8"
+  "-encoding",
+  "UTF-8"
 )
 scriptedLaunchOpts += "-Xmx1024m"
 scriptedLaunchOpts ++= Seq("-Dplugin.version=" + version.value)

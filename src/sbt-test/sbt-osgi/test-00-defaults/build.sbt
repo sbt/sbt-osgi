@@ -1,4 +1,4 @@
-lazy val test00 = (project in file ("")).enablePlugins(SbtOsgi)
+lazy val test00 = (project in file("")).enablePlugins(SbtOsgi)
 
 organization := "com.typesafe.sbt"
 
@@ -12,7 +12,7 @@ osgiSettings
 
 TaskKey[Unit]("verifyBundleActivator") := {
   val activator = OsgiKeys.bundleActivator.value
-  if (activator.isDefined) 
+  if (activator.isDefined)
     sys.error("Expected bundle-activator to be None, but was %s!" format activator)
 }
 
@@ -24,7 +24,7 @@ TaskKey[Unit]("verifyBundleSymbolicName") := {
 
 TaskKey[Unit]("verifyBundleRequiredExecutionEnvironment") := {
   val re = OsgiKeys.bundleRequiredExecutionEnvironment.value
-  if (re.nonEmpty) 
+  if (re.nonEmpty)
     sys.error("Expected bundleRequiredExecutionEnvironment to be Nil, but was %s!" format re)
 }
 

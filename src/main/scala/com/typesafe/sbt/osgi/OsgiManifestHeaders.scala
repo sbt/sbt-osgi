@@ -19,19 +19,20 @@ package com.typesafe.sbt.osgi
 import sbt.URL
 
 final case class OsgiManifestHeaders(
-  bundleActivator: Option[String],
-  bundleDescription: String,
-  bundleDocURL: Option[URL],
-  bundleLicense: Seq[(String, URL)],
-  bundleName: String,
-  bundleRequiredExecutionEnvironment: Seq[String],
-  bundleVendor: String,
-  bundleSymbolicName: String,
-  bundleVersion: String,
-  dynamicImportPackage: Seq[String],
-  exportPackage: Seq[String],
-  importPackage: Seq[String],
-  fragmentHost: Option[String],
-  privatePackage: Seq[String],
-  requireBundle: Seq[String],
-  requireCapability: String)
+    bundleActivator: Option[String],
+    bundleDescription: String,
+    bundleDocURL: Option[URL],
+    bundleLicense: Seq[(String, URL)],
+    bundleName: String,
+    bundleRequiredExecutionEnvironment: Seq[String],
+    bundleVendor: String,
+    bundleSymbolicName: String,
+    bundleVersion: String,
+    dynamicImportPackage: Seq[String],
+    exportPackage: Seq[String],
+    importPackage: Seq[String],
+    fragmentHost: Option[String],
+    privatePackage: Seq[String],
+    requireBundle: Seq[String],
+    requireCapability: String
+)

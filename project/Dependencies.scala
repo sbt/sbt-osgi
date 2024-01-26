@@ -8,14 +8,11 @@ object Library {
 
   // Libraries
   val bndLib = "biz.aQute.bnd" % "biz.aQute.bndlib" % bndVersion
-  val specs2 = "org.specs2" %% "specs2-core" % specs2Version
+  val specs2 = "org.specs2"   %% "specs2-core"      % specs2Version
 }
 
 object Dependencies {
-
   import Library._
 
-  val sbtOsgi = List(
-    bndLib,
-    specs2 % Test)
+  val sbtOsgi = List(bndLib, specs2 % Test)
 }

@@ -1,4 +1,4 @@
-lazy val test06 = (project in file ("")).enablePlugins(SbtOsgi)
+lazy val test06 = (project in file("")).enablePlugins(SbtOsgi)
 
 organization := "com.typesafe.sbt"
 
@@ -25,4 +25,3 @@ TaskKey[Unit]("verifyBundle") := {
   if (bundle.getManifest.getMainAttributes.getValue("Bundle-SymbolicName") == null)
     sys.error("Target manifest is incorrect.")
 }
-
