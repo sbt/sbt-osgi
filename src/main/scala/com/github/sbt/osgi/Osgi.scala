@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package com.typesafe.sbt.osgi
+package com.github.sbt.osgi
 
 import java.nio.file.{ FileVisitOption, Files, Path }
 
 import aQute.bnd.osgi.Builder
 import aQute.bnd.osgi.Constants._
-import com.typesafe.sbt.osgi.OsgiKeys.CacheStrategy
+import com.github.sbt.osgi.OsgiKeys.CacheStrategy
 import java.util.Properties
 import java.util.function.Predicate
 import java.util.stream.Collectors
