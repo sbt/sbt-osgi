@@ -1,6 +1,6 @@
 lazy val test02 = (project in file("")).enablePlugins(SbtOsgi)
 
-organization := "com.typesafe.sbt"
+organization := "com.github.sbt"
 
 name := "sbt-osgi-test"
 
@@ -10,11 +10,11 @@ libraryDependencies += "org.osgi" % "org.osgi.core" % "4.3.0" % "provided"
 
 osgiSettings
 
-OsgiKeys.bundleActivator := Some("com.typesafe.sbt.osgi.test.internal.Activator")
+OsgiKeys.bundleActivator := Some("com.github.sbt.osgi.test.internal.Activator")
 
 OsgiKeys.dynamicImportPackage := Seq("scala.*")
 
-OsgiKeys.exportPackage := Seq("com.typesafe.sbt.osgi.test")
+OsgiKeys.exportPackage := Seq("com.github.sbt.osgi.test")
 
 TaskKey[Unit]("verifyBundle") := {
   import java.io.IOException

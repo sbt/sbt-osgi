@@ -1,3 +1,3 @@
-package com.typesafe.sbt.osgi.test
+package com.github.sbt.osgi.test
 
 class Foo

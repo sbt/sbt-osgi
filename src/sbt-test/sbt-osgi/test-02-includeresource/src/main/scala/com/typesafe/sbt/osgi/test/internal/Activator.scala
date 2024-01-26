@@ -1,4 +1,4 @@
-package com.typesafe.sbt.osgi.test.internal
+package com.github.sbt.osgi.test.internal
 
 import org.osgi.framework._
 
