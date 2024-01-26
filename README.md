@@ -3,7 +3,7 @@ sbt-osgi
 
 [![Build Status](https://github.com/sbt/sbt-osgi/actions/workflows/ci.yml/badge.svg)](https://github.com/sbt/sbt-osgi/actions/workflows/ci.yml)
 
-Plugin for [sbt](http://www.scala-sbt.org) to to create [OSGi](http://www.osgi.org/) bundles.
+Plugin for [sbt](http://www.scala-sbt.org) to create [OSGi](http://www.osgi.org/) bundles.
 
 Installing sbt-osgi
 -------------------
@@ -129,12 +129,6 @@ OsgiKeys.exportPackage := Seq("com.github.sbt.osgidemo")
 
 OsgiKeys.bundleActivator := Option("com.github.sbt.osgidemo.internal.Activator")
 ```
-
-Contribution policy
--------------------
-
-Contributions via GitHub pull requests are gladly accepted from their original author. 
-Before we can accept pull requests, you will need to agree to the [Typesafe Contributor License Agreement](http://www.typesafe.com/contribute/cla) online, using your GitHub account - it takes 30 seconds.
 
 License
 -------
