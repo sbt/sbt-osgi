@@ -22,7 +22,7 @@ val myModuleName = "my.nice.module.name"
 val AutomaticModuleName = "Automatic-Module-Name"
 packageOptions in (Compile, packageBin) += Package.ManifestAttributes(AutomaticModuleName → myModuleName)
 
-apiURL := Some(url("http://typesafe.com"))
+apiURL := Some(url("https://github.com/sbt/sbt-osgi"))
 
 licenses += ("license" -> url("http://license.license"))
 
@@ -48,8 +48,8 @@ TaskKey[Unit]("verifyBundle") := {
       sys.error("Expected 'Bundle-Activator: com.github.sbt.osgi.test.internal.Activator' in manifest!" + butWas)
     if (!(lines contains "Bundle-Description: sbt-osgi-test"))
       sys.error("Expected 'Bundle-Description: sbt-osgi-test' in manifest!" + butWas)
-    if (!(lines contains "Bundle-DocURL: http://typesafe.com"))
-      sys.error("Expected 'Bundle-DocURL: http://typesafe.com' in manifest!" + butWas)
+    if (!(lines contains "Bundle-DocURL: https://github.com/sbt/sbt-osgi"))
+      sys.error("Expected 'Bundle-DocURL: https://github.com/sbt/sbt-osgi' in manifest!" + butWas)
     if (!(lines contains "Bundle-License: http://license.license;description=license"))
       sys.error("Expected 'Bundle-License: http://license.license;description=license' in manifest!" + butWas)
     if (!(lines contains "Bundle-Name: sbt-osgi-test"))
