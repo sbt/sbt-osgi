@@ -7,8 +7,7 @@ inThisBuild(
     homepage := Some(url("https://github.com/woq-blended/blended")),
     version := "1.2.3",
     libraryDependencies += "org.osgi" % "org.osgi.core" % "4.3.0" % "provided",
-    licenses += ("Apache 2.0", url("https://www.apache.org/licenses/LICENSE-2.0.html")),
-    scalaVersion := "2.12.6"
+    licenses += ("Apache 2.0", url("https://www.apache.org/licenses/LICENSE-2.0.html"))
   )
 )
 
