@@ -1,5 +1,5 @@
-import com.typesafe.sbt.osgi.SbtOsgi
-import com.typesafe.sbt.osgi.OsgiKeys
+import com.github.sbt.osgi.SbtOsgi
+import com.github.sbt.osgi.OsgiKeys
 
 inThisBuild(
   Seq(

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.typesafe.sbt.osgi
+package com.github.sbt.osgi
 
 import aQute.bnd.osgi.Constants._
 import java.io.File

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.typesafe.sbt.osgi
+package com.github.sbt.osgi
 
 import sbt._
 import sbt.Keys._
@@ -31,9 +31,9 @@ object SbtOsgi extends AutoPlugin {
   override lazy val globalSettings: Seq[Def.Setting[_]] = defaultGlobalSettings
 
   object autoImport {
-    type OsgiManifestHeaders = com.typesafe.sbt.osgi.OsgiManifestHeaders
+    type OsgiManifestHeaders = com.github.sbt.osgi.OsgiManifestHeaders
 
-    val OsgiKeys = com.typesafe.sbt.osgi.OsgiKeys
+    val OsgiKeys = com.github.sbt.osgi.OsgiKeys
 
     lazy val osgiSettings: Seq[Setting[_]] = Seq(
       Compile / packageBin / packagedArtifact := Scoped

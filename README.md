@@ -48,8 +48,8 @@ enablePlugins(SbtOsgi)
 Example `<PROJECT_ROOT>/project/Build.scala`:
 ```scala
 import sbt._
-import com.typesafe.sbt.SbtOsgi.autoImport._  // The autoImport object contains everything which would normally be
-                                              // imported automatically in '*.sbt' project definition files.
+import com.github.sbt.SbtOsgi.autoImport._  // The autoImport object contains everything which would normally be
+                                            // imported automatically in '*.sbt' project definition files.
 
 object Build extends sbt.Build {
 
@@ -125,9 +125,9 @@ libraryDependencies += "org.osgi" % "org.osgi.core" % "4.3.0" % "provided"
 
 osgiSettings
 
-OsgiKeys.exportPackage := Seq("com.typesafe.sbt.osgidemo")
+OsgiKeys.exportPackage := Seq("com.github.sbt.osgidemo")
 
-OsgiKeys.bundleActivator := Option("com.typesafe.sbt.osgidemo.internal.Activator")
+OsgiKeys.bundleActivator := Option("com.github.sbt.osgidemo.internal.Activator")
 ```
 
 Contribution policy
