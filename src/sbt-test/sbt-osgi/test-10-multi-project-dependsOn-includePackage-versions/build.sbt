@@ -3,7 +3,7 @@ import com.typesafe.sbt.osgi.OsgiKeys
 
 inThisBuild(
   Seq(
-    organization := "com.typesafe.sbt",
+    organization := "com.github.sbt",
     homepage := Some(url("https://github.com/woq-blended/blended")),
     version := "1.2.3",
     libraryDependencies += "org.osgi" % "org.osgi.core" % "4.3.0" % "provided",

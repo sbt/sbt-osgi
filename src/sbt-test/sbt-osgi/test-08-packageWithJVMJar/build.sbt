@@ -1,6 +1,6 @@
 lazy val test08 = (project in file("")).enablePlugins(SbtOsgi)
 
-organization := "com.typesafe.sbt"
+organization := "com.github.sbt"
 
 name := "sbt-osgi-test"
 
@@ -20,8 +20,8 @@ TaskKey[Unit]("verifyBundleActivator") := {
 
 TaskKey[Unit]("verifyBundleSymbolicName") := {
   val name = OsgiKeys.bundleSymbolicName.value
-  if (name != "com.typesafe.sbt.osgi.test")
-    sys.error("Expected bundle-symbolic-name to be %s, but was %s!".format("com.typesafe.sbt.osgi.test", name))
+  if (name != "com.github.sbt.osgi.test")
+    sys.error("Expected bundle-symbolic-name to be %s, but was %s!".format("com.github.sbt.osgi.test", name))
 }
 
 TaskKey[Unit]("verifyBundleRequiredExecutionEnvironment") := {
@@ -62,8 +62,8 @@ TaskKey[Unit]("verifyFragmentHost") := {
 
 TaskKey[Unit]("verifyPrivatePackage") := {
   val pkg = OsgiKeys.privatePackage.value
-  if (pkg != Seq("com.typesafe.sbt.osgi.test.*"))
-    sys.error("Expected private-package to be %s, but was %s!".format(Seq("com.typesafe.sbt.osgi.test.*"), pkg))
+  if (pkg != Seq("com.github.sbt.osgi.test.*"))
+    sys.error("Expected private-package to be %s, but was %s!".format(Seq("com.github.sbt.osgi.test.*"), pkg))
 }
 
 TaskKey[Unit]("verifyRequireBundle") := {

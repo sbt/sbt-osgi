@@ -1,6 +1,6 @@
 lazy val test03 = (project in file("")).enablePlugins(SbtOsgi)
 
-organization := "com.typesafe.sbt"
+organization := "com.github.sbt"
 
 name := "sbt-osgi-test"
 
@@ -9,7 +9,7 @@ version := "1.2.3"
 osgiSettings
 
 OsgiKeys.additionalHeaders := Map(
-  "Main-Class" -> "com.typesafe.sbt.osgi.test.App"
+  "Main-Class" -> "com.github.sbt.osgi.test.App"
 )
 
 TaskKey[Unit]("verifyBundle") := {
@@ -25,8 +25,8 @@ TaskKey[Unit]("verifyBundle") := {
     val lines = Source.fromInputStream(manifestIn).getLines().toList
     val allLines = lines mkString newLine
     val butWas = newLine + "But was:" + newLine + allLines
-    if (!(lines contains "Main-Class: com.typesafe.sbt.osgi.test.App"))
-      sys.error("Expected 'Main-Class: com.typesafe.sbt.osgi.test.App' in manifest!" + butWas)
+    if (!(lines contains "Main-Class: com.github.sbt.osgi.test.App"))
+      sys.error("Expected 'Main-Class: com.github.sbt.osgi.test.App' in manifest!" + butWas)
   } catch {
     case e: IOException => sys.error("Expected to be able to read the manifest, but got exception!" + newLine + e)
   } finally manifestIn.close()

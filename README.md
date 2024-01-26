@@ -113,7 +113,7 @@ sbt-osgi can be configured with the following settings:
 Example `build.sbt`:
 
 ```
-organization := "com.typesafe.sbt"
+organization := "com.github.sbt"
 
 name := "osgi.demo"
 
