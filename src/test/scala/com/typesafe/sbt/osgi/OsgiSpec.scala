@@ -29,9 +29,9 @@ class OsgiSpec extends Specification {
     "return None for an empty Seq" in {
       seqToStrOpt(Nil)(id) must be(None)
     }
-    "return Some wrapping a properly consturcted String for a non-empty Seq" in {
-      seqToStrOpt(Seq("foo", "bar", "baz"))(id) must beEqualTo(Some("foo,bar,baz"))
-      seqToStrOpt(Seq(1, 2, 3))(_.toString) must beEqualTo(Some("1,2,3"))
+    "return Some wrapping a properly constructed String for a non-empty Seq" in {
+      seqToStrOpt(Seq("foo", "bar", "baz"))(id) must beSome("foo,bar,baz")
+      seqToStrOpt(Seq(1, 2, 3))(_.toString) must beSome("1,2,3")
     }
   }
 
@@ -70,7 +70,7 @@ class OsgiSpec extends Specification {
         EXPORT_PACKAGE -> "exportPackage1,exportPackage2,exportPackage3",
         IMPORT_PACKAGE -> "importPackage",
         PRIVATE_PACKAGE -> "privatePackage",
-        REQUIRE_CAPABILITY → "requireCapability"
+        REQUIRE_CAPABILITY -> "requireCapability"
       )
       properties.asScala must not(haveKey(FRAGMENT_HOST))
       properties.asScala must not(haveKey(REQUIRE_BUNDLE))
@@ -95,9 +95,7 @@ class OsgiSpec extends Specification {
       val jar = new File("/aJar.jar")
       val anotherJar = new File("/anotherJar.jar")
       val actual = includeResourceProperty(Seq(resourceDir), Seq(jar), Seq(anotherJar))
-      actual must beEqualTo(
-        Some(resourceDir.getAbsolutePath + "," + jar.getAbsolutePath + ",@" + anotherJar.getAbsolutePath)
-      )
+      actual must beSome(resourceDir.getAbsolutePath + "," + jar.getAbsolutePath + ",@" + anotherJar.getAbsolutePath)
     }
   }
 
@@ -105,12 +103,12 @@ class OsgiSpec extends Specification {
     "add bundle classes and embedded jars to classpath" in {
       val embeddedJars = Seq(new File("/aJar.jar"), new File("/bJar.jar"))
       val actual = bundleClasspathProperty(embeddedJars)
-      actual must beEqualTo(Some(".,aJar.jar,bJar.jar"))
+      actual must beSome(".,aJar.jar,bJar.jar")
     }
     "remain default if no embedded jars are specified" in {
       val embeddedJars = Seq()
       val actual = bundleClasspathProperty(embeddedJars)
-      actual must beEqualTo(None)
+      actual must beNone
     }
   }
 }
