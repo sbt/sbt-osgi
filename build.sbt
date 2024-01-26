@@ -45,7 +45,8 @@ ThisBuild / githubWorkflowOSes := Seq("ubuntu-latest", "macos-latest", "windows-
 ThisBuild / githubWorkflowJavaVersions := Seq(
   JavaSpec.temurin("8"),
   JavaSpec.temurin("11"),
-  JavaSpec.temurin("17")
+  JavaSpec.temurin("17"),
+  JavaSpec.temurin("21")
 )
 
 name := "sbt-osgi"
