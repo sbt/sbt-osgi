@@ -16,7 +16,7 @@ As sbt-osgi is a plugin for sbt, it is installed like any other sbt plugin, that
 
 In order to add sbt-osgi as a plugin, just add the below setting to the relevant plugin definition, paying attention to blank lines between settings:
 
-```
+```sbt
 // Other stuff
 
 addSbtPlugin("com.github.sbt" % "sbt-osgi" % "0.9.11")
@@ -24,7 +24,7 @@ addSbtPlugin("com.github.sbt" % "sbt-osgi" % "0.9.11")
 
 If you want to use the latest and greatest features, you can instead have sbt depend on and locally build the current source snapshot by adding the following to your plugin definition file.
 Example `<PROJECT_ROOT>/project/plugins.sbt`:
-```scala
+```sbt
 lazy val plugins = (project in file("."))
   .dependsOn(sbtOsgi)
 
@@ -41,31 +41,15 @@ As, since version `0.8.0`, sbt-osgi uses the sbt 0.13.5 *Autoplugin* feature, it
 
 Example `<PROJECT_ROOT>/build.sbt`:
 
-```scala
+```sbt
 enablePlugins(SbtOsgi)
-```
-
-Example `<PROJECT_ROOT>/project/Build.scala`:
-```scala
-import sbt._
-import com.github.sbt.SbtOsgi.autoImport._  // The autoImport object contains everything which would normally be
-                                            // imported automatically in '*.sbt' project definition files.
-
-object Build extends sbt.Build {
-
-  lazy val fooProject = Project("foo-project", file("."))
-    .enablePlugins(SbtOsgi)  // Enables sbt-osgi for this project. This will automatically append
-                             // the plugin's default settings to this project thus providing the
-                             // `osgiBundle` task.
-}
-
 ```
 
 To also override the default publish behaviour, also add the `osgiSettings` settings to your project via your preferred method.
 
 Example `<PROJECT_ROOT>/build.sbt`:
 
-```scala
+```sbt
 // Other settings
 
 osgiSettings
@@ -74,7 +58,7 @@ osgiSettings
 #### Version 0.7.0 and below
 Add the below line to your sbt build definition, which adds the task `osgiBundle` which creates an OSGi bundle for your project and also changes the `publish` task to publish an OSGi bundle instead of a raw JAR archive. Again, pay attention to the blank line between settings:
 
-```
+```sbt
 // Other stuff
 
 osgiSettings
@@ -112,7 +96,7 @@ sbt-osgi can be configured with the following settings:
 
 Example `build.sbt`:
 
-```
+```sbt
 organization := "com.github.sbt"
 
 name := "osgi.demo"
