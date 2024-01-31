@@ -22,7 +22,8 @@ lazy val proj1 = project
     name := "proj1",
     OsgiKeys.bundleSymbolicName := "proj1",
     OsgiKeys.bundleVersion := version.value,
-    OsgiKeys.exportPackage := Seq("proj1")
+    OsgiKeys.exportPackage := Seq("proj1"),
+    (Compile / packageBin) := OsgiKeys.bundle.value
   )
 
 lazy val proj2 = project
@@ -33,7 +34,8 @@ lazy val proj2 = project
     name := "proj2",
     OsgiKeys.bundleSymbolicName := "proj2",
     OsgiKeys.bundleVersion := version.value,
-    OsgiKeys.exportPackage := Seq("proj2")
+    OsgiKeys.exportPackage := Seq("proj2"),
+    (Compile / packageBin) := OsgiKeys.bundle.value
   )
 
 TaskKey[Unit]("verifyBundle") := {

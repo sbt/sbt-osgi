@@ -8,6 +8,8 @@ version := "1.2.3"
 
 libraryDependencies += "org.osgi" % "org.osgi.core" % "4.3.0" % "provided"
 
+(Compile / packageBin) := OsgiKeys.bundle.value
+
 osgiSettings
 
 TaskKey[Unit]("verifyBundleActivator") := {

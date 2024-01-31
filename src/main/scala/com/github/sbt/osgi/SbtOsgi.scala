@@ -17,6 +17,7 @@
 package com.github.sbt.osgi
 
 import sbt._
+import sbt.Classpaths.concat
 import sbt.Keys._
 import sbt.plugins.JvmPlugin
 
@@ -46,10 +47,11 @@ object SbtOsgi extends AutoPlugin {
     import OsgiKeys._
     Seq(
       (Compile / exportJars) := false,
+      (Compile / fullClasspath) := concat(Compile / exportedProducts, Compile / dependencyClasspathAsJars).value,
       bundle := Osgi.bundleTask(
         manifestHeaders.value,
         additionalHeaders.value,
-        (Compile / fullClasspath).value.map(_.data) ++ (Compile / internalDependencyAsJars).value.map(_.data),
+        (Compile / fullClasspath).value.map(_.data),
         (Compile / packageBin / artifactPath).value,
         (Compile / resourceDirectories).value,
         embeddedJars.value,
