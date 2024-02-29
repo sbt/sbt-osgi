@@ -17,6 +17,7 @@
 package com.github.sbt.osgi
 
 import sbt._
+import sbt.Classpaths.concat
 import sbt.Keys._
 import sbt.plugins.JvmPlugin
 
@@ -45,10 +46,12 @@ object SbtOsgi extends AutoPlugin {
   lazy val defaultOsgiSettings: Seq[Setting[_]] = {
     import OsgiKeys._
     Seq(
+      (Compile / exportJars) := false,
+      (Compile / fullClasspath) := concat(Compile / exportedProducts, Compile / dependencyClasspathAsJars).value,
       bundle := Osgi.bundleTask(
         manifestHeaders.value,
         additionalHeaders.value,
-        (Compile / dependencyClasspathAsJars).value.map(_.data) ++ (Compile / products).value,
+        (Compile / fullClasspath).value.map(_.data),
         (Compile / packageBin / artifactPath).value,
         (Compile / resourceDirectories).value,
         embeddedJars.value,
@@ -78,7 +81,6 @@ object SbtOsgi extends AutoPlugin {
         requireBundle.value,
         requireCapability.value
       ),
-      Compile / sbt.Keys.packageBin := bundle.value,
       bundleSymbolicName := Osgi.defaultBundleSymbolicName(organization.value, normalizedName.value),
       privatePackage := bundleSymbolicName(name => List(name + ".*")).value,
       bundleVersion := version.value
