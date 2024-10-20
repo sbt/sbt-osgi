@@ -3,7 +3,7 @@ import sbt._
 object Library {
 
   // Versions
-  val bndVersion = "6.4.1"
+  val bndVersion = "7.0.0"
   val specs2Version = "4.20.9"
 
   // Libraries
