@@ -250,7 +250,7 @@ private object Osgi {
         )
       } else
         realPackages match {
-          case Nil => // OK!
+          case Nil                       => // OK!
           case pack :: remainingPackages =>
             def startsWith(it: String, prefixes: Seq[String]): Boolean =
               prefixes.exists(it.startsWith)
