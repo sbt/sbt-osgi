@@ -1,7 +1,6 @@
 lazy val scala212 = "2.12.20"
 ThisBuild / crossScalaVersions := Seq(scala212)
 ThisBuild / scalaVersion := scala212
-ThisBuild / dynverSonatypeSnapshots := true
 
 // So that publishLocal doesn't continuously create new versions
 def versionFmt(out: sbtdynver.GitDescribeOutput): String = {
