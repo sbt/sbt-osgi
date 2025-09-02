@@ -307,7 +307,7 @@ private object Osgi {
   def seqToStrOpt[A](seq: Seq[A])(f: A => String): Option[String] =
     if (seq.isEmpty) None else Some(seq map f mkString ",")
 
-  def strToStrOpt(s: String): Option[String] = Option(s).filter(_.trim nonEmpty)
+  def strToStrOpt(s: String): Option[String] = Option(s).filter(_.trim.nonEmpty)
 
   def includeResourceProperty(resourceDirectories: Seq[File], embeddedJars: Seq[File], explodedJars: Seq[File]) = {
     val paths: Seq[String] =
