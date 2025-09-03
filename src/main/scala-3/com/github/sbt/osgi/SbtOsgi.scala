@@ -36,13 +36,14 @@ object SbtOsgi extends AutoPlugin {
     val OsgiKeys = com.github.sbt.osgi.OsgiKeys
 
     lazy val osgiSettings: Seq[Setting[_]] = Seq(
-      Compile / packageBin / packagedArtifact := Def.uncached:
+      Compile / packageBin / packagedArtifact := Def.uncached {
         val conv = fileConverter.value
         Scoped
           .mkTuple2(
             (Compile / packageBin / artifact).value,
             conv.toVirtualFile(OsgiKeys.bundle.value.toPath)
-          ),
+          )
+      },
       Compile / packageBin / artifact ~= (_.withType("bundle"))
     )
   }
@@ -50,7 +51,7 @@ object SbtOsgi extends AutoPlugin {
   lazy val defaultOsgiSettings: Seq[Setting[_]] = {
     import OsgiKeys._
     Seq(
-      bundle := Def.uncached:
+      bundle := Def.uncached {
         val conv = fileConverter.value
         Osgi.bundleTask(
           manifestHeaders.value,
@@ -66,8 +67,9 @@ object SbtOsgi extends AutoPlugin {
           packageWithJVMJar.value,
           cacheStrategy.value,
           streams.value
-        ),
-      manifestHeaders := Def.uncached:
+        )
+      },
+      manifestHeaders := Def.uncached {
         OsgiManifestHeaders(
           bundleActivator.value,
           description.value,
@@ -85,7 +87,8 @@ object SbtOsgi extends AutoPlugin {
           privatePackage.value,
           requireBundle.value,
           requireCapability.value
-        ),
+        )
+      },
       Compile / sbt.Keys.packageBin := Def.uncached:
         val conv = fileConverter.value
         conv.toVirtualFile(bundle.value.toPath)
