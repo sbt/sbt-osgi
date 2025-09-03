@@ -89,10 +89,10 @@ object SbtOsgi extends AutoPlugin {
           requireCapability.value
         )
       },
-      Compile / sbt.Keys.packageBin := Def.uncached:
+      Compile / sbt.Keys.packageBin := Def.uncached {
         val conv = fileConverter.value
         conv.toVirtualFile(bundle.value.toPath)
-      ,
+      },
       bundleSymbolicName := Osgi.defaultBundleSymbolicName(organization.value, normalizedName.value),
       privatePackage := bundleSymbolicName(name => List(name + ".*")).value,
       bundleVersion := version.value
