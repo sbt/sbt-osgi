@@ -16,8 +16,8 @@
 
 package com.github.sbt.osgi
 
-import sbt._
-import sbt.Keys._
+import sbt.*
+import sbt.Keys.*
 import sbt.plugins.JvmPlugin
 
 object SbtOsgi extends AutoPlugin {
@@ -43,7 +43,7 @@ object SbtOsgi extends AutoPlugin {
   }
 
   lazy val defaultOsgiSettings: Seq[Setting[_]] = {
-    import OsgiKeys._
+    import OsgiKeys.*
     Seq(
       bundle := Osgi.bundleTask(
         manifestHeaders.value,
@@ -86,7 +86,7 @@ object SbtOsgi extends AutoPlugin {
   }
 
   lazy val defaultGlobalSettings: Seq[Setting[_]] = {
-    import OsgiKeys._
+    import OsgiKeys.*
     Seq(
       bundle := file(""),
       bundleActivator := None,

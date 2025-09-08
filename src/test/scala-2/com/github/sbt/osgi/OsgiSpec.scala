@@ -16,14 +16,15 @@
 
 package com.github.sbt.osgi
 
-import aQute.bnd.osgi.Constants._
-import java.io.File
+import aQute.bnd.osgi.Constants.*
 import org.specs2.mutable.Specification
-import scala.collection.JavaConverters._
+
+import java.io.File
+import scala.collection.JavaConverters.*
 
 class OsgiSpec extends Specification {
 
-  import Osgi._
+  import Osgi.*
 
   "Calling seqToStrOpt" should {
     "return None for an empty Seq" in {
