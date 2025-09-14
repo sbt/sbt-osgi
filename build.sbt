@@ -1,6 +1,22 @@
 lazy val scala212 = "2.12.20"
-ThisBuild / crossScalaVersions := Seq(scala212)
+lazy val scala3 = "3.7.2"
+
+ThisBuild / crossScalaVersions := Seq(scala212, scala3)
 ThisBuild / scalaVersion := scala212
+
+ThisBuild / (pluginCrossBuild / sbtVersion) := {
+  scalaBinaryVersion.value match {
+    case "2.12" => "1.9.9"
+    case _      => "2.0.0-RC4"
+  }
+}
+
+ThisBuild / scriptedSbt := {
+  scalaBinaryVersion.value match {
+    case "2.12" => "1.10.10"
+    case _      => "2.0.0-RC4"
+  }
+}
 
 // So that publishLocal doesn't continuously create new versions
 def versionFmt(out: sbtdynver.GitDescribeOutput): String = {
