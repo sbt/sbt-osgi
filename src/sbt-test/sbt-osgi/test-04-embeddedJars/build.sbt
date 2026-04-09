@@ -1,11 +1,13 @@
 import sbtcompat.PluginCompat._
 
-lazy val test04 = (project in file("")).enablePlugins(SbtOsgi).settings(
-  OsgiKeys.embeddedJars := Def.uncached {
-    implicit val conv: xsbti.FileConverter = fileConverter.value
-    toFiles((Compile / externalDependencyClasspath).value).filter(_.getName.startsWith("junit"))
-  }
-)
+lazy val test04 = (project in file(""))
+  .enablePlugins(SbtOsgi)
+  .settings(
+    OsgiKeys.embeddedJars := Def.uncached {
+      implicit val conv: xsbti.FileConverter = fileConverter.value
+      toFiles((Compile / externalDependencyClasspath).value).filter(_.getName.startsWith("junit"))
+    }
+  )
 
 organization := "com.github.sbt"
 

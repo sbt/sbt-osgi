@@ -1,6 +1,7 @@
 import sbtcompat.PluginCompat._
 
-lazy val test06 = (project in file("")).enablePlugins(SbtOsgi).settings(OsgiKeys.explodedJars := Def.uncached(Seq(file("tiny.jar"))))
+lazy val test06 =
+  (project in file("")).enablePlugins(SbtOsgi).settings(OsgiKeys.explodedJars := Def.uncached(Seq(file("tiny.jar"))))
 
 organization := "com.github.sbt"
 

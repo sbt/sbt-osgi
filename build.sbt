@@ -68,7 +68,7 @@ scalacOptions ++= Seq(
   "UTF-8"
 ) ++ (CrossVersion.partialVersion(scalaVersion.value) match {
   case Some((2, 12)) => Seq("-Xlint")
-  case _               => Nil
+  case _             => Nil
 })
 
 scalacOptions ++= {
