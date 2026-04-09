@@ -8,8 +8,6 @@ private[osgi] object PluginCompat {
   def licenses(v: Seq[License]): Seq[(String, URL)] =
     v.map(l => l.spdxId -> new URL(l.uri.toString))
   def apiUrl(v: Option[URI]): Option[URL] =
-    v.map(l => l.spdxId -> new URI(l.uri.toString).toURL)
-  def apiUrl(v: Option[URI]): Option[URL] =
     v.map(u => new URI(u.toString).toURL)
   type ManifestAttributes = sbt.PackageOption.ManifestAttributes
 }
