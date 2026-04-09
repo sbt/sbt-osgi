@@ -61,7 +61,7 @@ class OsgiSpec extends Specification {
         BUNDLE_ACTIVATOR -> "bundleActivator",
         BUNDLE_SYMBOLICNAME -> "bundleSymbolicName",
         BUNDLE_DESCRIPTION -> "bundleDescription",
-        BUNDLE_DOCURL -> new URL("http://example.example").toString,
+        BUNDLE_DOCURL -> new URI("http://example.example").toURL.toString,
         BUNDLE_LICENSE -> "http://license.license;description=License",
         BUNDLE_NAME -> "bundleName",
         BUNDLE_REQUIREDEXECUTIONENVIRONMENT -> "req1,req2",
