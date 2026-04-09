@@ -1,4 +1,11 @@
-lazy val test04 = (project in file("")).enablePlugins(SbtOsgi)
+import sbtcompat.PluginCompat._
+
+lazy val test04 = (project in file("")).enablePlugins(SbtOsgi).settings(
+  OsgiKeys.embeddedJars := Def.uncached {
+    implicit val conv: xsbti.FileConverter = fileConverter.value
+    toFiles((Compile / externalDependencyClasspath).value).filter(_.getName.startsWith("junit"))
+  }
+)
 
 organization := "com.github.sbt"
 
@@ -8,15 +15,13 @@ version := "1.2.3"
 
 osgiSettings
 
-OsgiKeys.embeddedJars := (Keys.externalDependencyClasspath in Compile).value map (_.data) filter (_.getName startsWith "junit")
-
 libraryDependencies += "junit" % "junit" % "4.11" // Not in test scope here!
 
 TaskKey[Unit]("verifyBundle") := {
   import java.io.IOException
   import java.util.zip.ZipFile
   import scala.io.Source
-  val file = OsgiKeys.bundle.value
+  val file = OsgiKeys.bundleFile.value
   val newLine = System.getProperty("line.separator")
   val zipFile = new ZipFile(file)
   // Verify bundle content

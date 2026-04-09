@@ -16,9 +16,13 @@
 
 package com.github.sbt.osgi
 
+import java.io.File
+
 import sbt._
 import sbt.Keys._
 import sbt.plugins.JvmPlugin
+import sbtcompat.PluginCompat._
+import xsbti.FileConverter
 
 object SbtOsgi extends AutoPlugin {
 
@@ -36,8 +40,12 @@ object SbtOsgi extends AutoPlugin {
     val OsgiKeys = com.github.sbt.osgi.OsgiKeys
 
     lazy val osgiSettings: Seq[Setting[_]] = Seq(
-      Compile / packageBin / packagedArtifact := Scoped
-        .mkTuple2((Compile / packageBin / artifact).value, OsgiKeys.bundle.value),
+      Compile / packageBin / packagedArtifact := Def.uncached {
+        Scoped.mkTuple2(
+          (Compile / packageBin / artifact).value,
+          OsgiKeys.bundle.value
+        )
+      },
       Compile / packageBin / artifact ~= (_.withType("bundle"))
     )
   }
@@ -45,40 +53,52 @@ object SbtOsgi extends AutoPlugin {
   lazy val defaultOsgiSettings: Seq[Setting[_]] = {
     import OsgiKeys._
     Seq(
-      bundle := Osgi.bundleTask(
-        manifestHeaders.value,
-        additionalHeaders.value,
-        (Compile / dependencyClasspathAsJars).value.map(_.data) ++ (Compile / products).value,
-        (Compile / packageBin / artifactPath).value,
-        (Compile / resourceDirectories).value,
-        embeddedJars.value,
-        explodedJars.value,
-        failOnUndecidedPackage.value,
-        (Compile / sourceDirectories).value,
-        (Compile / packageBin / packageOptions).value,
-        packageWithJVMJar.value,
-        cacheStrategy.value,
-        streams.value
-      ),
-      manifestHeaders := OsgiManifestHeaders(
-        bundleActivator.value,
-        description.value,
-        apiURL.value,
-        licenses.value,
-        name.value,
-        bundleRequiredExecutionEnvironment.value,
-        organizationName.value,
-        bundleSymbolicName.value,
-        bundleVersion.value,
-        dynamicImportPackage.value,
-        exportPackage.value,
-        importPackage.value,
-        fragmentHost.value,
-        privatePackage.value,
-        requireBundle.value,
-        requireCapability.value
-      ),
-      Compile / sbt.Keys.packageBin := bundle.value,
+      bundle := Def.uncached {
+        implicit val conv: FileConverter = fileConverter.value
+        val cpJars = toFiles((Compile / dependencyClasspathAsJars).value)
+        val prods = (Compile / products).value
+        val out = Osgi.bundleTask(
+          manifestHeaders.value,
+          additionalHeaders.value,
+          cpJars ++ prods,
+          artifactPathToFile((Compile / packageBin / artifactPath).value),
+          (Compile / resourceDirectories).value,
+          embeddedJars.value,
+          explodedJars.value,
+          failOnUndecidedPackage.value,
+          (Compile / sourceDirectories).value,
+          (Compile / packageBin / packageOptions).value,
+          packageWithJVMJar.value,
+          cacheStrategy.value,
+          streams.value
+        )
+        toFileRef(out)
+      },
+      bundleFile := Def.uncached {
+        implicit val conv: FileConverter = fileConverter.value
+        toFile(bundle.value)
+      },
+      manifestHeaders := Def.uncached {
+        OsgiManifestHeaders(
+          bundleActivator.value,
+          description.value,
+          PluginCompat.apiUrl(apiURL.value),
+          PluginCompat.licenses(licenses.value),
+          name.value,
+          bundleRequiredExecutionEnvironment.value,
+          organizationName.value,
+          bundleSymbolicName.value,
+          bundleVersion.value,
+          dynamicImportPackage.value,
+          exportPackage.value,
+          importPackage.value,
+          fragmentHost.value,
+          privatePackage.value,
+          requireBundle.value,
+          requireCapability.value
+        )
+      },
+      Compile / sbt.Keys.packageBin := Def.uncached(OsgiKeys.bundle.value),
       bundleSymbolicName := Osgi.defaultBundleSymbolicName(organization.value, normalizedName.value),
       privatePackage := bundleSymbolicName(name => List(name + ".*")).value,
       bundleVersion := version.value
@@ -88,7 +108,14 @@ object SbtOsgi extends AutoPlugin {
   lazy val defaultGlobalSettings: Seq[Setting[_]] = {
     import OsgiKeys._
     Seq(
-      bundle := file(""),
+      bundle := Def.uncached {
+        implicit val conv: FileConverter = (ThisBuild / fileConverter).value
+        toFileRef(file(""))
+      },
+      bundleFile := Def.uncached {
+        implicit val conv: FileConverter = (ThisBuild / fileConverter).value
+        toFile(bundle.value)
+      },
       bundleActivator := None,
       bundleSymbolicName := "",
       bundleVersion := "",
@@ -102,8 +129,8 @@ object SbtOsgi extends AutoPlugin {
       failOnUndecidedPackage := false,
       requireCapability := Osgi.requireCapabilityTask,
       additionalHeaders := Map.empty,
-      embeddedJars := Nil,
-      explodedJars := Nil,
+      embeddedJars := Def.uncached(Seq.empty[File]),
+      explodedJars := Def.uncached(Seq.empty[File]),
       packageWithJVMJar := false,
       cacheStrategy := None
     )

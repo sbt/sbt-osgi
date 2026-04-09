@@ -71,3 +71,8 @@ TaskKey[Unit]("verifyRequireBundle") := {
   if (!bundle.isEmpty)
     sys.error("Expected require-bundle to be empty, but was %s!" format bundle)
 }
+
+TaskKey[Unit]("verifyOsgiBundleJar") := {
+  val jar = OsgiKeys.bundleFile.value
+  if (!jar.exists()) sys.error(s"Expected OSGi bundle jar on disk: $jar")
+}
