@@ -43,13 +43,15 @@ ThisBuild / githubWorkflowPublish := Seq(
 ThisBuild / githubWorkflowOSes := Seq("ubuntu-latest", "macos-latest", "windows-latest")
 
 ThisBuild / githubWorkflowJavaVersions := Seq(
-  JavaSpec.temurin("8"),
-  JavaSpec.temurin("11"),
   JavaSpec.temurin("17"),
-  JavaSpec.temurin("21")
+  JavaSpec.temurin("21"),
+  JavaSpec.temurin("8"),
+  JavaSpec.temurin("11")
 )
 
 ThisBuild / githubWorkflowBuildMatrixExclusions += MatrixExclude(Map("java" -> "temurin@8", "os" -> "macos-latest"))
+ThisBuild / githubWorkflowBuildMatrixExclusions += MatrixExclude(Map("java" -> "temurin@8", "scala" -> scala3))
+ThisBuild / githubWorkflowBuildMatrixExclusions += MatrixExclude(Map("java" -> "temurin@11", "scala" -> scala3))
 
 name := "sbt-osgi"
 enablePlugins(SbtPlugin)
