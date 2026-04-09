@@ -41,8 +41,8 @@ class OsgiSpec extends Specification {
       val headers = OsgiManifestHeaders(
         Some("bundleActivator"),
         "bundleDescription",
-        Some(new URL("http://example.example")),
-        Seq(("License", new URL("http://license.license"))),
+        Some(new URI("http://example.example").toURL),
+        Seq(("License", new URI("http://license.license").toURL)),
         "bundleName",
         Seq("req1", "req2"),
         "bundleVendor",
