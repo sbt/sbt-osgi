@@ -29,9 +29,9 @@ jobs:
           - java: temurin@8
             os: macos-latest
           - java: temurin@8
-            scala: 3.8.2
+            scala: 3.8.3
           - java: temurin@11
-            scala: 3.8.2
+            scala: 3.8.3
     runs-on: ${{ matrix.os }}
     steps:
       - name: Ignore line ending differences in git
@@ -177,12 +177,12 @@ jobs:
           tar xf targets.tar
           rm targets.tar
 
-      - name: Download target directories (3.8.2)
+      - name: Download target directories (3.8.3)
         uses: actions/download-artifact@v6
         with:
-          name: target-${{ matrix.os }}-3.8.2-${{ matrix.java }}
+          name: target-${{ matrix.os }}-3.8.3-${{ matrix.java }}
 
-      - name: Inflate target directories (3.8.2)
+      - name: Inflate target directories (3.8.3)
         run: |
           tar xf targets.tar
           rm targets.tar
