@@ -19,7 +19,7 @@ package com.github.sbt.osgi
 import aQute.bnd.osgi.Constants._
 import java.io.File
 import org.specs2.mutable.Specification
-import java.net.URL
+import java.net.URI
 import scala.collection.JavaConverters._
 
 class OsgiSpec extends Specification {
