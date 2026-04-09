@@ -21,7 +21,7 @@ TaskKey[Unit]("verifyBundle") := {
   import java.util.jar.JarFile
   import scala.io.Source
   val newLine = System.getProperty("line.separator")
-  val jarFile = new JarFile(OsgiKeys.bundle.value)
+  val jarFile = new JarFile(OsgiKeys.bundleFile.value)
   // Verify manifest
   try {
     val manifest = jarFile.getManifest

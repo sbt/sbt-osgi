@@ -44,7 +44,7 @@ TaskKey[Unit]("verifyBundle") := {
   val newLine = System.getProperty("line.separator")
 
   {
-    val file = OsgiKeys.bundle.in(proj1).value
+    val file = (proj1 / OsgiKeys.bundleFile).value
     val zipFile = new ZipFile(file)
 
     // Verify manifest
@@ -55,10 +55,10 @@ TaskKey[Unit]("verifyBundle") := {
       val allLines = lines.mkString(newLine)
       val butWas = newLine + "But was:" + newLine + allLines
 
-      val export = Seq("Export-Package: ", "proj1;", s"""version="${version.value}"""")
+      val expectedExportFragments = Seq("Export-Package: ", "proj1;", s"""version="${version.value}"""")
 
-      if (!(lines.exists(l => export.forall(s => l.containsSlice(s))))) {
-        sys.error(s"""Expected ${export.mkString("'", "' and '", "'")} in manifest!""" + butWas)
+      if (!(lines.exists(l => expectedExportFragments.forall(s => l.containsSlice(s))))) {
+        sys.error(s"""Expected ${expectedExportFragments.mkString("'", "' and '", "'")} in manifest!""" + butWas)
       }
     } catch {
       case e: IOException => sys.error("Expected to be able to read the manifest, but got exception!" + newLine + e)
@@ -66,7 +66,7 @@ TaskKey[Unit]("verifyBundle") := {
   }
 
   {
-    val file = OsgiKeys.bundle.in(proj2).value
+    val file = (proj2 / OsgiKeys.bundleFile).value
     val zipFile = new ZipFile(file)
 
     // Verify manifest

@@ -19,6 +19,7 @@ package com.github.sbt.osgi
 import aQute.bnd.osgi.Constants._
 import java.io.File
 import org.specs2.mutable.Specification
+import java.net.URL
 import scala.collection.JavaConverters._
 
 class OsgiSpec extends Specification {
@@ -40,8 +41,8 @@ class OsgiSpec extends Specification {
       val headers = OsgiManifestHeaders(
         Some("bundleActivator"),
         "bundleDescription",
-        Some(sbt.url("http://example.example")),
-        Seq(("License", sbt.url("http://license.license"))),
+        Some(new URL("http://example.example")),
+        Seq(("License", new URL("http://license.license"))),
         "bundleName",
         Seq("req1", "req2"),
         "bundleVendor",
@@ -60,7 +61,7 @@ class OsgiSpec extends Specification {
         BUNDLE_ACTIVATOR -> "bundleActivator",
         BUNDLE_SYMBOLICNAME -> "bundleSymbolicName",
         BUNDLE_DESCRIPTION -> "bundleDescription",
-        BUNDLE_DOCURL -> sbt.url("http://example.example").toString,
+        BUNDLE_DOCURL -> new URL("http://example.example").toString,
         BUNDLE_LICENSE -> "http://license.license;description=License",
         BUNDLE_NAME -> "bundleName",
         BUNDLE_REQUIREDEXECUTIONENVIRONMENT -> "req1,req2",
