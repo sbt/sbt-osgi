@@ -1,5 +1,6 @@
 lazy val scala212 = "2.12.21"
-ThisBuild / crossScalaVersions := Seq(scala212)
+lazy val scala3 = "3.8.3"
+ThisBuild / crossScalaVersions := Seq(scala212, scala3)
 ThisBuild / scalaVersion := scala212
 
 // So that publishLocal doesn't continuously create new versions
@@ -42,27 +43,38 @@ ThisBuild / githubWorkflowPublish := Seq(
 ThisBuild / githubWorkflowOSes := Seq("ubuntu-latest", "macos-latest", "windows-latest")
 
 ThisBuild / githubWorkflowJavaVersions := Seq(
-  JavaSpec.temurin("8"),
-  JavaSpec.temurin("11"),
   JavaSpec.temurin("17"),
-  JavaSpec.temurin("21")
+  JavaSpec.temurin("21"),
+  JavaSpec.temurin("8"),
+  JavaSpec.temurin("11")
 )
 
 ThisBuild / githubWorkflowBuildMatrixExclusions += MatrixExclude(Map("java" -> "temurin@8", "os" -> "macos-latest"))
+ThisBuild / githubWorkflowBuildMatrixExclusions += MatrixExclude(Map("java" -> "temurin@8", "scala" -> scala3))
+ThisBuild / githubWorkflowBuildMatrixExclusions += MatrixExclude(Map("java" -> "temurin@11", "scala" -> scala3))
 
 name := "sbt-osgi"
 enablePlugins(SbtPlugin)
+addSbtPlugin("com.github.sbt" % "sbt2-compat" % "0.1.0")
+pluginCrossBuild / sbtVersion := {
+  scalaBinaryVersion.value match {
+    case "2.12" => "1.12.9"
+    case _      => "2.0.0-RC11"
+  }
+}
 libraryDependencies ++= Dependencies.sbtOsgi
 scalacOptions ++= Seq(
   "-unchecked",
   "-deprecation",
-  "-Xlint",
   "-encoding",
   "UTF-8"
-)
+) ++ (CrossVersion.partialVersion(scalaVersion.value) match {
+  case Some((2, 12)) => Seq("-Xlint")
+  case _             => Nil
+})
 
 scalacOptions ++= {
-  if (insideCI.value) {
+  if (insideCI.value && scalaBinaryVersion.value == "2.12") {
     val log = sLog.value
     log.info("Running in CI, enabling Scala2 optimizer")
     Seq(

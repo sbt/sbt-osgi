@@ -17,11 +17,15 @@
 package com.github.sbt.osgi
 
 import sbt._
+import sbtcompat.PluginCompat.FileRef
 
 trait OsgiKeys {
 
-  lazy val bundle: TaskKey[File] =
-    TaskKey[File](prefix("Bundle"), "Create an OSGi bundle.")
+  lazy val bundle: TaskKey[FileRef] =
+    TaskKey[FileRef](prefix("Bundle"), "Create an OSGi bundle.")
+
+  lazy val bundleFile: TaskKey[File] =
+    TaskKey[File](prefix("BundleFile"), "The OSGi bundle as a java.io.File.")
 
   lazy val manifestHeaders: TaskKey[OsgiManifestHeaders] =
     TaskKey[OsgiManifestHeaders](prefix("ManifestHeaders"), "The aggregated manifest headers.")
