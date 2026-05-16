@@ -44,6 +44,7 @@ ThisBuild / githubWorkflowOSes := Seq("ubuntu-latest", "macos-latest", "windows-
 
 ThisBuild / githubWorkflowJavaVersions := Seq(
   JavaSpec.temurin("17"),
+  JavaSpec.temurin("25"),
   JavaSpec.temurin("21"),
   JavaSpec.temurin("8"),
   JavaSpec.temurin("11")
