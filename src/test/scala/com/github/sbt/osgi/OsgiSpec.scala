@@ -20,7 +20,7 @@ import aQute.bnd.osgi.Constants._
 import java.io.File
 import org.specs2.mutable.Specification
 import java.net.URI
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 class OsgiSpec extends Specification {
 

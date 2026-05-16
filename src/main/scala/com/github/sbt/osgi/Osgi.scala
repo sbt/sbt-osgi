@@ -30,7 +30,7 @@ import sbt.Keys._
 
 import PluginCompat.ManifestAttributes
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import scala.language.implicitConversions
 
 private object Osgi {
@@ -187,7 +187,7 @@ private object Osgi {
 
         def content = {
           import _root_.java.nio.file._
-          import _root_.scala.collection.JavaConverters._
+          import _root_.scala.jdk.CollectionConverters._
           val path = tmpArtifactDirectoryPath.toPath
           Files
             .walk(path)
@@ -195,7 +195,7 @@ private object Osgi {
             .asScala
             .map(f => f.toFile -> path.relativize(f))
             .collect { case (f, p) if p != (file("META-INF") / "MANIFEST.MF").toPath => (f, p.toString) }
-            .toTraversable
+            .toList
         }
 
         IO.jar(content, tmpArtifactPath, manifest)
@@ -235,7 +235,7 @@ private object Osgi {
             })
             .collect(Collectors.toSet())
 
-        import scala.collection.JavaConverters._
+        import scala.jdk.CollectionConverters._
         packages.asScala
       }
     }.toSet

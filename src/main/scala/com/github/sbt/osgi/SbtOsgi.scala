@@ -30,16 +30,16 @@ object SbtOsgi extends AutoPlugin {
 
   override lazy val requires: Plugins = JvmPlugin
 
-  override lazy val projectSettings: Seq[Def.Setting[_]] = defaultOsgiSettings
+  override lazy val projectSettings: Seq[Def.Setting[?]] = defaultOsgiSettings
 
-  override lazy val globalSettings: Seq[Def.Setting[_]] = defaultGlobalSettings
+  override lazy val globalSettings: Seq[Def.Setting[?]] = defaultGlobalSettings
 
   object autoImport {
     type OsgiManifestHeaders = com.github.sbt.osgi.OsgiManifestHeaders
 
     val OsgiKeys = com.github.sbt.osgi.OsgiKeys
 
-    lazy val osgiSettings: Seq[Setting[_]] = Seq(
+    lazy val osgiSettings: Seq[Setting[?]] = Seq(
       Compile / packageBin / packagedArtifact := Def.uncached {
         Scoped.mkTuple2(
           (Compile / packageBin / artifact).value,
@@ -50,7 +50,7 @@ object SbtOsgi extends AutoPlugin {
     )
   }
 
-  lazy val defaultOsgiSettings: Seq[Setting[_]] = {
+  lazy val defaultOsgiSettings: Seq[Setting[?]] = {
     import OsgiKeys._
     Seq(
       bundle := Def.uncached {
@@ -105,7 +105,7 @@ object SbtOsgi extends AutoPlugin {
     )
   }
 
-  lazy val defaultGlobalSettings: Seq[Setting[_]] = {
+  lazy val defaultGlobalSettings: Seq[Setting[?]] = {
     import OsgiKeys._
     Seq(
       bundle := Def.uncached {
