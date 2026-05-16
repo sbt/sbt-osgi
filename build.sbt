@@ -70,7 +70,7 @@ scalacOptions ++= Seq(
   "-encoding",
   "UTF-8"
 ) ++ (CrossVersion.partialVersion(scalaVersion.value) match {
-  case Some((2, 12)) => Seq("-Xlint")
+  case Some((2, 12)) => Seq("-Xlint", "-Xsource:3", "-release:8")
   case _             => Nil
 })
 
