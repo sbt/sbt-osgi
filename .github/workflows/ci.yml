@@ -178,7 +178,7 @@ jobs:
           rm targets.tar
 
       - name: Download target directories (3.8.3)
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v8
         with:
           name: target-${{ matrix.os }}-3.8.3-${{ matrix.java }}
 
