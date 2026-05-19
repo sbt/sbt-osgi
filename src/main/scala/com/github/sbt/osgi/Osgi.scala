@@ -27,9 +27,10 @@ import java.util.stream.Collectors
 
 import sbt._
 import sbt.Keys._
-import sbt.Package.ManifestAttributes
 
-import scala.collection.JavaConverters._
+import PluginCompat.ManifestAttributes
+
+import scala.jdk.CollectionConverters._
 import scala.language.implicitConversions
 
 private object Osgi {
@@ -186,7 +187,7 @@ private object Osgi {
 
         def content = {
           import _root_.java.nio.file._
-          import _root_.scala.collection.JavaConverters._
+          import _root_.scala.jdk.CollectionConverters._
           val path = tmpArtifactDirectoryPath.toPath
           Files
             .walk(path)
@@ -194,7 +195,7 @@ private object Osgi {
             .asScala
             .map(f => f.toFile -> path.relativize(f))
             .collect { case (f, p) if p != (file("META-INF") / "MANIFEST.MF").toPath => (f, p.toString) }
-            .toTraversable
+            .toList
         }
 
         IO.jar(content, tmpArtifactPath, manifest)
@@ -207,9 +208,9 @@ private object Osgi {
 
   private def addPackageOptions(props: Properties, packageOptions: Seq[PackageOption]) = {
     packageOptions
-      .collect({ case attr: ManifestAttributes ⇒ attr.attributes })
+      .collect({ case attr: ManifestAttributes => attr.attributes })
       .flatten
-      .foreach { case (name, value) ⇒ props.put(name.toString, value) }
+      .foreach { case (name, value) => props.put(name.toString, value) }
     props
   }
 
@@ -234,7 +235,7 @@ private object Osgi {
             })
             .collect(Collectors.toSet())
 
-        import scala.collection.JavaConverters._
+        import scala.jdk.CollectionConverters._
         packages.asScala
       }
     }.toSet
@@ -307,7 +308,7 @@ private object Osgi {
   def seqToStrOpt[A](seq: Seq[A])(f: A => String): Option[String] =
     if (seq.isEmpty) None else Some(seq map f mkString ",")
 
-  def strToStrOpt(s: String): Option[String] = Option(s).filter(_.trim nonEmpty)
+  def strToStrOpt(s: String): Option[String] = Option(s).filter(_.trim.nonEmpty)
 
   def includeResourceProperty(resourceDirectories: Seq[File], embeddedJars: Seq[File], explodedJars: Seq[File]) = {
     val paths: Seq[String] =
@@ -330,7 +331,7 @@ private object Osgi {
 
   def id(s: String) = s
 
-  def parts(s: String) = s split "[.-]" filterNot (_.isEmpty)
+  def parts(s: String) = s.split("[.-]").filterNot(_.isEmpty)
 
   // ------------ Poor Man's Java 8 make-it-look-nice inter-op ----------------
   implicit def asPredicate[T](f: T => Boolean): Predicate[T] =

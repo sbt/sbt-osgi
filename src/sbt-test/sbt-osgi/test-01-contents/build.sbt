@@ -26,7 +26,7 @@ TaskKey[Unit]("verifyBundle") := {
   import java.io.IOException
   import java.util.zip.ZipFile
   import scala.io.Source
-  val file = OsgiKeys.bundle.value
+  val file = OsgiKeys.bundleFile.value
   val newLine = System.getProperty("line.separator")
   val zipFile = new ZipFile(file)
   // Verify manifest

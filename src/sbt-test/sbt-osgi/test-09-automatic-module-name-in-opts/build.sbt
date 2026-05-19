@@ -20,7 +20,7 @@ OsgiKeys.bundleRequiredExecutionEnvironment := Seq("JavaSE-1.7", "JavaSE-1.8")
 
 val myModuleName = "my.nice.module.name"
 val AutomaticModuleName = "Automatic-Module-Name"
-packageOptions in (Compile, packageBin) += Package.ManifestAttributes(AutomaticModuleName → myModuleName)
+Compile / packageBin / packageOptions += Package.ManifestAttributes(AutomaticModuleName -> myModuleName)
 
 apiURL := Some(url("https://github.com/sbt/sbt-osgi"))
 
@@ -30,7 +30,7 @@ TaskKey[Unit]("verifyBundle") := {
   import java.io.IOException
   import java.util.zip.ZipFile
   import scala.io.Source
-  val file = OsgiKeys.bundle.value
+  val file = OsgiKeys.bundleFile.value
   val newLine = System.getProperty("line.separator")
   val zipFile = new ZipFile(file)
   // Verify manifest
