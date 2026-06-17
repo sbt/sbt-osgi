@@ -60,7 +60,7 @@ addSbtPlugin("com.github.sbt" % "sbt2-compat" % "0.1.0")
 pluginCrossBuild / sbtVersion := {
   scalaBinaryVersion.value match {
     case "2.12" => "1.12.11"
-    case _      => "2.0.0-RC12"
+    case _      => "2.0.0"
   }
 }
 libraryDependencies ++= Dependencies.sbtOsgi
