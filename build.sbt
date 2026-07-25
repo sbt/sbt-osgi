@@ -56,7 +56,7 @@ ThisBuild / githubWorkflowBuildMatrixExclusions += MatrixExclude(Map("java" -> "
 
 name := "sbt-osgi"
 enablePlugins(SbtPlugin)
-addSbtPlugin("com.github.sbt" % "sbt2-compat" % "0.1.0")
+addSbtPlugin("com.github.sbt" % "sbt2-compat" % "0.2.0")
 pluginCrossBuild / sbtVersion := {
   scalaBinaryVersion.value match {
     case "2.12" => "1.12.11"
