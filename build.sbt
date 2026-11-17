@@ -1,5 +1,5 @@
 lazy val scala212 = "2.12.21"
-lazy val scala3 = "3.8.4"
+lazy val scala3 = "3.9.0"
 ThisBuild / crossScalaVersions := Seq(scala212, scala3)
 ThisBuild / scalaVersion := scala212
 
@@ -60,7 +60,7 @@ addSbtPlugin("com.github.sbt" % "sbt2-compat" % "0.2.0")
 pluginCrossBuild / sbtVersion := {
   scalaBinaryVersion.value match {
     case "2.12" => "1.12.11"
-    case _      => "2.0.0"
+    case _      => "2.1.0"
   }
 }
 libraryDependencies ++= Dependencies.sbtOsgi
@@ -126,3 +126,5 @@ ThisBuild / developers := List(
     url = url("https://github.com/romainreuillon")
   )
 )
+
+ThisBuild / githubWorkflowPublishJavaVersion := JavaSpec.temurin("17")

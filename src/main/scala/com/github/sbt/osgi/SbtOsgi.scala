@@ -52,7 +52,7 @@ object SbtOsgi extends AutoPlugin {
 
   lazy val defaultOsgiSettings: Seq[Setting[?]] = {
     import OsgiKeys._
-    Seq(
+    PluginCompat.internalBundleSettings ++ Seq(
       bundle := Def.uncached {
         implicit val conv: FileConverter = fileConverter.value
         val cpJars = toFiles((Compile / dependencyClasspathAsJars).value)
