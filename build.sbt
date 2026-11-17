@@ -88,6 +88,8 @@ scalacOptions ++= {
 scriptedLaunchOpts += "-Xmx1024m"
 scriptedLaunchOpts ++= Seq("-Dplugin.version=" + version.value)
 scriptedLaunchOpts += "-debug"
+// Scripted uses its own IPC; avoid Windows boot-pipe locks for these batch JVMs.
+scriptedLaunchOpts ++= Seq("-Dsbt.server.autostart=false", "-Dsbt.server.forcestart=true")
 // scriptedBufferLog := false
 
 ThisBuild / licenses += ("Apache-2.0", url("https://www.apache.org/licenses/LICENSE-2.0.html"))
