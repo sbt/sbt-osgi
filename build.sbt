@@ -45,14 +45,8 @@ ThisBuild / githubWorkflowOSes := Seq("ubuntu-latest", "macos-latest", "windows-
 ThisBuild / githubWorkflowJavaVersions := Seq(
   JavaSpec.temurin("17"),
   JavaSpec.temurin("25"),
-  JavaSpec.temurin("21"),
-  JavaSpec.temurin("8"),
-  JavaSpec.temurin("11")
+  JavaSpec.temurin("21")
 )
-
-ThisBuild / githubWorkflowBuildMatrixExclusions += MatrixExclude(Map("java" -> "temurin@8", "os" -> "macos-latest"))
-ThisBuild / githubWorkflowBuildMatrixExclusions += MatrixExclude(Map("java" -> "temurin@8", "scala" -> scala3))
-ThisBuild / githubWorkflowBuildMatrixExclusions += MatrixExclude(Map("java" -> "temurin@11", "scala" -> scala3))
 
 name := "sbt-osgi"
 enablePlugins(SbtPlugin)
@@ -68,9 +62,10 @@ scalacOptions ++= Seq(
   "-unchecked",
   "-deprecation",
   "-encoding",
-  "UTF-8"
+  "UTF-8",
+  "-release:17"
 ) ++ (CrossVersion.partialVersion(scalaVersion.value) match {
-  case Some((2, 12)) => Seq("-Xlint", "-Xsource:3", "-release:8")
+  case Some((2, 12)) => Seq("-Xlint", "-Xsource:3")
   case _             => Nil
 })
 

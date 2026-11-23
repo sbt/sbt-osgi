@@ -12,6 +12,8 @@ sbt-osgi is a plugin for sbt. In order to install sbt, please refer to the sbt [
 
 - sbt-osgi 0.9.{4-x} -> sbt 1.6.2+ (older versions of sbt may work but 1.6.2+ supports all JDK LTS versions)
 
+The current development version uses Bnd 7 and requires **Java 17 or newer** to run sbt. Projects built with sbt-osgi can still target older Java versions.
+
 As sbt-osgi is a plugin for sbt, it is installed like any other sbt plugin, that is by mere configuration: just add sbt-osgi to your global or local plugin definition. Global plugins are defined in `~/.sbt/<SBT_VERSION>/plugins/plugins.sbt` and local plugins are defined in `project/plugins.sbt` in your project.
 
 In order to add sbt-osgi as a plugin, just add the below setting to the relevant plugin definition, paying attention to blank lines between settings:
